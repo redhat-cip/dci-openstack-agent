@@ -1,5 +1,5 @@
 [gerrit]
 host=softwarefactory-project.io
 port=29418
-project=dci-openstack-agent
+project=dci-ansible-agent
 defaultbranch=master
