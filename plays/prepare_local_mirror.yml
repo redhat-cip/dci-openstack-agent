@@ -27,16 +27,6 @@
     path: '{{ dci_mirror_location }}/dci_repo'
     state: absent
   become: true
-- name: Ensure proper directories are created
-  file:
-    path: '{{ item }}'
-    state: directory
-    owner: '{{ ansible_user_id }}'
-    group: '{{ ansible_user_gid }}'
-  with_items:
-    - '{{ dci_cache_dir }}'
-    - '{{ dci_mirror_location }}/dci_repo'
-  become: true
 - name: Generating RSA key for stack
   user:
     name: '{{ ansible_user_id }}'
