@@ -134,6 +134,11 @@ In this example, `OSP9` is the current version and `OSP10` is the version to
 
 `/etc/dci-ansible-agent/hooks/update_OSP9.yml`
 
+During the upgrade, you may need to use a specific version of a repository.
+Each component has its own .repo. They are located in
+<http://$jumpbox_ip/dci_repo/>, for instance:
+<http://$jumpbox_ip/dci_repo/dci_repo_RH7-RHOS-11.0.repo>.
+
 ## How to run my own set of tests ?
 
 `dci-ansible-agent` ships with a pre-defined set of tests that will be run. It
