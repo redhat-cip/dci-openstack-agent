@@ -69,7 +69,7 @@
 - name: Add undercloud in the /etc/hosts
   lineinfile:
     dest: /etc/hosts
-    regexp: '^\d+.*\sundercloud'
+    regexp: '^\d+.*\sundercloud$'
     line: "{{ hostvars['undercloud']['ansible_host'] }} undercloud"
     owner: root
     group: root
