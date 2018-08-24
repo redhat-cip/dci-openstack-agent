@@ -109,28 +109,16 @@ Once the `remoteci` is ready, you can download its authentication file on the
  `Download rc file` column. The file is called `remotecirc.sh`, please rename it
  to `dcirc.sh` for the next step.
 
-### Configuration
+### Use the dcirc.sh to authenticate the lab
 
-You start using the DCI Ansible Agent, you need to adjust a couple of
- configuration files. The first one is `/etc/dci-ansible-agent/dcirc.sh`:
+You start using the DCI Ansible Agent, you need to copy the `dcirc.sh` file here
+`/etc/dci-ansible-agent/dcirc.sh`.
 
-```bash
-#!/bin/bash
-DCI_CS_URL="https://api.distributed-ci.io/"
-DCI_CLIENT_ID=<remoteci_id>
-DCI_API_SECRET=<api_secret>
-# The file is used by systemd. This is the reason why we cannot
-# use the common 'export FOO=bar' syntax.
-export DCI_CS_URL
-export DCI_CLIENT_ID
-export DCI_API_SECRET
-```
-
-- `DCI_CLIENT_ID`: Replace `remoteci_id` with the remoteci UUID.
-- `DCI_API_SECRET`: Replace `api_secret` with the CI token.
+### HTTP Proxy
 
 If you need to go through a HTTP proxy, you will need to set the
- `http_proxy` environment variables:
+`http_proxy` environment variables.
+Edit the `/etc/dci-ansible-agent/dcirc.sh` file and add the following lines:
 
 ```console
 http_proxy="http://somewhere:3128"
@@ -138,6 +126,12 @@ https_proxy="http://somewhere:3128"
 export http_proxy
 export https_proxy
 ```
+
+In addition, you will need to configure yum, so it will make use of the HTTP
+proxy. For instance, add `proxy=http://somewhere:3128` in the `[main]`
+section of `/etc/yum.conf`.
+
+### Test the connection between the remoteci and the DCI API server
 
 At this point, you can validate your `dcirc.sh` with the following commands:
 
@@ -164,13 +158,19 @@ $ curl https://api.distributed-ci.io/api/v1
 {"_status": "OK", "message": "Distributed CI."}
 ```
 
-------------------------------------------------------------------------
+### Integration with the lab deployment scripts
 
-Then, you need to edit the `/etc/dci-ansible-agent/settings.yml` to adjust some
- settings to match your environment. The latest version of the default settings
- is [available on GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.yml)
+The agent has two different location where you can adjust its configuration:
 
-------------------------------------------------------------------------
+- `settings.yml`: The place where you can do the generic configuration
+- `hooks/*.yml`: Each file from this directory is a list of Ansible tasks.
+  This is the place where the users can launch their deployment scripts.
+
+First, you can edit `/etc/dci-ansible-agent/settings.yml`. You probably just have to
+adjust the value of the `undercloud_ip` key. It should point on your undercloud.
+
+If you want the last version of this file, it's [available on
+GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.yml)
 
 You need adjust the following Ansible playbook to describe how you want to
  provision your OpenStack. These playbook are located in the `/etc/dci-ansible-agent/hooks`.
@@ -181,7 +181,8 @@ You need adjust the following Ansible playbook to describe how you want to
     * configuration of a network device
     * etc
 * `running.yml`: this playbook will be trigger to deploy the undercloud and the
- overcloud. It should also add <http://$jumpbox_ip/dci_repo/dci_repo.repo> to the repository list (`/etc/yum/yum.repo.d/dci_repo.repo`).
+ overcloud. It should also add <http://$jumpbox_ip/dci_repo/dci_repo.repo> to the
+ repository list (`/etc/yum/yum.repo.d/dci_repo.repo`).
 
 > At the end of the this hook run, the Overcloud should be running.
 > If your undercloud has a dynamic IP, you must use a set_fact action to set the undercloud_ip variable. The agent needs to
