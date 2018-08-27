@@ -1,0 +1,4 @@
+dci-openstack-agent ALL=(ALL) NOPASSWD:ALL
+
+Defaults:dci-openstack-agent !requiretty
+
