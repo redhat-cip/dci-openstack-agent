@@ -1,4 +1,4 @@
-# DCI Ansible Agent
+# DCI OpenStack Agent
 
 The "jumpbox" is the host where the agent is running. It can be a virtual
  machine.
@@ -168,7 +168,7 @@ $ curl https://api.distributed-ci.io/api/v1
 
 Then, you need to edit the `/etc/dci-ansible-agent/settings.yml` to adjust some
  settings to match your environment. The latest version of the default settings
- is [available on GitHub](https://github.com/redhat-cip/dci-ansible-agent/blob/master/settings.yml)
+ is [available on GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.yml)
 
 ------------------------------------------------------------------------
 
