@@ -1,3 +1,6 @@
+:warning: We are in the progress to rename the agent RPM. Please read [
+the migration guide](README_migration_from_dci-ansible-agent.md).
+
 # DCI OpenStack Agent
 
 The "jumpbox" is the host where the agent is running. It can be a virtual
@@ -70,10 +73,10 @@ You will also need the EPEL and DCI repositories:
 # yum install -y https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 ```
 
-You can now install the `dci-ansible-agent` package:
+You can now install the `dci-openstack-agent` package:
 
 ```console
-# yum install -y dci-ansible-agent
+# yum install -y dci-openstack-agent
 ```
 
 ### Configure your time source
@@ -112,7 +115,7 @@ Once the `remoteci` is ready, you can download its authentication file on the
 ### Configuration
 
 You start using the DCI Ansible Agent, you need to adjust a couple of
- configuration files. The first one is `/etc/dci-ansible-agent/dcirc.sh`:
+ configuration files. The first one is `/etc/dci-openstack-agent/dcirc.sh`:
 
 ```bash
 #!/bin/bash
@@ -142,7 +145,7 @@ export https_proxy
 At this point, you can validate your `dcirc.sh` with the following commands:
 
 ```console
-# source /etc/dci-ansible-agent/dcirc.sh
+# source /etc/dci-openstack-agent/dcirc.sh
 # dcictl remoteci-list
 ```
 
@@ -166,14 +169,14 @@ $ curl https://api.distributed-ci.io/api/v1
 
 ------------------------------------------------------------------------
 
-Then, you need to edit the `/etc/dci-ansible-agent/settings.yml` to adjust some
+Then, you need to edit the `/etc/dci-openstack-agent/settings.yml` to adjust some
  settings to match your environment. The latest version of the default settings
  is [available on GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.yml)
 
 ------------------------------------------------------------------------
 
 You need adjust the following Ansible playbook to describe how you want to
- provision your OpenStack. These playbook are located in the `/etc/dci-ansible-agent/hooks`.
+ provision your OpenStack. These playbook are located in the `/etc/dci-openstack-agent/hooks`.
 
 * `pre-run.yml`: It will be called during the provisioning. This is the place
  where you describe the steps to follow to prepare your platform:
@@ -194,19 +197,19 @@ You need adjust the following Ansible playbook to describe how you want to
 The agent comes with a systemd configuration that simplify its execution. You can just start the agent:
 
 ```console
-# systemctl start dci-ansible-agent
+# systemctl start dci-openstack-agent
 ```
 
 Use journalctl to follow the agent execution:
 
 ```console
-# journalctl -ef -u dci-ansible-agent
+# journalctl -ef -u dci-openstack-agent
 ```
 
-If you need to connect as the dci-ansible-agent user, you can do:
+If you need to connect as the dci-openstack-agent user, you can do:
 
 ```console
-# su - dci-ansible-agent -s /bin/bash
+# su - dci-openstack-agent -s /bin/bash
 ```
 
 This is for example necessary if you want to create a ssh key:
@@ -219,14 +222,14 @@ $ ssh-keygen
 
 Two systemd timers are provided by the package:
 
-* `dci-ansible-agent.timer` will ensure the agent will be call automatically several time a day.
+* `dci-openstack-agent.timer` will ensure the agent will be call automatically several time a day.
 * `dci-update.timer` will refresh dci packages automatically.
 
 To enable them, just run:
 
 ```console
-# systemctl enable dci-ansible-agent.timer
-# systemctl start dci-ansible-agent.timer
+# systemctl enable dci-openstack-agent.timer
+# systemctl start dci-openstack-agent.timer
 # systemctl enable dci-update.timer
 # systemctl start dci-update.timer
 ```
