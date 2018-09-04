@@ -1,4 +1,4 @@
-:warning: We are in the progress to rename the agent RPM. Please read [
+:warning: We are renaming the agent RPM. Please read [
 the migration guide](README_migration_from_dci-ansible-agent.md).
 
 # DCI OpenStack Agent
@@ -39,7 +39,7 @@ The "jumpbox" is the host where the agent is running. It can be a virtual
   - Should be able to reach:
     - The jumpbox via `http` (80) for yum repositories.
     - The jumpbox via `http` (5000) for docker registry.
-  - the Undercloud should be able to reach the floating-IP network. During
+  - The Undercloud should be able to reach the floating-IP network. During
     its run, Tempest will try to reach the VM IP on this range. If you don't
     use the feature, the tests can be disabled.
 
@@ -51,7 +51,7 @@ You need to create your user account in the system. Please connect to
  `https://www.distributed-ci.io` with your redhat.com SSO account. Your user
  account will be created in our database the first time you connect.
 
-There is no reliable way to automatically know your team. So please contact us
+There is no reliable way to know your team automatically. So please contact us
  back when you reach this step, we will manually move your user in the correct
  organisation.
 
@@ -81,8 +81,9 @@ You can now install the `dci-openstack-agent` package:
 
 ### Configure your time source
 
-It's important to have an chronized clock. Chrony should be started and running.
-You can valide the server clock is synchronized with the following command:
+Having an chronized clock is important to get meaningful log files. This is
+the reason why the agent ensure Chrony is running.You can valide the server
+is synchronized with the following command:
 
 ```console
 $ chronyc activity
@@ -98,7 +99,7 @@ If Chrony is not running, you can follow [the official documentation](https://ac
 
 ### Create the `remoteci`
 
-What DCI calls the `remoteci` is actually your platform and its jumpbox. It has a
+What DCI calls the `remoteci` is your platform and its jumpbox. It has a
  name and a secret key that will be used to authenticate itself.
 
 Only the admins of the team can create the remoteci [on our interface](http://www.distributed-ci.io).
@@ -130,7 +131,7 @@ export http_proxy
 export https_proxy
 ```
 
-In addition, you will need to configure yum, so it will make use of the HTTP
+Also, you will need to configure yum, so it will make use of the HTTP
 proxy. For instance, add `proxy=http://somewhere:3128` in the `[main]`
 section of `/etc/yum.conf`.
 
@@ -146,14 +147,14 @@ At this point, you can validate your `dcirc.sh` with the following commands:
 You should get an output similar to this one:
 
 ```console
-+--------------------------------------+-----------+--------+---------+-------+--------------+
++--------------------------------------|-----------|--------|---------|-------|--------------+
 |                  id                  |    name   | state  | country | email | notification |
-+--------------------------------------+-----------+--------+---------+-------+--------------+
++--------------------------------------|-----------|--------|---------|-------|--------------+
 | a2780b4c-0cdc-4a4a-a9ed-44930562ecce | RACKSPACE | active |   None  |  None |     None     |
 +--------------------------------------|-----------|--------|---------|-------|--------------+
 ```
 
-If you get a error with the call above, you can validate the API server is
+If you get an error with the call above, you can validate the API server is
 reachable with the following `curl` call:
 
 ```console
@@ -170,12 +171,12 @@ The agent has two different location where you can adjust its configuration:
   This is the place where the users can launch their deployment scripts.
 
 First, you must edit `/etc/dci-ansible-agent/settings.yml`. You probably just have to
-adjust the value of the `undercloud_ip` key. It should point on your undercloud IP.
+adjust the value of the `undercloud_ip` key. It should point to your undercloud IP.
 
 If you want the last version of this file, it's [available on
 GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.yml)
 
-You need adjust the following Ansible playbook to describe how you want to
+You need to adjust the following Ansible playbook to describe how you want to
  provision your OpenStack. These playbook are located in the `/etc/dci-openstack-agent/hooks`.
 
 * `pre-run.yml`: It will be called during the provisioning. This is the place
@@ -183,19 +184,19 @@ You need adjust the following Ansible playbook to describe how you want to
     * deployment of the undercloud machine
     * configuration of a network device
     * etc
-* `running.yml`: this playbook will be trigger to deploy the undercloud and the
+* `running.yml`: this playbook will trigger to deploy the undercloud and the
  overcloud. It should also add <http://$jumpbox_ip/dci_repo/dci_repo.repo> to the
  repository list (`/etc/yum/yum.repo.d/dci_repo.repo`).
 
-> At the end of the this hook run, the Overcloud should be running.
+> At the end of this hook run, the Overcloud should be running.
 > If your undercloud has a dynamic IP, you must use a set_fact action to set the undercloud_ip variable. The agent needs to
 > know its IP to run the tests.
 
-* `teardown.yml`: This playbook clean the full platform.
+* `teardown.yml`: This playbook cleans the full platform.
 
 ### Start the service
 
-The agent comes with a systemd configuration that simplify its execution. You can just start the agent:
+The agent comes with a systemd configuration that simplifies its execution. You can just start the agent:
 
 ```console
 # systemctl start dci-openstack-agent
@@ -213,7 +214,7 @@ If you need to connect as the dci-openstack-agent user, you can do:
 # su - dci-openstack-agent -s /bin/bash
 ```
 
-This is for example necessary if you want to create a ssh key:
+This is, for example, necessary if you want to create a ssh key:
 
 ```console
 $ ssh-keygen
@@ -221,7 +222,7 @@ $ ssh-keygen
 
 ### Use the timers
 
-Two systemd timers are provided by the package:
+The `dci-ansible-agent` rpm provides two systemd timers:
 
 * `dci-openstack-agent.timer` will ensure the agent will be call automatically several time a day.
 * `dci-update.timer` will refresh dci packages automatically.
