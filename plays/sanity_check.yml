@@ -17,7 +17,7 @@
   when: not chrony_result.stdout|regex_search('Leap status\s+:\s+Normal')
 
 - name: Ensure the system is up to date
-  command: yum check-update dci-ansible ansible dci-ansible-agent python-dciclient python-requests
+  command: yum check-update dci-ansible ansible dci-ansible-agent dci-openstack-agent python-dciclient python-requests
   register: yum_check_update_result
   failed_when: False
   become: True
