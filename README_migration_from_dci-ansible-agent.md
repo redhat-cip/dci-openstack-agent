@@ -23,5 +23,5 @@ Finally you can restart the agent:
     # systemctl start dci-openstack-agent.timer
     # systemctl start dci-openstack-agent
 
-Do not try to manually remove the `dci-openstack-agent` rpm. It will be
+You do not need to manually remove the `dci-openstack-agent` rpm. It will be
 automatically remove by an update in the future.
