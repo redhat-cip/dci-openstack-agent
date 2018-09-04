@@ -20,8 +20,23 @@
      line: "STORAGE_DRIVER=overlay2"
      regexp: '^STORAGE_DRIVER='
   become: True
+- name: Create the docker.service.d directory
+  file:
+    path: /etc/systemd/system/docker.service.d/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  become: True
+- name: Create the http-proxy configuration for systemd
+  template:
+    src: docker_http_proxy.j2
+    dest: /etc/systemd/system/docker.service.d/http-proxy.conf
+  become: True
 - name: Ensure docker is restarted
   service:
+    # we reload systemd in case docker.service.d content has changed
+    daemon_reload: True
     name: docker
     state: restarted
   become: True
