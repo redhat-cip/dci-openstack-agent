@@ -1,0 +1,8 @@
+Code-Review+2: François Charlier <francois.charlier@redhat.com>
+Workflow+1: Gonéri Le Bouder <goneri@lebouder.net>
+Verified+2: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-by: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-at: Tue, 04 Sep 2018 13:44:04 +0000
+Reviewed-on: https://softwarefactory-project.io/r/13513
+Project: dci-openstack-agent
+Branch: refs/heads/master
