@@ -3,7 +3,7 @@ Version:        0.0.VERS
 Release:        1%{?dist}
 Summary:        DCI Ansible Agent for DCI control server
 License:        ASL 2.0
-URL:            https://github.com/redhat-openstack/dci-openstack-agent
+URL:            https://github.com/redhat-cip/dci-ansible-agent
 BuildArch:      noarch
 Source0:        dci-openstack-agent-%{version}.tar.gz
 
@@ -55,6 +55,7 @@ install -p -D -m 644 hooks/teardown.yml %{buildroot}%{_sysconfdir}/dci-ansible-a
 install -p -D -m 644 hooks/success.yml %{buildroot}%{_sysconfdir}/dci-ansible-agent/hooks/success.yml
 install -p -D -m 644 hooks/local_tests.yml %{buildroot}%{_sysconfdir}/dci-ansible-agent/hooks/local_tests.yml
 install -p -D -m 644 settings.yml %{buildroot}%{_sysconfdir}/dci-ansible-agent/settings.yml
+sed -i 's,dci-openstack-agent,dci-ansible-agent,' %{buildroot}%{_sysconfdir}/dci-ansible-agent/settings.yml
 install -p -D -m 440 dci-ansible-agent.sudo %{buildroot}%{_sysconfdir}/sudoers.d/dci-ansible-agent
 install -p -d -m 755 %{buildroot}/%{_sharedstatedir}/dci-ansible-agent
 install -p -D -m 644 fetch_images.py %{buildroot}%{_datadir}/dci-ansible-agent/fetch_images.py
