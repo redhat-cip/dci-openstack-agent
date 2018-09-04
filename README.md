@@ -116,13 +116,13 @@ Once the `remoteci` is ready, you can download its authentication file on the
 ### Use the dcirc.sh to authenticate the lab
 
 You start using the DCI Ansible Agent, you need to copy the `dcirc.sh` file here
-`/etc/dci-ansible-agent/dcirc.sh`.
+`/etc/dci-openstack-agent/dcirc.sh`.
 
 ### HTTP Proxy
 
 If you need to go through a HTTP proxy, you will need to set the
 `http_proxy` environment variables.
-Edit the `/etc/dci-ansible-agent/dcirc.sh` file and add the following lines:
+Edit the `/etc/dci-openstack-agent/dcirc.sh` file and add the following lines:
 
 ```console
 http_proxy="http://somewhere:3128"
@@ -170,7 +170,7 @@ The agent has two different location where you can adjust its configuration:
 - `hooks/*.yml`: Each file from this directory is a list of Ansible tasks.
   This is the place where the users can launch their deployment scripts.
 
-First, you must edit `/etc/dci-ansible-agent/settings.yml`. You probably just have to
+First, you must edit `/etc/dci-openstack-agent/settings.yml`. You probably just have to
 adjust the value of the `undercloud_ip` key. It should point to your undercloud IP.
 
 If you want the last version of this file, it's [available on
@@ -222,7 +222,7 @@ $ ssh-keygen
 
 ### Use the timers
 
-The `dci-ansible-agent` rpm provides two systemd timers:
+The `dci-openstack-agent` rpm provides two systemd timers:
 
 * `dci-openstack-agent.timer` will ensure the agent will be call automatically several time a day.
 * `dci-update.timer` will refresh dci packages automatically.

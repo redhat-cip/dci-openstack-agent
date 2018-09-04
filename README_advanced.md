@@ -1,4 +1,4 @@
-# DCI Ansible Agent Advanced
+# DCI OpenStack Agent Advanced
 
 ## How to deal with multiple OpenStack releases
 
@@ -127,12 +127,12 @@ After the deployment of the OpenStack, the agent will look for an update or an
 
 The agent expects the upgrade playbook to have the following naming convention:
 
-`/etc/dci-ansible-agent/hooks/upgrade_from_OSP9_to_OSP10.yml`
+`/etc/dci-openstack-agent/hooks/upgrade_from_OSP9_to_OSP10.yml`
 
 In this example, `OSP9` is the current version and `OSP10` is the version to
  upgrade to. Here is an example of an update playbook:
 
-`/etc/dci-ansible-agent/hooks/update_OSP9.yml`
+`/etc/dci-openstack-agent/hooks/update_OSP9.yml`
 
 During the upgrade, you may need to use a specific version of a repository.
 Each component has its own .repo. They are located in
@@ -141,11 +141,11 @@ Each component has its own .repo. They are located in
 
 ## How to run my own set of tests ?
 
-`dci-ansible-agent` ships with a pre-defined set of tests that will be run. It
+`dci-openstack-agent` ships with a pre-defined set of tests that will be run. It
  is however possible for anyone, in addition of the pre-defined tests, to run
  their own set of tests.
 
-In order to do so, a user needs to drop the tasks to run in `/etc/dci-ansible-agent/hooks/local_tests.yml`.
+In order to do so, a user needs to drop the tasks to run in `/etc/dci-openstack-agent/hooks/local_tests.yml`.
 
 **NOTE**: Tasks run in this playbook will be run from the undercloud node. To
  have an improved user-experience in the DCI web application, the suite should
@@ -155,7 +155,7 @@ In order to do so, a user needs to drop the tasks to run in `/etc/dci-ansible-ag
 ## How to adjust the timer configuration
 
 ```console
-# systemctl edit --full dci-ansible-agent.timer
+# systemctl edit --full dci-openstack-agent.timer
 ```
 
 You have to edit the value of the `OnUnitActiveSec` key. According to systemd
@@ -174,10 +174,10 @@ You may want to trace the agent execution to understand a problem. In this case,
  you can call it manually:
 
 ```console
-# su - dci-ansible-agent -s /bin/bash
-$ cd /usr/share/dci-ansible-agent
-$ source /etc/dci-ansible-agent/dcirc.sh
-$ /usr/bin/ansible-playbook -vv /usr/share/dci-ansible-agent/dci-ansible-agent.yml -e @/etc/dci-ansible-agent/settings.yml
+# su - dci-openstack-agent -s /bin/bash
+$ cd /usr/share/dci-openstack-agent
+$ source /etc/dci-openstack-agent/dcirc.sh
+$ /usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml
 ```
 
 ## Red Hat Certification:  Manually restart the certification test-suite
@@ -235,7 +235,7 @@ If you want to test a cinder/manila/neutron driver you will have to update the
  cinder volumes certification tests:
 
 ```console
-$ vim /etc/dci-ansible-agent/settings.yml
+$ vim /etc/dci-openstack-agent/settings.yml
 (...)
 openstack_certification_tests:
   - self_check
@@ -261,7 +261,7 @@ You can use the tempest_extra_config variable in the settings.yml file to add
  some services to disable:
 
 ```console
-$ vim /etc/dci-ansible-agent/settings.yml
+$ vim /etc/dci-openstack-agent/settings.yml
 
 tempest_extra_config:
 (...)
@@ -280,7 +280,7 @@ Depending on the drivers (cinder, manila, neutron, etc...) you are using, you
  service, then you can disable the feature to avoid tempest failures.
 
 ```console
-$ vim /etc/dci-ansible-agent/settings.yml
+$ vim /etc/dci-openstack-agent/settings.yml
 
 tempest_extra_config:
 (...)
@@ -296,7 +296,7 @@ For instance, the cinder volume type tests are using the storage_protocol
  cinder backend you will need to update those values like:
 
 ```console
-$ vim /etc/dci-ansible-agent/settings.yml
+$ vim /etc/dci-openstack-agent/settings.yml
 
 tempest_extra_config:
 (...)
@@ -323,7 +323,7 @@ You can off course run different versions of OpenStack with the same jumpbox.
  To do so, you need first to adjust the way systemd call the agent:
 
 ```console
-# systemctl edit --full dci-ansible-agent
+# systemctl edit --full dci-openstack-agent
 ```
 
 Content :
@@ -334,13 +334,13 @@ Description=DCI Ansible Agent
 
 [Service]
 Type=oneshot
-WorkingDirectory=/usr/share/dci-ansible-agent
-EnvironmentFile=/etc/dci-ansible-agent/dcirc.sh
-ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-ansible-agent/dci-ansible-agent.yml -e @/etc/dci-ansible-agent/settings.yml -e dci_topic=OSP10
-ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-ansible-agent/dci-ansible-agent.yml -e @/etc/dci-ansible-agent/settings.yml -e dci_topic=OSP11
-ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-ansible-agent/dci-ansible-agent.yml -e @/etc/dci-ansible-agent/settings.yml -e dci_topic=OSP12
+WorkingDirectory=/usr/share/dci-openstack-agent
+EnvironmentFile=/etc/dci-openstack-agent/dcirc.sh
+ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml -e dci_topic=OSP10
+ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml -e dci_topic=OSP11
+ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml -e dci_topic=OSP12
 SuccessExitStatus=0
-User=dci-ansible-agent
+User=dci-openstack-agent
 
 [Install]
 WantedBy=default.target
