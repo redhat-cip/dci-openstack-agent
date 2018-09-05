@@ -348,3 +348,22 @@ WantedBy=default.target
 
 In this example, we do a run of OSP10, OSP11 and OSP12 everytime we start the
  agent.
+
+### How to manually run the hooks
+
+You can prepare a minimal playbook like this one:
+
+```console
+# cat run_hook.yml
+- hosts: localhost
+  tasks:
+    - include_tasks: /etc/dci-ansible-agent/hooks/success.yml
+```
+
+Then call it using the `ansible` command:
+
+```console
+# ansible-playbook run_hook.yml
+```
+
+The tasks will be run on the local machine and nothing will be sent to the DCI server.
