@@ -99,7 +99,7 @@
 
     - name: Copy undercloud config template
       copy:
-        src: /usr/share/instack-undercloud/undercloud.conf.sample
+        src: "{% if release >= 'rocky' %}/usr/share/python-tripleoclient{% else %}/usr/share/instack-undercloud{% endif %}/undercloud.conf.sample"
         dest: /home/stack/undercloud.conf
         remote_src: yes
 
@@ -111,6 +111,27 @@
         value: '{{ item.value }}'
       with_items:
         - "{{ undercloud_config_override|default([]) }}"
+
+    - name: Customize the undercloud config for containerized env
+      ini_file:
+        path: /home/stack/undercloud.conf
+        section: '{{ item.section }}'
+        option: '{{ item.option }}'
+        value: '{{ item.value }}'
+      with_items:
+        - {"section": "DEFAULT", "option": "container_images_file", "value": "/home/stack/docker_registry.yaml"}
+        - {"section": "DEFAULT", "option": "docker_insecure_registries", "value": "{{ dci_base_ip }}:5000"}
+      when: release >= 'rocky'
+
+    - name: Generating the container images environment file for the undercloud
+      shell: >
+        openstack overcloud container image prepare
+        --namespace {{ dci_base_ip }}:5000/rhosp{{ dci_topic | regex_replace('^OSP','') }}
+        --prefix=openstack-
+        --tag latest
+        --roles-file /usr/share/openstack-tripleo-heat-templates/roles_data_undercloud.yaml
+        --output-env-file /home/stack/docker_registry.yaml
+      when: release >= 'rocky'
 
     - name: Install the undercloud
       shell: |
@@ -157,6 +178,7 @@
       shell: |
         source /home/stack/stackrc
         openstack subnet set {% for dns in openstack_dnsservers %}--dns-nameserver {{ dns }} {% endfor %} ctlplane-subnet
+      when: release < 'rocky'
 
     - name: Copy the baremetal inventory file
       template:

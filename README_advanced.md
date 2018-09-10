@@ -103,6 +103,30 @@ The Overcloud deployment is standard, you just have to include the two following
 
 See the upstream documentation if you need more details: [Deploying the containerized Overcloud](https://docs.openstack.org/tripleo-docs/latest/install/containers_deployment/overcloud.html#deploying-the-containerized-overcloud)
 
+Starting with OSP14 (Rocky), the undercloud is now also containerized. That means
+that you also need to generate the container image list before the undercloud
+installation.
+
+```console
+$ openstack overcloud container image prepare --namespace ${jump_box}:5000/rhosp14
+                                              --roles-file /usr/share/openstack-tripleo-heat-templates/roles_data_undercloud.yaml
+                                              --output-env-file ~/docker_registry.yaml
+
+```
+
+Finally specify the generated file path in the undercloud configuration and add
+the jumpbox ip in the list of the docker insecure registries:
+
+```console
+$ vim undercloud.conf
+```
+
+```ini
+[DEFAULT]
+container_images_file = /home/stack/docker_registry.yaml
+docker_insecure_registries = ${jump_box}:5000
+```
+
 ## How to skip downloading some container images
 
 Each Openstack release comes with +100 container images.
