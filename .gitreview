@@ -1,5 +1,4 @@
 [gerrit]
-host=softwarefactory-project.io
-port=29418
+host=sf
 project=dci-openstack-agent
 defaultbranch=master
