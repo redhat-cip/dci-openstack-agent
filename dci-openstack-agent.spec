@@ -134,7 +134,8 @@ exit 0
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/local_tests.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/teardown.yml
 %dir %{_sharedstatedir}/dci-ansible-agent
-%attr(0755, %{name}, %{name}) %{_sharedstatedir}/dci-ansible-agent
+%attr(0755, dci-ansible, dci-ansible-agent) %{_sharedstatedir}/dci-ansible-agent
+%attr(0755, dci-openstack-agent, dci-openstack-agent) %{_sharedstatedir}/dci-openstack-agent
 /etc/sudoers.d/dci-ansible-agent
 
 %files -n dci-openstack-agent
