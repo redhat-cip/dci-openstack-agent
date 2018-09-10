@@ -1,26 +1,27 @@
-- name: Ensure Apache is installed
-  package:
-    name: 'httpd'
-    state: 'present'
-  become: true
-- name: Ensure Apache is running
-  systemd:
-    name: 'httpd'
-    state: 'started'
-  become: true
 - name: Ensure python-firewall is installed
   package:
     name: 'python-firewall'
     state: 'present'
   become: true
-- name: Open port 80 on the firewall
-  firewalld:
-    zone: public
-    service: http
-    permanent: true
-    state: enabled
-  register: result
-  failed_when: false
+# This to revert the previous behavior of the agent.
+- name: Ensure Apache is installed
+  package:
+    name: 'httpd'
+    state: 'present'
+  become: true
+- name: Prepare the vhost configuration
+  template:
+    src: httpd_vhost.j2
+    dest: /etc/httpd/conf.d/dci.conf
+  become: true
+- name: Bind httpd on the $dci_base_ip
+  replace:
+    regexp: "^Listen .*"
+    replace: "^Listen {{ dci_base_ip }}:80"
+- name: Ensure Apache is restarted
+  systemd:
+    name: 'httpd'
+    state: 'restarted'
   become: true
 - name: Drop existing repo dir
   file:
