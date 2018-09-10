@@ -3,25 +3,26 @@
     name: 'httpd'
     state: 'present'
   become: true
-- name: Ensure Apache is running
+- name: Prepare the vhost configuration
+  template:
+    src: httpd_vhost.j2
+    dest: /etc/httpd/conf.d/dci.conf
+  become: true
+- name: httpd should not listen on all the interfaces
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: "^Listen .*"
+    state: absent
+  become: True
+- name: Ensure Apache is restarted
   systemd:
     name: 'httpd'
-    state: 'started'
+    state: 'restarted'
   become: true
-- name: Ensure python-firewall is installed
-  package:
-    name: 'python-firewall'
-    state: 'present'
+- command: ps aux
   become: true
-- name: Open port 80 on the firewall
-  firewalld:
-    zone: public
-    service: http
-    permanent: true
-    state: enabled
-  register: result
-  failed_when: false
-  become: true
+- debug:
+    msg: "So far so good, let's drop {{ dci_mirror_location }}/dci_repo"
 - name: Drop existing repo dir
   file:
     path: '{{ dci_mirror_location }}/dci_repo'
