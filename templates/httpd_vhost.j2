@@ -1,0 +1,6 @@
+Listen {{ dci_base_ip }}:80
+<VirtualHost {{ dci_base_ip }}:80>
+    DocumentRoot "/var/www/html"
+    ErrorLog "/var/log/httpd/dci_error_log"
+    CustomLog "/var/log/httpd/dci_access_log" combined
+</VirtualHost>

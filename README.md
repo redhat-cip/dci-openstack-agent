@@ -171,7 +171,13 @@ The agent has two different location where you can adjust its configuration:
   This is the place where the users can launch their deployment scripts.
 
 First, you must edit `/etc/dci-ansible-agent/settings.yml`. You probably just have to
-adjust the value of the `undercloud_ip` key. It should point to your undercloud IP.
+adjust the following variables:
+
+- `undercloud_ip`: It should point to your undercloud IP.
+- `dci_base_ip`: This is IP address that will be used to expose the last snapshot
+ during the deployment. The default is `"{{ ansible_default_ipv4.address }}"`, which is
+ the first IPv4 of your platform. You can either use a static IP here, or asks Ansible
+ to do the lookup for you, e.g: The IP of virbr0: `{{ ansible_virbr0.ipv4.address }}`.
 
 If you want the last version of this file, it's [available on
 GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.yml)
