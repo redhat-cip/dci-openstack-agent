@@ -110,6 +110,7 @@ def main():
 
     docker_distribution_config = yaml.load(open('/etc/docker-distribution/registry/config.yml', 'r'))
 
+    images_to_purge = []
     with open(sys.argv[1], 'r') as stream:
         try:
             images = yaml.load(stream)
@@ -131,7 +132,9 @@ def main():
                 print('Image {}:{} is already on the registry'.format(name, tag))
             else:
                 sync_image(image)
-            purge_image_from_local_docker(image)
+            images_to_purge.append(image)
+    for image in images_to_purge:
+        purge_image_from_local_docker(image)
     call_registry_gc()
 
 if __name__ == '__main__':
