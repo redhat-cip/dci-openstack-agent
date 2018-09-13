@@ -391,3 +391,55 @@ Then call it using the `ansible` command:
 ```
 
 The tasks will be run on the local machine and nothing will be sent to the DCI server.
+
+## How to switch between different configuration for the same remoteci/topic
+
+DCI gives you the ability to have several configuration for a remoteci/topic. This allow you
+for instance to run half of your deployments with an option and the other half without it.
+
+This feature is not available yet on the interface. You need to use the `dcictl` CLI tool.
+
+First, identify the ID of your remoteci and the topic.
+```console
+$ dcictl topic-list
+$ dcictl remoteci-list
+```
+
+With this information, you can now associate the `rconfiguration` with the remoteci.
+
+```console
+$ dcictl remoteci-attach-rconfiguration bb16865b-6f88-4488-be8a-f87a54142eb0 --name ceph-enable --topic_id 7f1bc54b-790b-40c8-8993-af7e3910e7ca --component_types '["puddle_osp"]' --data "{}"
+$ dcictl remoteci-attach-rconfiguration bb16865b-6f88-4488-be8a-f87a54142eb0 --name ceph-disabled --topic_id 7f1bc54b-790b-40c8-8993-af7e3910e7ca --component_types '["puddle_osp"]' --data "{}"
+```
+
+You can use `dcictl remoteci-list-rconfigurations` to validate your configuration:
+
+```console
+dcictl remoteci-list-rconfigurations cf7262db-b91a-450b-b6dc-5877e3753272                                                                                                         1331ms  Wed 12 Sep 2018 11:20:45 AM PDT
++--------------------------------------|--------------------|--------|-----------------|--------------------------------------+
+|                  id                  |        name        | state  | component_types |               topic_id               |
++--------------------------------------|--------------------|--------|-----------------|--------------------------------------+
+| bb16865b-6f88-4488-be8a-f87a54142eb0 |        ceph-enable | active | [u'puddle_osp'] | 7f1bc54b-790b-40c8-8993-af7e3910e7ca |
+| bb16865b-6f88-4488-be8a-f87a54142eb0 |      ceph-disabled | active | [u'puddle_osp'] | 7f1bc54b-790b-40c8-8993-af7e3910e7ca |
++--------------------------------------|--------------------|--------|-----------------|--------------------------------------+
+```
+
+
+The name of the rconfiguration will be exposed in your hooks through
+the `job_informations.job.rconfiguration.name` variable. This is
+an example where we trigger the OverCloud deployment with an exatra
+parameter depending on the rconfiguration name.
+
+```yaml
+- name: Deploy OverCloud
+  shell: "ansible-playbook -i inventory playbooks/prepare_overcloud.yml"
+  args:
+    chdir: /var/lib/dci-openstack-agent/ansible
+  when: job_informations.job.rconfiguration.name == 'no_ceph'
+
+- name: Deploy OverCloud
+  shell: "ansible-playbook -i inventory playbooks/prepare_overcloud.yml -e use_ceph=True
+  args:
+    chdir: /var/lib/dci-openstack-agent/ansible
+  when: job_informations.job.rconfiguration.name == 'with_ceph'
+```

@@ -189,7 +189,8 @@ You need to adjust the following Ansible playbook to describe how you want to
  repository list (`/etc/yum/yum.repo.d/dci_repo.repo`).
 
 > At the end of this hook run, the Overcloud should be running.
-> If your undercloud has a dynamic IP, you must use a set_fact action to set the undercloud_ip variable. The agent needs to
+> If your undercloud has a dynamic IP, you must use a set_fact action
+> to set the undercloud_ip variable. The agent needs to
 > know its IP to run the tests.
 
 * `teardown.yml`: This playbook cleans the full platform.
