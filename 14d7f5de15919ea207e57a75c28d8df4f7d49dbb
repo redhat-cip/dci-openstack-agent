@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18d92148_dc30cbd0",
+        "filename": "plays/prepare_local_mirror.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-09-18T15:41:07Z",
+      "side": 1,
+      "message": "What happen to those using public zone but on a private network ? httpd won\u0027t be available",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 14
+      },
+      "revId": "14d7f5de15919ea207e57a75c28d8df4f7d49dbb",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b98da9c2_ef878836",
+        "filename": "plays/prepare_local_mirror.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-09-18T15:41:07Z",
+      "side": 1,
+      "message": "this is already done in fetch_bits.yml why add this here ?",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 14
+      },
+      "revId": "14d7f5de15919ea207e57a75c28d8df4f7d49dbb",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
