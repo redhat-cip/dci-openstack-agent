@@ -22,6 +22,30 @@
       "revId": "7cc6962d1d8d087f0cab39ecb084234d3c779920",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23632d2c_466f6395",
+        "filename": "README_migration_from_dci-ansible-agent.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-09-19T19:21:21Z",
+      "side": 1,
+      "message": "Good point.",
+      "parentUuid": "98a32665_e6956c52",
+      "range": {
+        "startLine": 28,
+        "startChar": 40,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "7cc6962d1d8d087f0cab39ecb084234d3c779920",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
