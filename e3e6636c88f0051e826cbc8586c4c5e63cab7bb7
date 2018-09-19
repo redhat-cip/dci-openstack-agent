@@ -22,6 +22,30 @@
       "revId": "e3e6636c88f0051e826cbc8586c4c5e63cab7bb7",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71fe11db_3c1513e6",
+        "filename": "README_advanced.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-09-19T19:25:03Z",
+      "side": 1,
+      "message": "Good idea.",
+      "parentUuid": "3583c574_8f492d07",
+      "range": {
+        "startLine": 360,
+        "startChar": 6,
+        "endLine": 360,
+        "endChar": 13
+      },
+      "revId": "e3e6636c88f0051e826cbc8586c4c5e63cab7bb7",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
