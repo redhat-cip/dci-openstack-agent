@@ -22,6 +22,30 @@
       "revId": "55a35310c83bde73440eb5f11ac0cfa0acf44477",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a3cd50a_6a91a89e",
+        "filename": "templates/httpd_vhost.j2",
+        "patchSetId": 8
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-09-19T19:33:22Z",
+      "side": 1,
+      "message": "Hum, indeed.",
+      "parentUuid": "7d6d6233_43b0ed8c",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 31
+      },
+      "revId": "55a35310c83bde73440eb5f11ac0cfa0acf44477",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
