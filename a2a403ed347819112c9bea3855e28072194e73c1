@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "65e80a6b_38744f56",
+        "filename": "plays/prepare_local_mirror.yml",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-09-19T19:11:30Z",
+      "side": 1,
+      "message": "I just did it.",
+      "parentUuid": "0faf3c6f_a15b925b",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 14
+      },
+      "revId": "a2a403ed347819112c9bea3855e28072194e73c1",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef402c22_69c7b40f",
         "filename": "plays/prepare_local_mirror.yml",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2018-09-19T19:05:10Z",
       "side": 1,
       "message": "Instead of doing a replace you can specify directly the Listen IP:80 in the vhost and then lineinfile ^Listen 80$\" absent in httpd.conf",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 14
+      },
+      "revId": "a2a403ed347819112c9bea3855e28072194e73c1",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "749a07df_f2c257d7",
+        "filename": "plays/prepare_local_mirror.yml",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-09-19T19:11:30Z",
+      "side": 1,
+      "message": "Agreed. I like it.",
+      "parentUuid": "ef402c22_69c7b40f",
       "range": {
         "startLine": 17,
         "startChar": 0,
