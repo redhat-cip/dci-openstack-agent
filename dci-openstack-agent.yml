@@ -256,7 +256,7 @@
           include_tasks: plays/failure.yml
 
 - name: 'Openstack specific tests after an Update'
-  hosts: undercloud
+  hosts: localhost
   tags:
     - post-run
   vars:
@@ -324,7 +324,7 @@
           include_tasks: plays/failure.yml
 
 - name: 'Openstack specific tests after an Upgrade'
-  hosts: undercloud
+  hosts: localhost
   tags:
     - post-run
   vars:

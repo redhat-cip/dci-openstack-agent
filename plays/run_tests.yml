@@ -10,6 +10,7 @@
     name: python-tempestconf
     state: present
   become: true
+  delegate_to: undercloud
   when: release >= 'ocata'
 
 - name: default-overrides.conf is in openstack-tempest before ocata
@@ -17,12 +18,14 @@
     name: openstack-tempest
     state: present
   become: true
+  delegate_to: undercloud
   when: release in ['mitaka', 'newton']
 
 - name: Copy tempest config overrides
   copy:
     src: tempest-overrides.conf
     dest: ~/tempest-deployer-input.conf
+  delegate_to: undercloud
 
 - name: Start the tripleo-validations role
   include_role:
@@ -36,6 +39,7 @@
       - pre-introspection
       - post-deployment
   when: release not in ['liberty', 'mitaka']
+  delegate_to: undercloud
 
 - name: Create missing openstack roles
   shell: |
@@ -45,6 +49,7 @@
     - heat_stack_owner
     - swiftoperator
   ignore_errors: true
+  delegate_to: undercloud
 
 - name: Start the valide-tempest role
   include_role:
@@ -60,6 +65,7 @@
       {%- else -%}
       [ "python-neutron-tempest" ]
       {%- endif -%}
+  delegate_to: undercloud
 
 - name: Start the tripleo-inventory role
   include_role:
@@ -67,6 +73,7 @@
   vars:
     inventory: all
     undercloud_type: baremetal
+  delegate_to: undercloud
 
 - name: Red Hat Openstack Certification
   block:
@@ -75,6 +82,7 @@
         src: /root/.ssh/id_rsa.pub
       register: id_rsa_pub
       become: true
+      delegate_to: undercloud
 
     - name: Set authorized_key of heat-admin@overcloud
       authorized_key:
@@ -96,6 +104,8 @@
         openstack_certification_tempest_conf_path: /home/stack/tempest/etc/tempest.conf
         openstack_certification_tempest_conf_path_is_remote: Yes
         openstack_certification_tests: ['self_check', 'supportable', 'director']
+        openstack_certification_tests: "{{ remoteci_data_rhcert['tests']|default(['self_check', 'supportable', 'director']) }}"
+      delegate_to: undercloud
   when:
     - not skip_certification_role|bool
     - release >= 'newton'
