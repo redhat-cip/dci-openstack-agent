@@ -1,10 +1,4 @@
 - set_fact:
-    remoteci_data: "{{ hostvars['localhost'].job_informations['job']['remoteci']['data']|default({}) }}"
-- set_fact:
-    remoteci_data_rhcert: "{{ remoteci_data['rhcert']|default({}) }}"
-- set_fact:
-    remoteci_data_tempest: "{{ remoteci_data['tempest']|default({}) }}"
-- set_fact:
     release: '{{ hostvars.localhost.job_informations.job.topic.data.releasename }}'
     skip_certification_role: '{{ skip_certification|default(false) }}'
 - set_fact:
@@ -29,15 +23,6 @@
   copy:
     src: tempest-overrides.conf
     dest: ~/tempest-deployer-input.conf
-
-- name: Apply tempest configuration sent by the server
-  ini_file:
-    path: ~/tempest-deployer-input.conf
-    section: '{{ item.section }}'
-    option: '{{ item.option }}'
-    value: '{{ item.value }}'
-  with_items: "{{ remoteci_data['tempest']['default_overrides']|default([]) }}"
-  when: "'tempest' in remoteci_data.keys()"
 
 - name: Start the tripleo-validations role
   include_role:
@@ -68,7 +53,6 @@
     tempest_exit_on_failure: false
     run_tempest: true
     test_regex: ''
-    skip_file_src: "{{ remoteci_data_tempest['skip_file_src'] | default('') }}"
     tempest_plugins: >-
       {% if release >= 'newton' -%}
       [ "openstack-tempest-all" ]
@@ -110,7 +94,6 @@
         openstack_certification_results_download: true
         openstack_certification_tempest_conf_path: /home/stack/tempest/etc/tempest.conf
         openstack_certification_tempest_conf_path_is_remote: Yes
-        openstack_certification_tests: "{{ remoteci_data_rhcert['tests']|default(['self_check', 'supportable', 'director']) }}"
   when:
     - not skip_certification_role|bool
     - release >= 'newton'
