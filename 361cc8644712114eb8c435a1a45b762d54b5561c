@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ff2f8eae_ee479cd6",
+        "filename": "plays/run_tests.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-09-20T18:41:49Z",
+      "side": 0,
+      "message": "Good point.",
+      "parentUuid": "49013215_7438da4a",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 79
+      },
+      "revId": "361cc8644712114eb8c435a1a45b762d54b5561c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "683dff26_db7bc93e",
         "filename": "plays/run_tests.yml",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-09-20T18:38:17Z",
       "side": 0,
       "message": "don\u0027t remove this line but set the value to [\u0027self_check\u0027, \u0027supportable\u0027, \u0027director\u0027] instead",
+      "range": {
+        "startLine": 113,
+        "startChar": 8,
+        "endLine": 113,
+        "endChar": 127
+      },
+      "revId": "361cc8644712114eb8c435a1a45b762d54b5561c",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5030f87_017109fa",
+        "filename": "plays/run_tests.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-09-20T18:41:49Z",
+      "side": 0,
+      "message": "The default values are just fine IMO:\nhttps://github.com/goneri/ansible-role-openstack-certification/blob/master/defaults/main.yml#L35-L39",
+      "parentUuid": "683dff26_db7bc93e",
       "range": {
         "startLine": 113,
         "startChar": 8,
