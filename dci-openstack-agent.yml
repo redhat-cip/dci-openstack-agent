@@ -252,7 +252,7 @@
         - name: Clean the files
           include_tasks: plays/cleanup.yml
 
-        - name: Run the failre process
+        - name: Run the failure process
           include_tasks: plays/failure.yml
 
 - name: 'Openstack specific tests after an Update'
@@ -280,7 +280,7 @@
         - name: Clean the files
           include_tasks: plays/cleanup.yml
 
-        - name: Run the failre process
+        - name: Run the failure process
           include_tasks: plays/failure.yml
 
 - name: 'Upgrade the deployment'
@@ -320,7 +320,7 @@
         - name: Clean the files
           include_tasks: plays/cleanup.yml
 
-        - name: Run the failre process
+        - name: Run the failure process
           include_tasks: plays/failure.yml
 
 - name: 'Openstack specific tests after an Upgrade'
@@ -348,7 +348,7 @@
         - name: Clean the files
           include_tasks: plays/cleanup.yml
 
-        - name: Run the failre process
+        - name: Run the failure process
           include_tasks: plays/failure.yml
 
 # Success state
