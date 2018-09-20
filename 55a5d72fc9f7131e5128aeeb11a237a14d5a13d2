@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65d74cee_c0bcf523",
+        "filename": "README_advanced.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:06:05Z",
+      "side": 1,
+      "message": "simple\nbasic\nminimal\nsmall\nshort",
+      "range": {
+        "startLine": 354,
+        "startChar": 18,
+        "endLine": 354,
+        "endChar": 24
+      },
+      "revId": "55a5d72fc9f7131e5128aeeb11a237a14d5a13d2",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6fe2628a_d08dcd55",
+        "filename": "README_advanced.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:06:05Z",
+      "side": 1,
+      "message": "Then",
+      "range": {
+        "startLine": 363,
+        "startChar": 0,
+        "endLine": 363,
+        "endChar": 3
+      },
+      "revId": "55a5d72fc9f7131e5128aeeb11a237a14d5a13d2",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
