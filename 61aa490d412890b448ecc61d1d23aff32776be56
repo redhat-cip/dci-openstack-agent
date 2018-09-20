@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ec18cfd_79331f1f",
+        "filename": "README_advanced.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:15:02Z",
+      "side": 1,
+      "message": "As an example, you could run half of ....",
+      "range": {
+        "startLine": 354,
+        "startChar": 89,
+        "endLine": 354,
+        "endChar": 92
+      },
+      "revId": "61aa490d412890b448ecc61d1d23aff32776be56",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1acac86_ff0d9d17",
+        "filename": "README_advanced.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:15:02Z",
+      "side": 1,
+      "message": "... it.",
+      "range": {
+        "startLine": 355,
+        "startChar": 86,
+        "endLine": 355,
+        "endChar": 97
+      },
+      "revId": "61aa490d412890b448ecc61d1d23aff32776be56",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2aea81d4_e1bdcb5e",
+        "filename": "README_advanced.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:15:02Z",
+      "side": 1,
+      "message": "s/for that//.",
+      "range": {
+        "startLine": 357,
+        "startChar": 90,
+        "endLine": 357,
+        "endChar": 99
+      },
+      "revId": "61aa490d412890b448ecc61d1d23aff32776be56",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "546eac71_da46ec24",
+        "filename": "README_advanced.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:15:02Z",
+      "side": 1,
+      "message": "First, identify ID for your remoteci and the topic.",
+      "range": {
+        "startLine": 359,
+        "startChar": 0,
+        "endLine": 359,
+        "endChar": 34
+      },
+      "revId": "61aa490d412890b448ecc61d1d23aff32776be56",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a5e3999_df9882f6",
+        "filename": "README_advanced.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:15:02Z",
+      "side": 1,
+      "message": "this",
+      "range": {
+        "startLine": 365,
+        "startChar": 5,
+        "endLine": 365,
+        "endChar": 10
+      },
+      "revId": "61aa490d412890b448ecc61d1d23aff32776be56",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "360efea2_1f2d8462",
+        "filename": "README_advanced.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 526
+      },
+      "writtenOn": "2018-09-20T16:15:02Z",
+      "side": 1,
+      "message": "with",
+      "range": {
+        "startLine": 365,
+        "startChar": 67,
+        "endLine": 365,
+        "endChar": 71
+      },
+      "revId": "61aa490d412890b448ecc61d1d23aff32776be56",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
