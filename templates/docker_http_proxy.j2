@@ -1,4 +1,4 @@
-# File created by the dci-ansible-agent
+# File created by the dci-openstack-agent
 {% for var_name in ['http_proxy', 'https_proxy'] %}
 {% set val = lookup('env', var_name) %}
 {% if val %}
