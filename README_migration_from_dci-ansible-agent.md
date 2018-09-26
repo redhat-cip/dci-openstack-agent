@@ -20,8 +20,9 @@ Now you can rename the configuration files:
     # restorecon -R /var/lib/dci-openstack-agent/
     # chown -R dci-openstack-agent:dci-openstack-agent /var/lib/dci-openstack-agent/
 
-Finally you can restart the agent:
+Finally you can mask the old service restart the agent with the new one:
 
+    # systemctl mask dci-ansible-agent.system
     # systemctl start dci-openstack-agent.timer
     # systemctl start dci-openstack-agent
 
