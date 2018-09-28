@@ -48,6 +48,11 @@
         {% if release >= 'newton' %}
         --enable=rhel-ha-for-rhel-7-server-rpms
         {% endif %}
+        {% if release == 'pike' %}
+        --enable=rhel-7-server-rhceph-2-tools-rpms
+        {% elif release >= 'queens' %}
+        --enable=rhel-7-server-rhceph-3-tools-rpms
+        {% endif %}
       register: rhsm
       until: rhsm.rc == 0
       retries: 5
