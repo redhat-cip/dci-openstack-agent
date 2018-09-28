@@ -336,7 +336,7 @@ It may be useful to restart a failing test to troubleshoot the problem:
 
 ```console
 $ /home/stack/tempest
-$ ostestr --no-discover tempest.api.volume.admin.test_volume_retype_with_migration.VolumeRetypeWithMigrationTest
+$ ostestr --regex tempest.api.network.test_ports.PortsIpV6TestJSON.test_update_port_with_security_group_and_extra_attributes
 ```
 
 The Certification test-suite uses it's own configuration located at `/etc/redhat-certification-openstack/tempest.conf`. Is a copy of `/home/stack/tempest/etc/tempest.conf`.
