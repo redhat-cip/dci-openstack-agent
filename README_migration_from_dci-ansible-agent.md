@@ -4,7 +4,11 @@ The DCI OpenStack Agent used to be named `dci-ansible-agent`. The name was
 confusing we we decided to rename it `dci-openstack-agent`. To transition to
 the new package you have to follow a couple of manual steps.
 
-First, you must disable the `dci-ansible-agent`:
+First, install the new agent:
+
+    # yum install -y dci-openstack-agent
+
+You must now disable the `dci-ansible-agent`:
 
     # systemctl stop dci-ansible-agent.timer
     # systemctl stop dci-ansible-agent
