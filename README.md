@@ -179,21 +179,28 @@ GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.y
 You need to adjust the following Ansible playbook to describe how you want to
  provision your OpenStack. These playbook are located in the `/etc/dci-openstack-agent/hooks`.
 
-* `pre-run.yml`: It will be called during the provisioning. This is the place
+**pre-run.yml**: It will be called during the provisioning. This is the place
  where you describe the steps to follow to prepare your platform:
-    * deployment of the undercloud machine
+    * deployment of the `undercloud` machine
     * configuration of a network device
     * etc
-* `running.yml`: this playbook will trigger to deploy the undercloud and the
+This hook runs on the `localhost`.
+
+**running.yml**: this playbook will trigger to deploy the undercloud and the
  overcloud. It should also add <http://$jumpbox_ip/dci_repo/dci_repo.repo> to the
  repository list (`/etc/yum/yum.repo.d/dci_repo.repo`).
 
-> At the end of this hook run, the Overcloud should be running.
-> If your undercloud has a dynamic IP, you must use a set_fact action
-> to set the undercloud_ip variable. The agent needs to
-> know its IP to run the tests.
+At the end of this hook run, the Overcloud should be running.
+If your undercloud has a dynamic IP, you must use a set_fact action
+to set the undercloud_ip variable. The agent needs to
+know its IP to run the tests.
 
-* `teardown.yml`: This playbook cleans the full platform.
+This hook runs on the `localhost`.
+
+**teardown.yml**: This playbook cleans the full platform.
+This hook can either be called  from the `jumpbox` or the `undercloud`. If you
+need to run an action on a specific host, you should use the `delegate_to` key
+to be sure the task will be run on the correct machine.
 
 ### Start the service
 
