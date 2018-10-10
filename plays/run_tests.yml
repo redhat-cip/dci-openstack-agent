@@ -70,6 +70,12 @@
 
 - name: Red Hat Openstack Certification
   block:
+    - name: Ensure root has a SSH key
+      user:
+        name: root
+        generate_ssh_key: True
+      become: true
+
     - name: Fetch the root pub key
       slurp:
         src: /root/.ssh/id_rsa.pub
