@@ -30,7 +30,7 @@ DCI Ansible Agent for DCI control server (old package).
 Summary: DCI OpenStack Agent for DCI control server
 Requires: dci-ansible-agent
 %description -n dci-openstack-agent
-DCI Ansible Agent for DCI control server (old package).
+DCI Openstack Agent for DCI control server.
 
 %prep
 %setup -qc
@@ -70,10 +70,16 @@ cp -r roles %{buildroot}/%{_datadir}/dci-openstack-agent
 cp -r plays %{buildroot}/%{_datadir}/dci-openstack-agent
 cp -r templates %{buildroot}/%{_datadir}/dci-openstack-agent
 install -p -D -m 644 dci-openstack-agent.yml %{buildroot}%{_datadir}/dci-openstack-agent/dci-openstack-agent.yml
-install -p -D -m 440 dci-ansible-agent.sudo %{buildroot}%{_sysconfdir}/sudoers.d/dci-openstack-agent
+install -p -D -m 644 dcirc.sh %{buildroot}%{_sysconfdir}/dci-openstack-agent/dcirc.sh
+install -p -D -m 644 hooks/pre-run.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/pre-run.yml
+install -p -D -m 644 hooks/running.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/running.yml
+install -p -D -m 644 hooks/teardown.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/teardown.yml
+install -p -D -m 644 hooks/success.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/success.yml
+install -p -D -m 644 hooks/local_tests.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/local_tests.yml
+install -p -D -m 644 settings.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/settings.yml
+install -p -D -m 440 dci-openstack-agent.sudo %{buildroot}%{_sysconfdir}/sudoers.d/dci-openstack-agent
 install -p -d -m 755 %{buildroot}/%{_sharedstatedir}/dci-openstack-agent
 install -p -D -m 644 fetch_images.py %{buildroot}%{_datadir}/dci-openstack-agent/fetch_images.py
-install -p -D -m 440 dci-openstack-agent.sudo %{buildroot}%{_sysconfdir}/sudoers.d/dci-openstack-agent
 
 
 %clean
@@ -125,11 +131,6 @@ exit 0
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/dcirc.sh
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/settings.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/pre-run.yml
-%{_unitdir}/dci-update.service
-%{_datadir}/dci-ansible-agent
-%config(noreplace) %{_sysconfdir}/dci-ansible-agent/dcirc.sh
-%config(noreplace) %{_sysconfdir}/dci-ansible-agent/settings.yml
-%config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/pre-run.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/running.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/success.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/local_tests.yml
@@ -143,6 +144,13 @@ exit 0
 %{_unitdir}/dci-openstack-agent.service
 %{_unitdir}/dci-openstack-agent.timer
 %{_datadir}/dci-openstack-agent
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/dcirc.sh
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/settings.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/pre-run.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/running.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/success.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/local_tests.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/teardown.yml
 %dir %{_sharedstatedir}/dci-openstack-agent
 %attr(0755, dci-openstack-agent, dci-openstack-agent) %{_sharedstatedir}/dci-openstack-agent
 /etc/sudoers.d/dci-openstack-agent
