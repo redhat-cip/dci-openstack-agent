@@ -30,7 +30,7 @@ DCI Ansible Agent for DCI control server (old package).
 Summary: DCI OpenStack Agent for DCI control server
 Requires: dci-ansible-agent
 %description -n dci-openstack-agent
-DCI Ansible Agent for DCI control server (old package).
+DCI Openstack Agent for DCI control server.
 
 %prep
 %setup -qc
@@ -125,11 +125,6 @@ exit 0
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/dcirc.sh
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/settings.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/pre-run.yml
-%{_unitdir}/dci-update.service
-%{_datadir}/dci-ansible-agent
-%config(noreplace) %{_sysconfdir}/dci-ansible-agent/dcirc.sh
-%config(noreplace) %{_sysconfdir}/dci-ansible-agent/settings.yml
-%config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/pre-run.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/running.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/success.yml
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/hooks/local_tests.yml
@@ -143,6 +138,13 @@ exit 0
 %{_unitdir}/dci-openstack-agent.service
 %{_unitdir}/dci-openstack-agent.timer
 %{_datadir}/dci-openstack-agent
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/dcirc.sh
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/settings.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/pre-run.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/running.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/success.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/local_tests.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/teardown.yml
 %dir %{_sharedstatedir}/dci-openstack-agent
 %attr(0755, dci-openstack-agent, dci-openstack-agent) %{_sharedstatedir}/dci-openstack-agent
 /etc/sudoers.d/dci-openstack-agent
