@@ -16,6 +16,24 @@
       "revId": "35b35f98c92eff98da81272d3281ff6d870a6178",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7105394a_f3d38cff",
+        "filename": "roles/rocky/validate-tempest/tasks/pre-tempest.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-10-11T19:10:08Z",
+      "side": 1,
+      "message": "https://github.com/openstack/tripleo-quickstart-extras/blob/master/roles/validate-tempest/tasks/pre-tempest.yml#L41-L48\n\nthat\u0027s why I didn\u0027t transform the code.",
+      "parentUuid": "0d6f4cb3_b138c0da",
+      "revId": "35b35f98c92eff98da81272d3281ff6d870a6178",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
