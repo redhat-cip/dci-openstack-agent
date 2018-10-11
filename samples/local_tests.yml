@@ -1,0 +1,49 @@
+#
+# DISCLAIMER:
+# This is a sample file and it shouldn't be used as is. This
+# hook doesn't work out of the box because you need to adapt your
+# configuration to be able to execute it (like ansible variables,
+# templates, etc...).
+# The DCI team doesn't provide support on this file.
+#
+---
+- name: Install the Rally package
+  package:
+    name: openstack-rally
+  become: true
+
+- name: Create the Rally DB schema
+  shell: |
+    source ~/overcloudrc
+    rally-manage db recreate
+
+- name: Setup the Rally deployment
+  shell: |
+    source ~/overcloudrc
+    rally deployment create --fromenv --name=existing
+
+- name: Retrieve the Rally scenario file
+  get_url:
+    url: "{{ rally_file_location }}"
+    dest: "{{ rally_scenario_filepath }}"
+
+- name: Run specified Rally scenario
+  shell: |
+    source ~/overcloudrc
+    rally task start {{ rally_scenario_filepath }}
+    rally task report --junit --out {{ rally_result_filename }}
+
+- name: Fetch the Rally result
+  fetch:
+    src: "~/{{ rally_result_filename }}"
+    dest: "{{ lookup('env', 'HOME') }}/.quickstart/{{ rally_result_filename }}"
+    flat: yes
+
+- name: Upload the Rally result
+  dci_file:
+    path: "{{ lookup('env', 'HOME') }}/.quickstart/{{ rally_result_filename }}"
+    name: Rally
+    job_id: "{{ hostvars.localhost.job_informations.job.id }}"
+    mime: "application/junit"
+  delegate_to: localhost
+  ignore_errors: yes
