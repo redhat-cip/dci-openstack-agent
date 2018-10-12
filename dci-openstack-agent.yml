@@ -19,11 +19,6 @@
 
     - set_fact:
         job_id: '{{ hostvars.localhost.job_informations.job.id }}'
-    - name: Set the metadata
-      dci_job:
-        id: "{{ job_informations.job.id }}"
-        metadata: '{{ dci_metadata }}'
-      when: dci_metadata is defined and dci_metadata
 
 - name: 'Sanity check'
   hosts: localhost

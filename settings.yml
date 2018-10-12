@@ -13,13 +13,6 @@ dci_cache_dir: "/var/lib/dci-openstack-agent"
 # dci_teardown_on_failure variable to false (default: true).
 #dci_teardown_on_failure: false
 
-#
-# dci_metadata: Metadata to attach to a job [optional]
-#
-# dict of key/pair values one might want to attach to a job
-#
-dci_metadata: {}
-
 
 #######################################
 ## Settings for Tempest              ##
