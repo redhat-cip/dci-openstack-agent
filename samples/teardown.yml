@@ -1,0 +1,15 @@
+#
+# DISCLAIMER:
+# This is a sample file and it shouldn't be used as is. This
+# hook doesn't work out of the box because you need to adapt your
+# configuration to be able to execute it (like ansible variables,
+# templates, etc...).
+# The DCI team doesn't provide support on this file.
+#
+---
+- name: Unregister the undercoud node from the RHSM
+  redhat_subscription:
+    state: absent
+  delegate_to: undercloud
+  become: True
+  when: ansible_distribution == 'RedHat'
