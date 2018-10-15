@@ -1,7 +1,1 @@
 ---
-- name: Unregister the node from the RHSM
-  redhat_subscription:
-    state: absent
-  delegate_to: undercloud
-  become: True
-  when: ansible_distribution == 'RedHat'
