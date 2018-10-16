@@ -3,3 +3,8 @@
     name: "{{ lookup('env', 'HOME') }}/.quickstart"
     state: absent
   delegate_to: localhost
+
+- name: Clean ansible log file
+  shell: |
+    > ~/dci-openstack-agent.log
+  delegate_to: localhost

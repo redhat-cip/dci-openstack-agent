@@ -22,3 +22,12 @@
     - '{{ groups.overcloud|default([]) }}'
   delegate_to: localhost
   ignore_errors: yes
+
+- name: Upload ansible execution log
+  dci_file:
+    path: ~/dci-openstack-agent.log
+    name: dci-openstack-agent.log
+    job_id: '{{ hostvars.localhost.job_informations.job.id }}'
+    mime: text/plain
+  delegate_to: localhost
+  ignore_errors: yes
