@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06ce244a_9888b3a3",
+        "filename": "plays/prepare_local_mirror.yml",
+        "patchSetId": 15
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 29
+      },
+      "writtenOn": "2018-10-16T09:55:03Z",
+      "side": 1,
+      "message": "Wondering how are you sure that port 80 is open ?",
+      "revId": "b130a5e0d82cc79d9c1a30b5cacc2aaab769d534",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
