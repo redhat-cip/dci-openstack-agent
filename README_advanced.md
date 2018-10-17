@@ -344,34 +344,13 @@ The Certification test-suite uses it's own configuration located at `/etc/redhat
 ## How to test several versions of OpenStack
 
 You can off course run different versions of OpenStack with the same jumpbox.
- To do so, you need first to adjust the way systemd call the agent:
+In this case you can replace `dci_topic` value by a Jinja2 filter like this one:
 
-```console
-# systemctl edit --full dci-openstack-agent
+```yaml
+dci_topic: "{{ ['OSP8', 'OSP9', 'OSP10', 'OSP11', 'OSP12', 'OSP13', 'OSP14']|random }}"
 ```
 
-Content :
-
-```ini
-[Unit]
-Description=DCI Ansible Agent
-
-[Service]
-Type=oneshot
-WorkingDirectory=/usr/share/dci-openstack-agent
-EnvironmentFile=/etc/dci-openstack-agent/dcirc.sh
-ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml -e dci_topic=OSP10
-ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml -e dci_topic=OSP11
-ExecStart=-/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml -e dci_topic=OSP12
-SuccessExitStatus=0
-User=dci-openstack-agent
-
-[Install]
-WantedBy=default.target
-```
-
-In this example, we do a run of OSP10, OSP11 and OSP12 everytime we start the
- agent.
+The agent will automatically pick one of the topics.
 
 ### How to manually run the hooks
 
