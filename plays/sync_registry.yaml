@@ -70,7 +70,7 @@
 - name: Download the Openstack container images
   shell: |
     python /usr/share/dci-openstack-agent/fetch_images.py \
-      {{ dci_mirror_location | quote }}/dci_repo/{{ components[0].canonical_project_name }}/images_list.yaml
+      {{ dci_mirror_location | quote }}/dci_repo/{{ item.canonical_project_name }}/images_list.yaml
   register: image_sync_result
   until: image_sync_result.rc == 0
   retries: 3
@@ -80,3 +80,5 @@
   environment:
     DCI_REGISTRY_PASSWORD: '{{ hostvars.localhost.job_informations.job.topic.data.registry.password }}'
     DCI_REGISTRY_USER: '{{ hostvars.localhost.job_informations.job.topic.data.registry.login }}'
+  with_items: '{{ components }}'
+  when: hostvars.localhost.job_informations.job.topic.id == item.topic_id
