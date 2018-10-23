@@ -24,3 +24,6 @@
 - debug:
     msg: "Please update your system with: yum update -y"
   when: yum_check_update_result.rc != 0
+- name: Get playbook_dir variable
+  debug:
+    var: playbook_dir
