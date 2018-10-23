@@ -34,6 +34,29 @@
       "revId": "b130a5e0d82cc79d9c1a30b5cacc2aaab769d534",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c6eec9c_c926de67",
+        "filename": "plays/prepare_local_mirror.yml",
+        "patchSetId": 15
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2018-10-23T14:53:54Z",
+      "side": 1,
+      "message": "Apache should be restarted (or better, reloaded) only if there was a change in one of the three previous tasks.\nYou should use a handler and notify it from the tasks.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 22
+      },
+      "revId": "b130a5e0d82cc79d9c1a30b5cacc2aaab769d534",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
