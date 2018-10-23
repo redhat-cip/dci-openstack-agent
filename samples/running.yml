@@ -14,7 +14,7 @@
     # to store the release name in a local fact.
     - name: Set the openstack release name
       set_fact:
-        release: '{{ hostvars.localhost.job_info.job.topic.data.releasename }}'
+        release: '{{ job_info.job.topic.data.releasename }}'
 
     - name: Set the hostname
       hostname:

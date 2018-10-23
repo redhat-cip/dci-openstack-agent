@@ -1,0 +1,18 @@
+# User is free to do whaterver she needs before entering pre-run state.
+# Usually this is used to teardown the plateform
+#
+- name: 'Successful installation'
+  hosts: localhost
+  tags:
+    - success
+  vars:
+    dci_status: 'success'
+  tasks:
+    - name: Run the success process
+      include_tasks: "{{ dci_config_dir }}/hooks/success.yml"
+
+    - name: Run the teardown process
+      include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
+
+    - name: Clean the files
+      include_tasks: plays/cleanup.yml

@@ -1,6 +1,10 @@
 - name: Check the available space in /var/lib
   command: df -l --output=avail /var/lib
   register: df_l_result
+- debug:
+    var: df_l_result.stdout_lines
+  debug:
+    msg: '{{ df_l_result.stdout_lines[1]|int < 1024*1012*7 }}'
 - fail:
     msg: |
       Please free more space in the /var/lib directory. You need at last 7GB.

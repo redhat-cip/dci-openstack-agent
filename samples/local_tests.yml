@@ -43,7 +43,7 @@
   dci_file:
     path: "{{ lookup('env', 'HOME') }}/.quickstart/{{ rally_result_filename }}"
     name: Rally
-    job_id: "{{ hostvars.localhost.job_info.job.id }}"
+    job_id: "{{ job_info.job.id }}"
     mime: "application/junit"
   delegate_to: localhost
   ignore_errors: yes

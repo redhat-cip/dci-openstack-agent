@@ -1,5 +1,6 @@
 - set_fact:
-    release: '{{ hostvars.localhost.job_info.job.topic.data.releasename }}'
+    release: '{{ job_info.job.topic.data.releasename }}'
+    skip_certification_role: '{{ skip_certification|default(false) }}'
 - set_fact:
     undercloud_ip: '{{ hostvars.localhost.undercloud_ip }}'
   when: hostvars.localhost.undercloud_ip is defined
