@@ -1,0 +1,14 @@
+# Pre-run state
+#
+# User is free to do whaterver she needs before entering pre-run state.
+# Usually this is used to boot (not provision) the undercloud
+#
+- name: 'Spawning the environment'
+  hosts: localhost
+  tags:
+    - pre-run
+  vars:
+    dci_status: 'pre-run'
+  tasks:
+    - name: Run the pre-run process
+      include_tasks: '{{ dci_config_dir }}/hooks/pre-run.yml'

@@ -1,0 +1,28 @@
+# Run state
+#
+# User is free to do whaterver she needs before entering running state.
+# Usually this is used to provision both undercloud and the overcloud.
+#
+- name: 'Provision the undercloud and the overcloud'
+  hosts: localhost
+  tags:
+    - running
+  vars:
+    dci_status: 'running'
+  tasks:
+    - name: Add undercloud to inventory
+      include_tasks: plays/register_undercloud_host.yml
+    - name: Run the collect logs process
+      include_tasks: plays/collect_logs.yml
+    - name: Run the upload logs process
+      include_tasks: plays/upload_logs.yml
+
+    - name: Run the teardown process
+      include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
+      when: dci_teardown_on_failure|default('true')|bool
+
+    - name: Clean the files
+      include_tasks: plays/cleanup.yml
+
+    - name: Run the failure process
+      include_tasks: plays/failure.yml
