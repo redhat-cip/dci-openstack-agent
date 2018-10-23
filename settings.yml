@@ -7,7 +7,8 @@ dci_baseurl: "http://{{ dci_base_ip }}"
 # The IP address of the undercloud host. You cannot use hostname in this field.
 #undercloud_ip: "fooo"
 dci_mirror_location: "/var/www/html"
-dci_config_dir: "/etc/dci-openstack-agent"
+#dci_config_dir: "/etc/dci-openstack-agent"
+dci_config_dir: "."
 dci_cache_dir: "/var/lib/dci-openstack-agent"
 # If you don't want to free the resources on failure set the
 # dci_teardown_on_failure variable to false (default: true).

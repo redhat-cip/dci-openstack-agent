@@ -1,0 +1,25 @@
+# Post-run state
+#
+# User is free to do whaterver she needs before entering post-run state.
+# Usually this is used to run tests, certifications, etc...
+#
+- name: 'Openstack specific tests'
+  hosts: undercloud
+  tags:
+    - post-run
+  vars:
+    dci_status: 'post-run'
+  tasks:
+    - name: Run tests suite
+      include_tasks: plays/run_tests.yml
+
+- name: 'Partner-specific tests'
+  hosts: undercloud
+  tags:
+    - post-run
+  vars:
+    dci_status: 'post-run'
+  tasks:
+    - name: Run the local tests process
+      include_tasks: "{{ dci_config_dir }}/hooks/local_tests.yml"
+      ignore_errors: yes

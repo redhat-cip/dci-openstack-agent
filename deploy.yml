@@ -1,0 +1,23 @@
+# Run state
+#
+# User is free to do whaterver she needs before entering running state.
+# Usually this is used to provision both undercloud and the overcloud.
+#
+- name: 'Provision the undercloud and the overcloud'
+  hosts: localhost
+  tags:
+    - running
+  vars:
+    dci_status: 'running'
+  tasks:
+    - set_fact:
+        # NOTE(Gonéri): Workaround for https://github.com/ansible/ansible/issues/23733
+        # tripleo-inventory depends on the common role, however the role is not include
+        # has it should when we use the include_role directive.
+        # Here we manually declare the deploy_supplemental_node variable to avoid an
+        # undefined value during the role execution
+        deploy_supplemental_node: No
+    - name: Run the running process
+      include_tasks: '{{ dci_config_dir }}/hooks/running.yml'
+    - name: Add undercloud to inventory
+      include_tasks: plays/register_undercloud_host.yml

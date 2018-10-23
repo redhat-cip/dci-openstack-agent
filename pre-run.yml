@@ -1,0 +1,24 @@
+# Pre-run state
+#
+# User is free to do whaterver she needs before entering pre-run state.
+# Usually this is used to boot (not provision) the undercloud
+#
+- name: 'Spawning the environment'
+  hosts: localhost
+  tags:
+    - pre-run
+  vars:
+    dci_status: 'pre-run'
+  tasks:
+    - name: Clean the files
+      include_tasks: plays/cleanup.yml
+    - name: Check the jumpbox sanity
+      include_tasks: plays/sanity_check.yml
+    - name: Purge old components
+      include_tasks: plays/purge_cache.yml
+    - name: Setup the http mirror
+      include_tasks: plays/prepare_local_mirror.yml
+    - name: Download and setup components
+      include_tasks: plays/fetch_bits.yml
+    - name: Run the pre-run process
+      include_tasks: '{{ dci_config_dir }}/hooks/pre-run.yml'
