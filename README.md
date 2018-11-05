@@ -131,10 +131,19 @@ export http_proxy
 export https_proxy
 ```
 
-Also, you will need to configure yum, so it will make use of the HTTP
+You will need to configure yum, so it will make use of the HTTP
 proxy. For instance, add `proxy=http://somewhere:3128` in the `[main]`
 section of `/etc/yum.conf`.
 
+Finally, RHSM also needs to be able to go through the proxy. Configured it as explain in
+[KB57669](https://access.redhat.com/solutions/57669). Edit `/etc/rhsm/rhsm.conf`:
+
+```console
+proxy_hostname =
+proxy_port =
+proxy_user =
+proxy_password =
+```
 ### Test the connection between the remoteci and the DCI API server
 
 At this point, you can validate your `dcirc.sh` with the following commands:
