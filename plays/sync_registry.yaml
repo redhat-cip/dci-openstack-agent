@@ -1,12 +1,11 @@
 ---
 - name: install the registry dependency
   package:
-    name: '{{ item }}'
+    name:
+      - docker
+      - python-docker-py
+      - docker-distribution
     state: present
-  with_items:
-  - docker
-  - python-docker-py
-  - docker-distribution
   become: True
 - name: Prepare docker configuration
   copy:

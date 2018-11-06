@@ -31,16 +31,18 @@
 
 - name: Install packages to generate subunit results
   become: yes
-  package: name={{ item }} state=present
-  with_items:
-    - python-subunit
-    - subunit-filters
-    - python-os-testr
+  package:
+    name:
+      - python-subunit
+      - subunit-filters
+      - python-os-testr
+    state: present
   when: tempest_format in ['container', 'packages']
 
 - name: Install openstack services tempest plugins
-  yum: state=latest name={{ item }}
-  with_items: "{{ tempest_plugins }}"
+  yum:
+    name: "{{ tempest_plugins }}"
+    state: latest
   become: yes
   when: tempest_plugins|length > 0
 

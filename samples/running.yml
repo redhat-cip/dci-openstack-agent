@@ -144,11 +144,10 @@
 
     - name: Download Overcloud images
       yum:
-        name: '{{ item }}'
+        name:
+          - rhosp-director-images
+          - rhosp-director-images-ipa
       become: true
-      with_items:
-        - rhosp-director-images
-        - rhosp-director-images-ipa
 
     - name: Extract the archives
       unarchive:
