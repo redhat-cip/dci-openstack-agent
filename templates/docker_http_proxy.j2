@@ -1,8 +1,8 @@
 # File created by the dci-openstack-agent
+[Service]
 {% for var_name in ['http_proxy', 'https_proxy'] %}
 {% set val = lookup('env', var_name) %}
 {% if val %}
-[Service]
 Environment="{{ var_name|upper }}={{ val }}/"
 {% else %}
 # No {{ var_name|upper }} environment variable was defined
