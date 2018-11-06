@@ -4,7 +4,7 @@
 - fail:
     msg: |
       Please free more space in the /var/lib directory. You need at last 7GB.
-  when: df_l_result.stdout_lines[1] < 1024*1012*7
+  when: df_l_result.stdout_lines[1]|int < 1024*1012*7
 
 - name: Ensure the jumpbox time is correct
   command: chronyc tracking
