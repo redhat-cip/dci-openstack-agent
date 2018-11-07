@@ -16,6 +16,24 @@
       "revId": "e758b01cbc92bde9f157759b3178ead14e410794",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10353cd2_369b5a12",
+        "filename": "settings.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-11-07T18:52:48Z",
+      "side": 1,
+      "message": "it\u0027s not a mandatory parameter because you could manage the undercloud ip address dynamically during the agent execution",
+      "parentUuid": "c35fbfcb_25df64a6",
+      "revId": "e758b01cbc92bde9f157759b3178ead14e410794",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
