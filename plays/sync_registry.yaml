@@ -78,5 +78,5 @@
   become: True
   become_flags: '-E'
   environment:
-    DCI_REGISTRY_PASSWORD: '{{ hostvars.localhost.job_informations.job.topic.data.registry.password }}'
-    DCI_REGISTRY_USER: '{{ hostvars.localhost.job_informations.job.topic.data.registry.login }}'
+    DCI_REGISTRY_PASSWORD: '{{ job_info.job.topic.data.registry.password }}'
+    DCI_REGISTRY_USER: '{{ job_info.job.topic.data.registry.login }}'
