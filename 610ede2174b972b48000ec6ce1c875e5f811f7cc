@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11dc1dd4_f69a3050",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-11-07T18:55:19Z",
+      "side": 1,
+      "message": "maybe worth to mention that needs to be done on the jumpbox node",
+      "range": {
+        "startLine": 244,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 27
+      },
+      "revId": "610ede2174b972b48000ec6ce1c875e5f811f7cc",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7d4ce2f_9e6159d6",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-11-07T18:55:19Z",
+      "side": 1,
+      "message": "this is already in the requirement and installation process\nbtw there\u0027s a missing \u0027s\u0027 at the end",
+      "range": {
+        "startLine": 248,
+        "startChar": 0,
+        "endLine": 248,
+        "endChar": 64
+      },
+      "revId": "610ede2174b972b48000ec6ce1c875e5f811f7cc",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
