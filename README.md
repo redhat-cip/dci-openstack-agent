@@ -133,8 +133,8 @@ export https_proxy
 export no_proxy
 ```
 And replace <jumpbox ip> by the ip address of the jumpbox. This should be the
-same value than the dci_base_ip variable used in the settings.yml file (default
-to ansible_default_ipv4.address fact)
+same value than the dci_base_ip variable used in the settings.yml file if customized (default
+to ansible_default_ipv4.address fact in group_vars/all).
 
 Also, you will need to configure yum, so it will make use of the HTTP
 proxy. For instance, add `proxy=http://somewhere:3128` in the `[main]`
@@ -171,15 +171,16 @@ $ curl https://api.distributed-ci.io/api/v1
 
 The agent has two different location where you can adjust its configuration:
 
-- `settings.yml`: The place where you can do the generic configuration
+- `settings.yml`: The place where you can do the generic configuration.
+  This file will override any variables defined in group_vars/all. You
+  can take a look on the [sample file](https://github.com/redhat-cip/dci-openstack-agent/blob/master/samples/settings.yml)
 - `hooks/*.yml`: Each file from this directory is a list of Ansible tasks.
   This is the place where the users can launch their deployment scripts.
 
 First, you must edit `/etc/dci-openstack-agent/settings.yml`. You probably just have to
-adjust the value of the `undercloud_ip` key. It should point to your undercloud IP.
-
-If you want the last version of this file, it's [available on
-GitHub](https://github.com/redhat-cip/dci-openstack-agent/blob/master/settings.yml)
+add the `undercloud_ip` key if you're using a static ip address. It should point to your
+undercloud IP. Otherwise you could add the undercloud to the dynamic ansible inventory
+during the playbook execution via the [add_host module](https://docs.ansible.com/ansible/latest/modules/add_host_module.html)
 
 You need to adjust the following Ansible playbook to describe how you want to
  provision your OpenStack. These playbook are located in the `/etc/dci-openstack-agent/hooks`.
