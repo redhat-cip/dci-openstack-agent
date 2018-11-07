@@ -1,0 +1,16 @@
+# Default DCI topic. Can be overrided on the command line
+# with -e dci_topic=OSP13.
+dci_topic: OSP10
+
+# The IP address of the undercloud host if static.
+# Otherwise use add_host module in your hook to add undercloud host
+# to the ansible inventory dynamically.
+undercloud_ip: 192.168.42.100
+
+# Don't run the teardown in case of failure.
+dci_teardown_on_failure: false
+
+# Floating IP network configuration when using tagged vlan.
+public_net_name: external
+public_network_type: vlan
+public_segmentation_id: 69

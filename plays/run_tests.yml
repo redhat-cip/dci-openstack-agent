@@ -1,6 +1,5 @@
 - set_fact:
     release: '{{ hostvars.localhost.job_info.job.topic.data.releasename }}'
-    skip_certification_role: '{{ skip_certification|default(false) }}'
 - set_fact:
     undercloud_ip: '{{ hostvars.localhost.undercloud_ip }}'
   when: hostvars.localhost.undercloud_ip is defined
@@ -103,6 +102,6 @@
         openstack_certification_tempest_conf_path_is_remote: Yes
         openstack_certification_tests: ['self_check', 'supportable', 'director']
   when:
-    - not skip_certification_role|bool
+    - not skip_certification|bool
     - release >= 'newton'
     - ansible_distribution == 'RedHat'
