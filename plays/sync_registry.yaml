@@ -11,7 +11,7 @@
 - name: Prepare docker configuration
   copy:
     content: |
-      {"insecure-registries":["{{ dci_base_ip|default(ansible_default_ipv4.address) }}:{{ dci_registry_port|default(5000) }}"] }
+      {"insecure-registries":["{{ dci_base_ip }}:{{ dci_registry_port }}"] }
     dest: /etc/docker/daemon.json
   become: True
 - name: Enable overlay2 storage backend
@@ -53,7 +53,7 @@
 - name: Open docker registry port on the firewall
   firewalld:
     zone: public
-    port: '{{ dci_registry_port|default(5000) }}/tcp'
+    port: '{{ dci_registry_port }}/tcp'
     permanent: true
     state: enabled
   register: result
@@ -65,7 +65,7 @@
     path: '{{ dci_mirror_location }}/dci_repo/{{ components[0].canonical_project_name }}/images_list.yaml'
     regexp: '.*-{{ item }}.*'
     state: absent
-  with_items: '{{ skip_container_images|default([]) }}'
+  with_items: '{{ skip_container_images }}'
 
 - name: Download the Openstack container images
   shell: |

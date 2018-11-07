@@ -11,7 +11,7 @@
   tasks:
     - name: Schedule a new job
       dci_job:
-        components: '{{ dci_components|default([]) }}'
+        components: '{{ dci_components }}'
         topic: '{{ dci_topic }}'
         # id: '88fbd033-07b5-4cce-bb71-f320276cb0d0'
         # embed: 'remoteci,rconfiguration,topic,components'
@@ -23,7 +23,7 @@
       dci_job:
         id: "{{ job_informations.job.id }}"
         metadata: '{{ dci_metadata }}'
-      when: dci_metadata is defined and dci_metadata
+      when: dci_metadata
 
 - name: 'Sanity check'
   hosts: localhost
@@ -71,7 +71,7 @@
       rescue:
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
-          when: dci_teardown_on_failure|default('true')|bool
+          when: dci_teardown_on_failure|bool
 
         - name: Run the failure process
           include_tasks: plays/failure.yml
@@ -137,7 +137,7 @@
 
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
-          when: dci_teardown_on_failure|default('true')|bool
+          when: dci_teardown_on_failure|bool
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
@@ -170,7 +170,7 @@
 
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
-          when: dci_teardown_on_failure|default('true')|bool
+          when: dci_teardown_on_failure|bool
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
@@ -247,7 +247,7 @@
 
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
-          when: dci_teardown_on_failure|default('true')|bool
+          when: dci_teardown_on_failure|bool
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
@@ -275,7 +275,7 @@
 
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
-          when: dci_teardown_on_failure|default('true')|bool
+          when: dci_teardown_on_failure|bool
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
@@ -315,7 +315,7 @@
 
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
-          when: dci_teardown_on_failure|default('true')|bool
+          when: dci_teardown_on_failure|bool
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
@@ -343,7 +343,7 @@
 
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
-          when: dci_teardown_on_failure|default('true')|bool
+          when: dci_teardown_on_failure|bool
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
