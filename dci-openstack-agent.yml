@@ -15,13 +15,15 @@
         topic: '{{ dci_topic }}'
         # id: '88fbd033-07b5-4cce-bb71-f320276cb0d0'
         # embed: 'remoteci,rconfiguration,topic,components'
-      register: job_informations
+      register: job_info
 
     - set_fact:
-        job_id: '{{ hostvars.localhost.job_informations.job.id }}'
+        job_id: '{{ job_info.job.id }}'
+        job_informations: '{{ job_info }}'
+
     - name: Set the metadata
       dci_job:
-        id: "{{ job_informations.job.id }}"
+        id: "{{ job_info.job.id }}"
         metadata: '{{ dci_metadata }}'
       when: dci_metadata is defined and dci_metadata
 
@@ -91,7 +93,7 @@
     - block:
         - name: Retrieve information about the next topic
           dci_topic:
-            id: '{{ job_informations.job.topic.next_topic_id }}'
+            id: '{{ job_info.job.topic.next_topic_id }}'
           register: next
           ignore_errors: yes
         - set_fact:
@@ -100,10 +102,10 @@
             next_topic_name: "{{ next.topic.name }}"
           when: "'topic' in next"
         - set_fact:
-            # job_informations may be redefined below. We need a set_fact here to
+            # job_info may be redefined below. We need a set_fact here to
             # store a static result.
-            update_playbook: '{{ dci_config_dir }}/hooks/update_{{ job_informations.job.topic.name }}.yml'
-            upgrade_playbook: '{{ dci_config_dir }}/hooks/upgrade_from_{{ job_informations.job.topic.name }}_to_{{ next_topic_name }}.yml'
+            update_playbook: '{{ dci_config_dir }}/hooks/update_{{ job_info.job.topic.name }}.yml'
+            upgrade_playbook: '{{ dci_config_dir }}/hooks/upgrade_from_{{ job_info.job.topic.name }}_to_{{ next_topic_name }}.yml'
             # NOTE(Gonéri): Workaround for https://github.com/ansible/ansible/issues/23733
             # tripleo-inventory depends on the common role, however the role is not include
             # has it should when we use the include_role directive.
@@ -224,13 +226,13 @@
     - block:
         - name: Schedule an update job
           dci_job:
-            id: '{{ job_informations.job.id }}'
+            id: '{{ job_info.job.id }}'
             update: True
-          register: new_job_informations
+          register: new_job_info
         # NOTE(Gonéri): avoid https://github.com/ansible/ansible/issues/4297
         - set_fact:
-            job_informations: '{{ new_job_informations }}'
-          when: new_job_informations.skipped is not defined
+            job_info: '{{ new_job_info }}'
+          when: new_job_info.skipped is not defined
 
         - name: Download and setup components
           include_tasks: plays/fetch_bits.yml
@@ -293,12 +295,12 @@
     - block:
         - name: Schedule an upgrade job
           dci_job:
-            id: '{{ job_informations.job.id }}'
+            id: '{{ job_info.job.id }}'
             upgrade: True
-          register: new_job_informations
+          register: new_job_info
         - set_fact:
-            job_informations: '{{ new_job_informations }}'
-          when: new_job_informations.skipped is not defined
+            job_info: '{{ new_job_info }}'
+          when: new_job_info.skipped is not defined
 
         - name: Download and setup components
           include_tasks: plays/fetch_bits.yml
