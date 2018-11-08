@@ -1,6 +1,6 @@
 # File created by the dci-openstack-agent
 [Service]
-{% for var_name in ['http_proxy', 'https_proxy'] %}
+{% for var_name in ['http_proxy', 'https_proxy', 'no_proxy'] %}
 {% set val = lookup('env', var_name) %}
 {% if val %}
 Environment="{{ var_name|upper }}={{ val }}/"

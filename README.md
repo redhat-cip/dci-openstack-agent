@@ -127,9 +127,14 @@ Edit the `/etc/dci-openstack-agent/dcirc.sh` file and add the following lines:
 ```console
 http_proxy="http://somewhere:3128"
 https_proxy="http://somewhere:3128"
+no_proxy="localhost,127.0.0.1,<jumpbox ip>"
 export http_proxy
 export https_proxy
+export no_proxy
 ```
+And replace <jumpbox ip> by the ip address of the jumpbox. This should be the
+same value than the dci_base_ip variable used in the settings.yml file (default
+to ansible_default_ipv4.address fact)
 
 Also, you will need to configure yum, so it will make use of the HTTP
 proxy. For instance, add `proxy=http://somewhere:3128` in the `[main]`
