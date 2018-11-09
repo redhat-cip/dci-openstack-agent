@@ -233,7 +233,7 @@ This is, for example, necessary if you want to create a ssh key:
 $ ssh-keygen
 ```
 
-### Use the timers
+### Use the timer
 
 The `dci-openstack-agent` rpm provides two systemd timers:
 
@@ -245,10 +245,19 @@ To enable them, just run:
 ```console
 # systemctl enable dci-openstack-agent.timer
 # systemctl start dci-openstack-agent.timer
-# systemctl enable dci-update.timer
-# systemctl start dci-update.timer
 ```
 
 If you are using a HTTP proxy, you should also edit `/etc/yum.conf` and
  configure the proxy parameter to be sure the `dci-update timer` will be able to
  refresh DCI packages.
+
+### Keep your system up to date
+
+Distributed-CI is a rolling release. We publish updates every with and we expect
+our users to keep their jumpbox up to date.
+
+```console
+# yum install -y yum-cron
+# systemctl enable yum-cron
+# systemctl start yum-cron
+```
