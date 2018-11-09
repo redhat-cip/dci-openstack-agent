@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "eb5d6e34_a616dcad",
+        "filename": "dci-openstack-agent.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-11-09T14:38:58Z",
+      "side": 1,
+      "message": "why not, a debug task could do it",
+      "parentUuid": "a7020468_38ea4777",
+      "revId": "f7d869ca22ca0d2420bbfba15616adab056c3435",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c12b3a50_9148deea",
         "filename": "plays/sync_registry.yaml",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2018-11-09T09:07:09Z",
       "side": 1,
       "message": "why we remove \"hostvars.localhost.\" only in this file?",
+      "range": {
+        "startLine": 81,
+        "startChar": 31,
+        "endLine": 81,
+        "endChar": 40
+      },
+      "revId": "f7d869ca22ca0d2420bbfba15616adab056c3435",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a09965c_9716c692",
+        "filename": "plays/sync_registry.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 56
+      },
+      "writtenOn": "2018-11-09T14:38:58Z",
+      "side": 1,
+      "message": "because the play is only executed on localhost so we don\u0027t need to do a lookup on the hostvars scope.\nbtw I made the same change on fetch_bits.yml",
+      "parentUuid": "c12b3a50_9148deea",
       "range": {
         "startLine": 81,
         "startChar": 31,
