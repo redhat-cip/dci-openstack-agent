@@ -125,8 +125,8 @@ If you need to go through a HTTP proxy, you will need to set the
 Edit the `/etc/dci-openstack-agent/dcirc.sh` file and add the following lines:
 
 ```console
-http_proxy="http://somewhere:3128"
-https_proxy="http://somewhere:3128"
+http_proxy="http://somewhere:3128/"
+https_proxy="http://somewhere:3128/"
 no_proxy="localhost,127.0.0.1,<jumpbox ip>"
 export http_proxy
 export https_proxy
