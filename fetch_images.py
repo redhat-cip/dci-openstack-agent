@@ -74,9 +74,9 @@ def delete_existing_tag_from_registry(image, tag):
     refhash = r.headers['docker-content-digest']
     if not refhash:
         return
-    print(api_base + '/manifests/' + refhash)
     r = requests.delete(api_base + '/manifests/' + refhash)
-    if r.status_code != 202:
+    if r.status_code not in (202, 404):
+        print('Failed to delete' + api_base + '/manifests/' + refhash)
         # 405 code probably means storage.delete.enabled is False.
         raise Exception(r.text)
 
