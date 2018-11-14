@@ -18,17 +18,18 @@ Requires:       python-netaddr
 Requires:       ansible-role-openstack-certification
 Requires:       sudo
 
-Requires(pre): shadow-utils
-Requires(post): systemd
-Requires(preun): systemd
+Requires(pre):    shadow-utils
+Requires(post):   systemd
+Requires(preun):  systemd
 Requires(postun): systemd
 
 %description
 DCI Ansible Agent for DCI control server (old package).
 
 %package -n dci-openstack-agent
-Summary: DCI OpenStack Agent for DCI control server
-Requires: dci-ansible-agent
+Summary:        DCI OpenStack Agent for DCI control server
+Requires:       python-docker-py
+Conflicts:      python-docker > 2.0
 %description -n dci-openstack-agent
 DCI Openstack Agent for DCI control server.
 
