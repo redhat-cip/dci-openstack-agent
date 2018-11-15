@@ -1,5 +1,5 @@
 - set_fact:
-    components: '{{ hostvars.localhost.job_informations.job.components }}'
+    components: '{{ job_info.job.components }}'
 
 - name: Ensure proper directories are created
   file:
@@ -46,4 +46,4 @@
 
 - name: Run the sync registry process
   include_tasks: plays/sync_registry.yaml
-  when: job_informations.job.topic.data.releasename >= 'pike'
+  when: job_info.job.topic.data.releasename >= 'pike'

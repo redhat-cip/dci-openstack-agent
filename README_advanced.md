@@ -426,7 +426,7 @@ dcictl remoteci-list-rconfigurations cf7262db-b91a-450b-b6dc-5877e3753272       
 
 
 The name of the rconfiguration will be exposed in your hooks through
-the `job_informations.job.rconfiguration.name` variable. This is
+the `job_info.job.rconfiguration.name` variable. This is
 an example where we trigger the OverCloud deployment with an exatra
 parameter depending on the rconfiguration name.
 
@@ -435,11 +435,11 @@ parameter depending on the rconfiguration name.
   shell: "ansible-playbook -i inventory playbooks/prepare_overcloud.yml"
   args:
     chdir: /var/lib/dci-openstack-agent/ansible
-  when: job_informations.job.rconfiguration.name == 'no_ceph'
+  when: job_info.job.rconfiguration.name == 'no_ceph'
 
 - name: Deploy OverCloud
   shell: "ansible-playbook -i inventory playbooks/prepare_overcloud.yml -e use_ceph=True
   args:
     chdir: /var/lib/dci-openstack-agent/ansible
-  when: job_informations.job.rconfiguration.name == 'with_ceph'
+  when: job_info.job.rconfiguration.name == 'with_ceph'
 ```
