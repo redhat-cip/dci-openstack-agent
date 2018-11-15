@@ -3,11 +3,12 @@
   ignore_errors: true
   block:
     - name: Ensure required rpms for logging are installed
-      yum: name={{ item }} state=present
-      with_items:
-        - gzip
-        - rsync
-        - tar
+      yum:
+        name:
+          - gzip
+          - rsync
+          - tar
+        state: present
 
     - name: Prepare directory with extra logs
       file: dest=/var/log/extra state=directory
