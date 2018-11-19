@@ -17,6 +17,7 @@ Requires:       ansible
 Requires:       python-netaddr
 Requires:       ansible-role-dci-import-keys
 Requires:       ansible-role-dci-retrieve-component
+Requires:       ansible-role-dci-sync-registry
 Requires:       ansible-role-openstack-certification
 Requires:       sudo
 Requires:       python-docker-py
@@ -56,7 +57,6 @@ install -p -D -m 644 hooks/local_tests.yml %{buildroot}%{_sysconfdir}/dci-openst
 install -p -D -m 644 settings.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/settings.yml
 install -p -D -m 440 dci-openstack-agent.sudo %{buildroot}%{_sysconfdir}/sudoers.d/dci-openstack-agent
 install -p -d -m 755 %{buildroot}/%{_sharedstatedir}/dci-openstack-agent
-install -p -D -m 644 fetch_images.py %{buildroot}%{_datadir}/dci-openstack-agent/fetch_images.py
 
 
 %clean
