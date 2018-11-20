@@ -15,6 +15,8 @@ BuildRequires:  git
 Requires:       dci-ansible
 Requires:       ansible
 Requires:       python-netaddr
+Requires:       ansible-role-dci-import-keys
+Requires:       ansible-role-dci-retrieve-component
 Requires:       ansible-role-openstack-certification
 Requires:       sudo
 
