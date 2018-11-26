@@ -244,10 +244,7 @@ $ ssh-keygen
 
 ### Use the timer
 
-The `dci-openstack-agent` rpm provides two systemd timers:
-
-* `dci-openstack-agent.timer` will ensure the agent will be call automatically several time a day.
-* `dci-update.timer` will refresh dci packages automatically.
+The `dci-openstack-agent` rpm provides a systemd timer called `dci-openstack-agent.timer` will call automatically several times a day.
 
 To enable them, just run:
 
@@ -255,10 +252,6 @@ To enable them, just run:
 # systemctl enable dci-openstack-agent.timer
 # systemctl start dci-openstack-agent.timer
 ```
-
-If you are using a HTTP proxy, you should also edit `/etc/yum.conf` and
- configure the proxy parameter to be sure the `dci-update timer` will be able to
- refresh DCI packages.
 
 ### Keep your system up to date
 
@@ -270,3 +263,4 @@ our users to keep their jumpbox up to date.
 # systemctl enable yum-cron
 # systemctl start yum-cron
 ```
+

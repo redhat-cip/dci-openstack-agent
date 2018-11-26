@@ -40,8 +40,6 @@ DCI Openstack Agent for DCI control server.
 %install
 install -p -D -m 644 systemd/%{name}.service %{buildroot}%{_unitdir}/dci-ansible-agent.service
 install -p -D -m 644 systemd/%{name}.timer %{buildroot}%{_unitdir}/dci-ansible-agent.timer
-install -p -D -m 644 systemd/dci-update.service %{buildroot}%{_unitdir}/dci-update.service
-install -p -D -m 644 systemd/dci-update.timer %{buildroot}%{_unitdir}/dci-update.timer
 install -p -D -m 644 ansible.cfg %{buildroot}%{_datadir}/dci-ansible-agent/ansible.cfg
 cp -r files %{buildroot}/%{_datadir}/dci-ansible-agent
 cp -r roles %{buildroot}/%{_datadir}/dci-ansible-agent
@@ -63,8 +61,6 @@ install -p -D -m 644 fetch_images.py %{buildroot}%{_datadir}/dci-ansible-agent/f
 
 install -p -D -m 644 systemd/dci-openstack-agent.service %{buildroot}%{_unitdir}/dci-openstack-agent.service
 install -p -D -m 644 systemd/dci-openstack-agent.timer %{buildroot}%{_unitdir}/dci-openstack-agent.timer
-install -p -D -m 644 systemd/dci-update.service %{buildroot}%{_unitdir}/dci-update.service
-install -p -D -m 644 systemd/dci-update.timer %{buildroot}%{_unitdir}/dci-update.timer
 install -p -D -m 644 ansible.cfg %{buildroot}%{_datadir}/dci-openstack-agent/ansible.cfg
 cp -r files %{buildroot}/%{_datadir}/dci-openstack-agent
 cp -r roles %{buildroot}/%{_datadir}/dci-openstack-agent
@@ -101,8 +97,6 @@ getent passwd dci-openstack-agent >/dev/null || \
 exit 0
 
 %post -n dci-ansible-agent
-%systemd_post dci-update.service
-%systemd_post dci-update.timer
 %systemd_post %{name}.service
 %systemd_post %{name}.timer
 
@@ -111,8 +105,6 @@ exit 0
 %systemd_post dci-openstack-agent.timer
 
 %preun -n dci-ansible-agent
-%systemd_preun dci-update.service
-%systemd_preun dci-update.timer
 %systemd_preun %{name}.service
 %systemd_preun %{name}.timer
 
@@ -127,8 +119,6 @@ exit 0
 %doc LICENSE README.md README_advanced.md
 %{_unitdir}/dci-ansible-agent.service
 %{_unitdir}/dci-ansible-agent.timer
-%{_unitdir}/dci-update.service
-%{_unitdir}/dci-update.timer
 %{_datadir}/dci-ansible-agent
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/dcirc.sh
 %config(noreplace) %{_sysconfdir}/dci-ansible-agent/settings.yml
