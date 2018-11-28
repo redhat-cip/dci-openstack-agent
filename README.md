@@ -262,5 +262,6 @@ our users to keep their jumpbox up to date.
 # yum install -y yum-cron
 # systemctl enable yum-cron
 # systemctl start yum-cron
+# sed -i 's,apply_updates = .*,apply_updates = yes,' /etc/yum/yum-cron.conf
 ```
 
