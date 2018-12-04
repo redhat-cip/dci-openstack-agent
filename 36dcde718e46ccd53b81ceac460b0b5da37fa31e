@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "784d5326_9cd14270",
+        "filename": "dci-openstack-agent.spec",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-12-04T19:27:36Z",
+      "side": 1,
+      "message": "We also need:\n\nObsoletes: dci-ansible-agent \u003c\u003d 0.0.201811291905git108553f3-1\n\nhttps://fedoraproject.org/wiki/Upgrade_paths_%E2%80%94_renaming_or_splitting_packages#.28n:1.29_Many-to-one_replacement",
+      "revId": "36dcde718e46ccd53b81ceac460b0b5da37fa31e",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
