@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0481ccff_99a66533",
+        "filename": "dci-openstack-agent.spec",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 30
+      },
+      "writtenOn": "2018-12-06T21:04:32Z",
+      "side": 1,
+      "message": "Please add:\n\nConflicts:      dci-ansible-agent \u003c\u003d 0.0.201811291905git108553f3-1\n\nThis is an example of the output of a yum install of the new package. With the Conflicts, the dci-ansible-agent package is removed as expected.",
+      "revId": "8cf2c71a8e06962a10110ed72000c768cd3b1722",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
