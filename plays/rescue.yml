@@ -1,0 +1,14 @@
+- name: Run the collect logs process
+  include_tasks: collect_logs.yml
+
+- name: Run the upload logs process
+  include_tasks: upload_logs.yml
+
+- name: Run the teardown process
+  include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
+
+- name: Clean the files
+  include_tasks: cleanup.yml
+
+- name: Run the failure process
+  include_tasks: failure.yml

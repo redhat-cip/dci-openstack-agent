@@ -1,0 +1,40 @@
+- hosts: localhost
+  vars:
+    dci_status: new
+  tasks:
+    - name: Schedule an upgade job
+      dci_job:
+        id: '{{ job_info.job.id }}'
+        upgrade: True
+      register: job_info
+
+- hosts: localhost
+  vars:
+    dci_status: pre-run
+  tasks:
+    - block:
+        - name: Download and setup components
+          include_tasks: plays/fetch_bits.yml
+      rescue:
+        - name: Run the failure process
+          include_tasks: plays/failure.yml
+
+- hosts: localhost
+  vars:
+    dci_status: running
+  tasks:
+    - block:
+        - name: Run the upgrade process
+          include_tasks: '{ dci_config_dir }}/hooks/upgrade.yml'
+      rescue:
+        - name: Run the rescue process
+          include_tasks: plays/rescue.yml
+
+- name: Run the tests
+  import_playbook: tests.yml
+
+- name: Collect and Upload logs
+  import_playbook: logs.yml
+
+- name: Successful installation
+  import_playbook: success.yml

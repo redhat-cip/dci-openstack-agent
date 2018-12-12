@@ -1,0 +1,24 @@
+- name: Openstack specific tests
+  hosts: undercloud
+  vars:
+    dci_status: 'post-run'
+  tasks:
+    - block:
+        - name: Run tests suite
+          include_tasks: plays/run_tests.yml
+
+      rescue:
+        - name: Run the rescue process
+          include_tasks: plays/rescue.yml
+
+- name: Partner specific tests
+  hosts: undercloud
+  vars:
+    dci_status: 'post-run'
+  tasks:
+    - block:
+        - name: Run the local tests process
+          include_tasks: "{{ dci_config_dir }}/hooks/local_tests.yml"
+      rescue:
+        - name: Run the rescue process
+          include_tasks: plays/rescue.yml

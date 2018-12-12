@@ -1,0 +1,15 @@
+- hosts: localhost
+  vars:
+    dci_status: 'pre-run'
+  tasks:
+    - block:
+        - name: Run the pre-run process
+          include_tasks: '{{ dci_config_dir }}/hooks/pre-run.yml'
+
+      rescue:
+        - name: Run the teardown process
+          include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
+          when: dci_teardown_on_failure|bool
+
+        - name: Run the failure process
+          include_tasks: plays/failure.yml

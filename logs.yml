@@ -1,0 +1,25 @@
+- name: Collect Openstack logs
+  hosts: undercloud:overcloud
+  vars:
+    dci_status: 'post-run'
+    undercloud_user: stack
+    working_dir: "/home/{{ undercloud_user }}"
+    local_working_dir: "{{ lookup('env', 'HOME') }}/.quickstart"
+    artcl_collect_dir: "{{ local_working_dir }}/collected_files"
+    artcl_gzip_only: false
+    artcl_tar_gz: true
+  roles:
+    - collect-logs
+
+- name: Upload results and logs
+  hosts: localhost
+  vars:
+    dci_status: 'post-run'
+  tasks:
+    - block:
+        - name: Run the upload logs process
+          include_tasks: plays/upload_logs.yml
+
+      rescue:
+        - name: Run the rescue process
+          include_tasks: plays/rescue.yml
