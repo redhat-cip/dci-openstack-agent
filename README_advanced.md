@@ -314,7 +314,7 @@ You can prepare a minimal playbook like this one:
 # cat run_hook.yml
 - hosts: localhost
   tasks:
-    - include_tasks: /etc/dci-ansible-agent/hooks/success.yml
+    - include_tasks: /etc/dci-openstack-agent/hooks/success.yml
 ```
 
 Then call it using the `ansible` command:
