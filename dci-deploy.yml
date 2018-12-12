@@ -1,0 +1,34 @@
+- hosts: localhost
+  tasks:
+    - name: Schedule a new job
+      dci_job:
+        components: '{{ dci_components }}'
+        topic: '{{ dci_topic }}'
+      register: job_info
+
+    - set_fact:
+        job_id: '{{ job_info.job.id }}'
+
+    - name: Set the metadata
+      dci_job:
+        id: "{{ job_info.job.id }}"
+        metadata: '{{ dci_metadata }}'
+      when: dci_metadata
+
+- name: Sanity check
+  import_playbook: new.yml
+
+- name: Spawning the environment
+  import_playbook: pre-run.yml
+
+- name: Provision the undercloud and the overcloud
+  import_playbook: running.yml
+
+- name: Run the tests
+  import_playbook: tests.yml
+
+- name: Collect and Upload logs
+  import_playbook: logs.yml
+
+- name: Successful installation
+  import_playbook: success.yml

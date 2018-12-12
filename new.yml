@@ -1,0 +1,23 @@
+- hosts: localhost
+  vars:
+    dci_status: 'new'
+  tasks:
+    - block:
+        - name: Clean the files
+          include_tasks: plays/cleanup.yml
+
+        - name: Check the jumpbox sanity
+          include_tasks: plays/sanity_check.yml
+
+        - name: Purge old components
+          include_tasks: plays/purge_cache.yml
+
+        - name: Setup the http mirror
+          include_tasks: plays/prepare_local_mirror.yml
+
+        - name: Download and setup components
+          include_tasks: plays/fetch_bits.yml
+
+      rescue:
+        - name: Run the failure process
+          include_tasks: plays/failure.yml

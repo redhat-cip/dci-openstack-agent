@@ -1,0 +1,17 @@
+- hosts: localhost
+  vars:
+    dci_status: 'running'
+  tasks:
+    - block:
+        - name: Run the running process
+          include_tasks: '{{ dci_config_dir }}/hooks/running.yml'
+
+        - name: Add undercloud to inventory
+          include_tasks: plays/register_undercloud_host.yml
+
+      rescue:
+        - name: Add undercloud to inventory
+          include_tasks: plays/register_undercloud_host.yml
+
+        - name: Run the rescue process
+          include_tasks: plays/rescue.yml

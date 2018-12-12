@@ -1,0 +1,13 @@
+- name: 'Successful installation'
+  hosts: localhost
+  vars:
+    dci_status: 'success'
+  tasks:
+    - name: Run the success process
+      include_tasks: "{{ dci_config_dir }}/hooks/success.yml"
+
+    - name: Run the teardown process
+      include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
+
+    - name: Clean the files
+      include_tasks: plays/cleanup.yml
