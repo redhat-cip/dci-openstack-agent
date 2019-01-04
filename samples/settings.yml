@@ -2,6 +2,12 @@
 # with -e dci_topic=OSP13.
 dci_topic: OSP10
 
+# The IP of the jumpbox that will serve the Yum repository and the
+# docker images during the deployment.
+dci_base_ip: 192.168.1.5
+# If you want to use an IPv6 address, you need the [] around the value:
+# dci_base_ip: "[{{ ansible_default_ipv6.address }}]"
+
 # The IP address of the undercloud host if static.
 # Otherwise use add_host module in your hook to add undercloud host
 # to the ansible inventory dynamically.
