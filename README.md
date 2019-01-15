@@ -1,6 +1,3 @@
-:warning: We are renaming the agent RPM. Please read [
-the migration guide](README_migration_from_dci-ansible-agent.md).
-
 # DCI OpenStack Agent
 
 The "jumpbox" is the host where the agent is running. It can be a virtual
