@@ -4,3 +4,9 @@
 # static analysis it needs to # be present
 - src: redhat-cip.openstack-certification
   name: openstack-certification
+
+- src: https://github.com/redhat-cip/ansible-role-dci-retrieve-component
+  name: dci-retrieve-component
+
+- src: https://github.com/redhat-cip/ansible-role-dci-import-keys
+  name: dci-import-keys
