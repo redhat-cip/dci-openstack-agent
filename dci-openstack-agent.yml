@@ -27,6 +27,12 @@
           The job_informations variable is deprecated.
           Please use job_info instead in the hook files.
 
+    - name: Set the tags
+      dci_job:
+        id: "{{ job_info.job.id }}"
+        tags: '{{ dci_tags }}'
+      when: dci_tags
+
 - name: 'Sanity check'
   hosts: localhost
   tags:
