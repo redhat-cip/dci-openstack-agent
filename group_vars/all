@@ -19,13 +19,6 @@ dci_openstack_agent_sslverify: yes
 dci_openstack_agent_sslclientcert: /etc/ssl/repo/dci.crt
 dci_openstack_agent_sslclientkey: /etc/ssl/repo/dci.key
 
-#
-# dci_metadata: Metadata to attach to a job [optional]
-#
-# dict of key/pair values one might want to attach to a job
-#
-dci_metadata: {}
-
 # To skip the OpenStack Certification tests suite.
 skip_certification: false
 
