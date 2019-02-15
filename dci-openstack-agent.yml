@@ -29,7 +29,7 @@
 
     - name: Set the tags
       dci_job:
-        id: "{{ job_info.job.id }}"
+        id: "{{ job_id }}"
         tags: '{{ dci_tags }}'
       when: dci_tags
 
