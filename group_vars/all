@@ -24,7 +24,7 @@ dci_openstack_agent_sslclientkey: /etc/ssl/repo/dci.key
 #
 # list of values might want to attach to a job
 #
-dci_tags: []
+dci_tags: ['debug']
 
 
 # To skip the OpenStack Certification tests suite.
