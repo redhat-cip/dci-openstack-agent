@@ -250,6 +250,12 @@ To enable them, just run:
 # systemctl start dci-openstack-agent.timer
 ```
 
+### Use tags
+
+If you want to associate tags to jobs you can edit the file `/etc/dci-openstack-agent/settings.yml` and add your tags in the `dci_tags` list.
+By default the tag "debug" is associated with all jobs, you should keep it like this until the integration of the agent is done.
+The debug tag will prevent jobs to be count in the statistics.
+
 ### Keep your system up to date
 
 Distributed-CI is a rolling release. We publish updates every with and we expect
