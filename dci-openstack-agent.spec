@@ -18,7 +18,8 @@ Requires:       python-netaddr
 Requires:       ansible-role-dci-import-keys
 Requires:       ansible-role-dci-retrieve-component
 Requires:       ansible-role-dci-sync-registry
-Requires:       ansible-role-openstack-certification
+Requires:       ansible-role-openstack-certification <= 0.0.201902221320git74eedd7a-1
+Conflicts:      ansible-role-openstack-certification > 0.0.201902221320git74eedd7a-1
 Requires:       sudo
 Requires:       python-docker-py
 Conflicts:      python-docker > 2.0
