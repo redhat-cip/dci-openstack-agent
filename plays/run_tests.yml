@@ -89,6 +89,18 @@
       delegate_to: '{{ groups["overcloud"][0] }}'
       when: groups["overcloud"] is defined
 
+    - name: Fetch overcloudrc file from the undercloud
+      fetch:
+        src: /home/stack/overcloudrc
+        dest: /tmp/overcloudrc
+        flat: true
+
+    - name: Fetch tempest.conf file from the undercloud
+      fetch:
+        src: /home/stack/tempest/etc/tempest.conf
+        dest: /tmp/tempest.conf
+        flat: true
+
     - name: Run Red Hat OpenStack Certification test-suite
       include_role:
         name: "openstack-certification"
@@ -98,8 +110,6 @@
         openstack_certification_output_filename: cert.junit
         openstack_certification_dest_dir: "{{ lookup('env', 'HOME') }}/.quickstart"
         openstack_certification_results_download: true
-        openstack_certification_tempest_conf_path: /home/stack/tempest/etc/tempest.conf
-        openstack_certification_tempest_conf_path_is_remote: Yes
         openstack_certification_tests: ['self_check', 'supportable', 'director']
   when:
     - not skip_certification|bool
