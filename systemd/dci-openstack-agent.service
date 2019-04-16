@@ -5,6 +5,7 @@ Description=DCI OpenStack Agent
 Type=oneshot
 WorkingDirectory=/usr/share/dci-openstack-agent
 EnvironmentFile=/etc/dci-openstack-agent/dcirc.sh
+ExecStart=/usr/bin/yum update -y dci-openstack-agent dci-ansible ansible dci-openstack-agent python-dciclient python-requests ansible-role-dci-import-keys ansible-role-dci-retrieve-component ansible-role-dci-sync-registry
 ExecStart=/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml
 SuccessExitStatus=0
 User=dci-openstack-agent
