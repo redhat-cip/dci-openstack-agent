@@ -1,5 +1,7 @@
 [Unit]
 Description=DCI OpenStack Agent
+Requires=dci-openstack-agent-setup.service
+After=dci-openstack-agent-setup.service
 
 [Service]
 Type=oneshot
