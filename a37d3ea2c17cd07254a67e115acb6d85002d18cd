@@ -22,6 +22,30 @@
       "revId": "a37d3ea2c17cd07254a67e115acb6d85002d18cd",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e816daa_359fe27f",
+        "filename": "systemd/dci-openstack-agent.service",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-04-29T13:40:21Z",
+      "side": 1,
+      "message": "It won\u0027t but we can put it in a separate unit (and without specifying the user)\nIn this unit:\nRequires\u003ddci-openstack-agent-setup.service\nAfter\u003ddci-openstack-agent-setup.service\n\nShould ensure that the setup will be done before running the agent.",
+      "parentUuid": "0208097f_fd12b9d5",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 221
+      },
+      "revId": "a37d3ea2c17cd07254a67e115acb6d85002d18cd",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
     }
   ]
 }
