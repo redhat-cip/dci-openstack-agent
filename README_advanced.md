@@ -375,10 +375,10 @@ The tasks will be run on the local machine and nothing will be sent to the DCI s
 
 ## How to switch between different configuration for the same remoteci/topic
 
-DCI gives you the ability to have several configuration for a remoteci/topic. This allow you
-for instance to run half of your deployments with an option and the other half without it.
+DCI gives you the ability to have several configuration (aka `rconfiguration`) for a remoteci/topic.
+This allow you for instance to run half of your deployments with an option and the other half without it.
 
-This feature is not available yet on the interface. You need to use the `dcictl` CLI tool.
+This feature is not available yet through the web interface. You have to use the `dcictl` CLI tool.
 
 First, identify the ID of your remoteci and the topic.
 ```console
@@ -387,6 +387,8 @@ $ dcictl remoteci-list
 ```
 
 With this information, you can now associate the `rconfiguration` with the remoteci.
+**NOTE**: rconfigurations are identified by their names, in the example below, we are using the
+following rconfigurations `ceph-enable` and `ceph-disabled`.
 
 ```console
 $ dcictl remoteci-attach-rconfiguration bb16865b-6f88-4488-be8a-f87a54142eb0 --name ceph-enable --topic_id 7f1bc54b-790b-40c8-8993-af7e3910e7ca --component_types '["puddle_osp"]' --data "{}"
@@ -408,7 +410,7 @@ dcictl remoteci-list-rconfigurations cf7262db-b91a-450b-b6dc-5877e3753272       
 
 The name of the rconfiguration will be exposed in your hooks through
 the `job_info.job.rconfiguration.name` variable. This is
-an example where we trigger the OverCloud deployment with an exatra
+an example where we trigger the OverCloud deployment with an extra
 parameter depending on the rconfiguration name.
 
 ```yaml
