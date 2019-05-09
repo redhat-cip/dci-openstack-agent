@@ -6,8 +6,8 @@
     mime: '{{ item.mime }}'
   with_items:
     - {'name': 'Tempest', 'path': "{{ lookup('env', 'HOME') }}/.quickstart/nosetests.xml", 'mime': 'application/junit'}
-    - {'name': 'Certification', 'path': "{{ lookup('env', 'HOME') }}/.quickstart/cert.junit", 'mime': 'application/junit'}
-    - {'name': 'certification.xml.gz', 'path': "{{ lookup('env', 'HOME') }}/.quickstart/certification.xml.gz", 'mime': 'application/x-compressed'}
+    - {'name': 'Certification', 'path': "{{ lookup('env', 'HOME') }}/.quickstart/cert_{{ hostvars['undercloud']['ansible_hostname'] }}.junit", 'mime': 'application/junit'}
+    - {'name': 'certification.xml.gz', 'path': "{{ lookup('env', 'HOME') }}/.quickstart/certification_{{ hostvars['undercloud']['ansible_hostname'] }}.xml.gz", 'mime': 'application/x-compressed'}
   delegate_to: localhost
   ignore_errors: yes
 
