@@ -1,0 +1,12 @@
+[Unit]
+Description=DCI OpenStack Agent Setup & Update
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/yum update -y ansible dci-ansible dci-openstack-agent python-dciclient python-requests ansible-role-dci-import-keys ansible-role-dci-retrieve-component ansible-role-dci-sync-registry
+SuccessExitStatus=0
+
+[Install]
+WantedBy=default.target
+
+

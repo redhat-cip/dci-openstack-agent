@@ -41,6 +41,7 @@ DCI OpenStack Agent for DCI control server.
 %install
 install -p -D -m 644 systemd/dci-openstack-agent.service %{buildroot}%{_unitdir}/dci-openstack-agent.service
 install -p -D -m 644 systemd/dci-openstack-agent.timer %{buildroot}%{_unitdir}/dci-openstack-agent.timer
+install -p -D -m 644 systemd/dci-openstack-agent-setup.service %{buildroot}%{_unitdir}/dci-openstack-agent-setup.service
 install -p -D -m 644 ansible.cfg %{buildroot}%{_datadir}/dci-openstack-agent/ansible.cfg
 cp -r files %{buildroot}/%{_datadir}/dci-openstack-agent
 cp -r roles %{buildroot}/%{_datadir}/dci-openstack-agent
@@ -71,10 +72,12 @@ exit 0
 %post
 %systemd_post dci-openstack-agent.service
 %systemd_post dci-openstack-agent.timer
+%systemd_post dci-openstack-agent-setup.service
 
 %preun
 %systemd_preun dci-openstack-agent.service
 %systemd_preun dci-openstack-agent.timer
+%systemd_preun dci-openstack-agent-setup.service
 
 %postun
 %systemd_postun
@@ -83,6 +86,7 @@ exit 0
 %doc LICENSE README.md README_advanced.md
 %{_unitdir}/dci-openstack-agent.service
 %{_unitdir}/dci-openstack-agent.timer
+%{_unitdir}/dci-openstack-agent-setup.service
 %{_datadir}/dci-openstack-agent
 %config(noreplace) %{_sysconfdir}/dci-openstack-agent/dcirc.sh
 %config(noreplace) %{_sysconfdir}/dci-openstack-agent/settings.yml
