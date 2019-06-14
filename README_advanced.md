@@ -1,5 +1,37 @@
 # DCI OpenStack Agent Advanced
 
+
+## How to set HTTP Proxy for my dci-openstack-agent
+
+If you need to go through a HTTP proxy, you will need to set the `http_proxy` environment variables.
+Edit the `/etc/dci-openstack-agent/dcirc.sh` file and add the following lines:
+
+```console
+http_proxy="http://somewhere:3128/"
+https_proxy="http://somewhere:3128/"
+no_proxy="localhost,127.0.0.1,<remoteci_ip>"
+export http_proxy
+export https_proxy
+export no_proxy
+```
+
+And replace <remoteci_ip> by the ip address of the remoteci. This should be the
+same value than the dci_base_ip variable used in the settings.yml file if customized (default
+to ansible_default_ipv4.address fact in group_vars/all).
+
+You will need to configure yum, so it will make use of the HTTP
+proxy. For instance, add `proxy=http://somewhere:3128` in the `[main]`
+section of `/etc/yum.conf`.
+
+Finally, RHSM also needs to be able to go through the proxy. Edit `/etc/rhsm/rhsm.conf`:
+
+```console
+proxy_hostname = somewhere
+proxy_port = 3128
+proxy_user =
+proxy_password =
+```
+
 ## How to deal with multiple OpenStack releases
 
 When testing multiple OpenStack releases you probably have different steps
@@ -44,9 +76,9 @@ When testing multiple OpenStack releases you probably have different steps
 
 ## How to retrieve the OpenStack yum repository
 
-During the 'new' hook, the jumpbox will create a yum repository with latest bits
+During the 'new' hook, the remoteci will create a yum repository with latest bits
  available. This repository is located in the `/var/www/html/dci_repo` directory
- and accessible via HTTP at `http://$jumpbox_ip/dci_repo/dci_repo.repo`.
+ and accessible via HTTP at `http://$remoteci_ip/dci_repo/dci_repo.repo`.
 
 There's several ways to retrieve the yum repository from the undercloud:
 
@@ -127,17 +159,17 @@ $ dcictl component-list --topic-id=${TOPIC}
 ## How to fetch and use the images
 
 If you are use OSP12 and above, the DCI agent will set up an image registry and
- fetch the last OSP images on your jumpbox.
+ fetch the last OSP images on your remoteci.
 
 Before you start the overcloud deploy with the `openstack overcloud deploy
  --templates [additional parameters]` command, you have to call the following
  command on the undercloud node:
 
 ```console
-$ openstack overcloud container image prepare --namespace ${jump_box}:5000/rhosp12 --output-env-file ~/docker_registry.yaml
+$ openstack overcloud container image prepare --namespace ${remoteci_ip}:5000/rhosp12 --output-env-file ~/docker_registry.yaml
 ```
 
-:information_source: `${jump_box}` is the IP address of the Jumpbox machine and
+:information_source: `${remoteci_ip}` is the IP address of the remoteci machine and
  in this example we assume you use OSP12.
 
 You don't have to do any additional `openstack overcloud container` call unless
@@ -156,14 +188,14 @@ that you also need to generate the container image list before the undercloud
 installation.
 
 ```console
-$ openstack overcloud container image prepare --namespace ${jump_box}:5000/rhosp14
+$ openstack overcloud container image prepare --namespace ${remoteci_ip}:5000/rhosp14
                                               --roles-file /usr/share/openstack-tripleo-heat-templates/roles_data_undercloud.yaml
                                               --output-env-file ~/docker_registry.yaml
 
 ```
 
 Finally specify the generated file path in the undercloud configuration and add
-the jumpbox ip in the list of the docker insecure registries:
+the remoteci ip in the list of the docker insecure registries:
 
 ```console
 $ vim undercloud.conf
@@ -172,7 +204,7 @@ $ vim undercloud.conf
 ```ini
 [DEFAULT]
 container_images_file = /home/stack/docker_registry.yaml
-docker_insecure_registries = ${jump_box}:5000
+docker_insecure_registries = ${remoteci_ip}:5000
 ```
 
 ## How to skip downloading some container images
@@ -208,8 +240,8 @@ In this example, `OSP9` is the current version and `OSP10` is the version to
 
 During the upgrade, you may need to use a specific version of a repository.
 Each component has its own .repo. They are located in
-<http://$jumpbox_ip/dci_repo/>, for instance:
-<http://$jumpbox_ip/dci_repo/dci_repo_RH7-RHOS-11.0.repo>.
+<http://$remoteci_ip/dci_repo/>, for instance:
+<http://$remoteci_ip/dci_repo/dci_repo_RH7-RHOS-11.0.repo>.
 
 ## How to run my own set of tests ?
 
@@ -239,18 +271,6 @@ OnUnitInactiveSec= defines a timer relative to when the unit the timer is activa
 ```
 
 DCI comes with a default value of 1h, you can increase to 12h for example.
-
-## Debug: How to manually run the agent
-
-You may want to trace the agent execution to understand a problem. In this case,
- you can call it manually:
-
-```console
-# su - dci-openstack-agent -s /bin/bash
-$ cd /usr/share/dci-openstack-agent
-$ source /etc/dci-openstack-agent/dcirc.sh
-$ /usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml
-```
 
 ## Tempest: How to disable services
 
@@ -324,7 +344,7 @@ The Certification test-suite uses it's own configuration located at `/etc/redhat
 
 ## How to test several versions of OpenStack
 
-You can off course run different versions of OpenStack with the same jumpbox.
+You can off course run different versions of OpenStack with the same remoteci.
  To do so, you need first to adjust the way systemd call the agent:
 
 ```console
@@ -372,55 +392,3 @@ Then call it using the `ansible` command:
 ```
 
 The tasks will be run on the local machine and nothing will be sent to the DCI server.
-
-## How to switch between different configuration for the same remoteci/topic
-
-DCI gives you the ability to have several configuration for a remoteci/topic. This allow you
-for instance to run half of your deployments with an option and the other half without it.
-
-This feature is not available yet on the interface. You need to use the `dcictl` CLI tool.
-
-First, identify the ID of your remoteci and the topic.
-```console
-$ dcictl topic-list
-$ dcictl remoteci-list
-```
-
-With this information, you can now associate the `rconfiguration` with the remoteci.
-
-```console
-$ dcictl remoteci-attach-rconfiguration bb16865b-6f88-4488-be8a-f87a54142eb0 --name ceph-enable --topic_id 7f1bc54b-790b-40c8-8993-af7e3910e7ca --component_types '["puddle_osp"]' --data "{}"
-$ dcictl remoteci-attach-rconfiguration bb16865b-6f88-4488-be8a-f87a54142eb0 --name ceph-disabled --topic_id 7f1bc54b-790b-40c8-8993-af7e3910e7ca --component_types '["puddle_osp"]' --data "{}"
-```
-
-You can use `dcictl remoteci-list-rconfigurations` to validate your configuration:
-
-```console
-dcictl remoteci-list-rconfigurations cf7262db-b91a-450b-b6dc-5877e3753272                                                                                                         1331ms  Wed 12 Sep 2018 11:20:45 AM PDT
-+--------------------------------------|--------------------|--------|-----------------|--------------------------------------+
-|                  id                  |        name        | state  | component_types |               topic_id               |
-+--------------------------------------|--------------------|--------|-----------------|--------------------------------------+
-| bb16865b-6f88-4488-be8a-f87a54142eb0 |        ceph-enable | active | [u'puddle_osp'] | 7f1bc54b-790b-40c8-8993-af7e3910e7ca |
-| bb16865b-6f88-4488-be8a-f87a54142eb0 |      ceph-disabled | active | [u'puddle_osp'] | 7f1bc54b-790b-40c8-8993-af7e3910e7ca |
-+--------------------------------------|--------------------|--------|-----------------|--------------------------------------+
-```
-
-
-The name of the rconfiguration will be exposed in your hooks through
-the `job_info.job.rconfiguration.name` variable. This is
-an example where we trigger the OverCloud deployment with an exatra
-parameter depending on the rconfiguration name.
-
-```yaml
-- name: Deploy OverCloud
-  shell: "ansible-playbook -i inventory playbooks/prepare_overcloud.yml"
-  args:
-    chdir: /var/lib/dci-openstack-agent/ansible
-  when: job_info.job.rconfiguration.name == 'no_ceph'
-
-- name: Deploy OverCloud
-  shell: "ansible-playbook -i inventory playbooks/prepare_overcloud.yml -e use_ceph=True
-  args:
-    chdir: /var/lib/dci-openstack-agent/ansible
-  when: job_info.job.rconfiguration.name == 'with_ceph'
-```

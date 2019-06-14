@@ -65,9 +65,9 @@ openstack_certification_tests:
 You can find the list of the OpenStack tests available on the
  [Openstack Certification ansible role page](https://github.com/redhat-cip/ansible-role-openstack-certification/blob/master/defaults/main.yml#L35-L79)
 
-## How to install the Red Hat Certification UI on the jumpbox (and anywhere else)
+## How to install the Red Hat Certification UI on the remoteci (and anywhere else)
 
-You cannot install the redhat-certification interface on the jumpbox. This because of
+You cannot install the redhat-certification interface on the remoteci. This because of
 dependency conflict. However, you can use the docker image:
 
 ```console
