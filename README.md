@@ -1,86 +1,206 @@
 # DCI OpenStack Agent
 
-The "jumpbox" is the host where the agent is running. It can be a virtual
- machine.
+## Overview
+
+The following documentation will allow you to configure your OpenStack automated jobs with DCI.
+At the end of this documentation, you should have a configured systemd service running DCI jobs with the latest versions of RHOSP or RDO.
+dci-openstack-agent is an ansible-playbook executed as a systemd service. 
+This service will run on a RHEL server called remoteci.
+It will run Red Hat tests at the end of the process to ensure everything is working fine.
+
+This documentation is divided into 4 parts.
+
+- Requirements
+- Integrate your automation with DCI
+- Test your integation and run your first job
+- Automate job's run
 
 ## Requirements
 
-- General:
-  - A valid RHSM account.
-  - A RHSM pool with the following channels:
-    - rhel-7-server-rpms (jumpox|undercloud)
-    - rhel-7-server-cert-rpms (undercloud)
-    - rhel-7-server-extras-rpms (jumpox|undercloud)
-    - rhel-7-server-optional-rpms (jumpbox)
-    - rhel-7-server-rh-common-rpms (undercloud)
-    - rhel-ha-for-rhel-7-server-rpms (undercloud)
-  - Automation scripts for undercloud/overcloud deployment. The user must be
- able to automatically:
-    - redeploy the undercloud machine from scratch
-    - install the undercloud
-    - deploy the overcloud on the node of the lab
+### OpenStack Automation
 
-- Jumpbox:
-  - Run the latest RHEL 7 release.
-  - Should be able to reach:
-    - `https://api.distributed-ci.io` (443).
-    - `https://packages.distributed-ci.io` (443).
-    - `https://registry.distributed-ci.io` (443).
-    - RedHat CDN.
-    - EPEL repository.
-    - The undercloud via `ssh` (22) for Ansible.
-  - Have a static IPv4 address.
-  - Have 160GB of the free space in `/var`.
+To be able to work with DCI you **must have** automation scripts for undercloud and overcloud deployments.
+You should be able to automatically:
 
-- Undercloud/Overcloud:
-  - Should be able to reach:
-    - The jumpbox via `http` (80) for yum repositories.
-    - The jumpbox via `http` (5000) for docker registry.
-  - The Undercloud should be able to reach the floating-IP network. During
-    its run, Tempest will try to reach the VM IP on this range. If you don't
-    use the feature, the tests can be disabled.
+- clean and redeploy the undercloud machine automatically
+- install the undercloud using repository and registry urls as parameters
+- deploy the overcloud on the node of the lab
 
-## First steps
+### Red Hat SSO
 
-### Create your DCI account on distributed-ci.io
+DCI is connected to the Red Hat SSO. You will need a [Red Hat account](https://access.redhat.com/).
 
-You need to create your user account in the system. Please connect to
- `https://www.distributed-ci.io` with your redhat.com SSO account. Your user
- account will be created in our database the first time you connect.
+### RHSM account
 
-There is no reliable way to know your team automatically. So please contact us
- back when you reach this step, we will manually move your user in the correct
- organisation.
+On each remoteci where the agents will run, you need a valid RHSM account.
+You can type `subscription-manager identity` on your remoteci to see if it's the case.
+You should also have access to the following channel with your RHSM account:
 
-### Install the rpm
+- rhel-7-server-optional-rpms (remoteci)
+- rhel-7-server-rpms (remoteci|undercloud)
+- rhel-7-server-extras-rpms (remoteci|undercloud)
+- rhel-7-server-cert-rpms (undercloud)
+- rhel-7-server-rh-common-rpms (undercloud)
+- rhel-ha-for-rhel-7-server-rpms (undercloud)
 
-You be able to install the rpm of DCI Ansible Agent, you will need to activate
- some extra repositories.
+### Remoteci
 
-If you are running RHEL7, you need to enable a couple of extra channels:
+You should check that your remoteci:
+
+- Is running the latest RHEL 7 release.
+- Has a static IPv4 address.
+- Has 160GB of free space in `/var` (components will be in /var/www/html and container images in /var/lib/docker).
+- Should be able to reach:
+  - `https://api.distributed-ci.io` (443).
+  - `https://packages.distributed-ci.io` (443).
+  - `https://registry.distributed-ci.io` (443).
+  - RedHat CDN.
+  - EPEL repository.
+  - The undercloud via `ssh` (22) for Ansible.
+
+## Integrate your automation with DCI
+
+### Install dci-openstack-agent
+
+To be able to install the rpm of DCI Ansible Agent, you will need to activate some extra repositories and add EPEL and DCI repositories.
 
 ```console
-# subscription-manager repos '--disable=*' --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms
-```
-
-You will also need the EPEL and DCI repositories:
-
-```console
-# yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-# yum install -y https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
+$ subscription-manager repos '--disable=*' --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms
+$ yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+$ yum install -y https://packages.distributed-ci.io/dci-release.el7.noarch.rpm
 ```
 
 You can now install the `dci-openstack-agent` package:
 
 ```console
-# yum install -y dci-openstack-agent
+$ yum install -y dci-openstack-agent
 ```
+
+### Remoteci creation
+
+DCI is connected to the Red Hat SSO. You need to log in `https://www.distributed-ci.io` with your redhat.com SSO account.
+Your user account will be created in our database the first time you connect.
+
+After the first connection you have to create a remoteci. Go to [https://www.distributed-ci.io/remotecis](https://www.distributed-ci.io/remotecis) and click `Create a new remoteci` button. Once your `remoteci` is created, you can retrieve the connection information in the 'Authentication' column. Edit the `/etc/dci-openstack-agent/dcirc.sh` file with the information displayed.
+
+At this point, you can validate your credentials with the following commands:
+
+```console
+$ source /etc/dci-openstack-agent/dcirc.sh
+$ dcictl remoteci-list
+```
+
+If you see your remoteci in the list, everything is working great so far.
+
+### DCI hooks
+
+Here is the structure of the configuration files for dci-openstack-agent
+
+```console
+/etc/dci-openstack-agent/
+...
+├── hooks
+│   ...
+│   ├── pre-run.yml
+│   ├── running.yml
+│   ...
+└── settings.yml
+```
+
+DCI hooks are ansible tasks that will be run by the agent. You need to call your clean and provisioning script in the pre-run.yml task.
+
+```
+# /etc/dci-openstack-agent/hooks/pre-run.yml
+---
+- name: clean
+  shell: ansible-playbook clean.yml
+  args:
+    chdir: /var/lib/dci-openstack-agent
+- name: provision
+  shell: ansible-playbook provision.yml
+  args:
+    chdir: /var/lib/dci-openstack-agent
+```
+
+
+dci-openstack-agent will start a job by downloading the lastest component based on the topic version set in `/etc/dci-openstack-agent/settings.yml`
+
+```console
+$ cat /etc/dci-openstack-agent/settings.yml
+dci_topic: OSP15
+```
+
+Then the dci-openstack-agent will create a local repository (`http://<dci_mirror_location>/dci_repo/dci_repo.repo`) with the rpm downloaded and will create a local registry (`<dci_mirror_location>:5000`) for containers.
+
+
+`running.yml` hooks should install undercloud and overcloud using local repository and registry.
+
+```
+# /etc/dci-openstack-agent/hooks/running.yml
+---
+- name: install undercloud
+  shell: 'ansible-playbook -e repo="{{ dci_mirror_location }}/dci_repo/dci_repo.repo" install_undercloud.yml'
+  args:
+    chdir: /var/lib/dci-openstack-agent
+- name: install overcloud
+  shell: 'ansible-playbook -e registry="{{ dci_mirror_location }}" -e registry_port="5000" install_overcloud.yml'
+  args:
+    chdir: /var/lib/dci-openstack-agent
+```
+
+At the end of the running tasks, you **must** set the undercloud_ip variable using [set_fact module](https://docs.ansible.com/ansible/latest/modules/set_fact_module.html).
+
+```
+- name: Set undercloud_ip fact
+  set_fact:
+    undercloud_ip: "{{ undercloud_ip }}"
+```
+
+If your undercloud ip is fixed, just add `undercloud_ip: ....` in `/etc/dci-openstack-agent/settings.yml`
+
+### Topic access
+
+Before testing the integration, we need to check that you have access to the topic (version of OpenStack) present in `/etc/dci-openstack-agent/settings.yml`
+
+```console
+$ cat /etc/dci-openstack-agent/settings.yml
+dci_topic: OSP15
+```
+
+Check with dcictl if you have access to this topic
+
+```console
+$ dcictl topic-list --where 'name:OSP15'
+```
+
+If you don't have access to this topic then **you should contact your EPM at Red Hat** which will give you access to the topic you need.
+
+
+## Test your integation and run your first job
+
+Now that everything is configured, we will run the dci-openstask-agent playbook to see if everything is fine
+
+```console
+$ su - dci-openstack-agent -s /bin/bash
+$ cd /usr/share/dci-openstack-agent
+$ source /etc/dci-openstack-agent/dcirc.sh
+$ /usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml
+```
+
+### Integration notes
+
+When you are on the undercloud machine or the overcloud ones, you should be able to reach the remoteci via `http` port 80 and 5000.
+The undercloud should be able to reach the floating-IP network. During its run, Tempest will try to reach the VM IP on this range. If you don't use it disable the tests (see advanced documentation)
+
+
+## Automate job run
+
+You are here? Good news, you have now a working automated agent running on your remoteci. Next step is to configure your jobs to be performed on a recurring schedule.
 
 ### Configure your time source
 
-Having an chronized clock is important to get meaningful log files. This is
-the reason why the agent ensure Chrony is running.You can valide the server
-is synchronized with the following command:
+Having a synchronized clock is important to get meaningful log files. This is the reason why the agent ensures Chrony is running.
+You can valide the server is synchronized with the following command:
 
 ```console
 $ chronyc activity
@@ -94,177 +214,61 @@ $ chronyc activity
 
 If Chrony is not running, you can follow [the official documentation](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sect-using_chrony) to set it up.
 
-### Create the `remoteci`
 
-What DCI calls the `remoteci` is your platform and its jumpbox. It has a
- name and a secret key that will be used to authenticate itself.
+### Set tags
 
-Only the admins of the team can create the remoteci [on our interface](http://www.distributed-ci.io).
-
-To do so, they have to:
-
-1. Click on the `Remote CIs` entry from the left menu
-2. Use the `Create new remoteci` to add the `remoteci`
-
-Once the `remoteci` is ready, you can download its authentication file on the
- `Download rc file` column. The file is called `remotecirc.sh`, please rename it
- to `dcirc.sh` for the next step.
-
-### Use the dcirc.sh to authenticate the lab
-
-You start using the DCI Ansible Agent, you need to copy the `dcirc.sh` file here
-`/etc/dci-openstack-agent/dcirc.sh`.
-
-### HTTP Proxy
-
-If you need to go through a HTTP proxy, you will need to set the
-`http_proxy` environment variables.
-Edit the `/etc/dci-openstack-agent/dcirc.sh` file and add the following lines:
+Edit your settings to set the tags for your jobs
 
 ```console
-http_proxy="http://somewhere:3128/"
-https_proxy="http://somewhere:3128/"
-no_proxy="localhost,127.0.0.1,<jumpbox ip>"
-export http_proxy
-export https_proxy
-export no_proxy
-```
-And replace <jumpbox ip> by the ip address of the jumpbox. This should be the
-same value than the dci_base_ip variable used in the settings.yml file if customized (default
-to ansible_default_ipv4.address fact in group_vars/all).
-
-You will need to configure yum, so it will make use of the HTTP
-proxy. For instance, add `proxy=http://somewhere:3128` in the `[main]`
-section of `/etc/yum.conf`.
-
-Finally, RHSM also needs to be able to go through the proxy. Edit `/etc/rhsm/rhsm.conf`:
-
-```console
-proxy_hostname = somewhere
-proxy_port = 3128
-proxy_user =
-proxy_password =
-```
-### Test the connection between the remoteci and the DCI API server
-
-At this point, you can validate your `dcirc.sh` with the following commands:
-
-```console
-# source /etc/dci-openstack-agent/dcirc.sh
-# dcictl remoteci-list
+$ cat /etc/dci-openstack-agent/settings.yml
+dci_topic: OSP15
+dci_tags: []
+# dci_tags: ['lab1', 'osp15', 'driver abc']
 ```
 
-You should get an output similar to this one:
+or directly in your job's hooks:
 
-```console
-+--------------------------------------|-----------|--------|---------|-------|--------------+
-|                  id                  |    name   | state  | country | email | notification |
-+--------------------------------------|-----------|--------|---------|-------|--------------+
-| a2780b4c-0cdc-4a4a-a9ed-44930562ecce | RACKSPACE | active |   None  |  None |     None     |
-+--------------------------------------|-----------|--------|---------|-------|--------------+
 ```
-
-If you get an error with the call above, you can validate the API server is
-reachable with the following `curl` call:
-
-```console
-$ curl https://api.distributed-ci.io/api/v1
-{"_status": "OK", "message": "Distributed CI."}
+- name: Tag job with configuration used
+  dci_job:
+    id: "{{ job_id }}"
+    tags:
+      - "{{ configuration }}"
 ```
-
-### Integration with the lab deployment scripts
-
-The agent has two different location where you can adjust its configuration:
-
-- `settings.yml`: The place where you can do the generic configuration.
-  This file will override any variables defined in group_vars/all. You
-  can take a look on the [sample file](https://github.com/redhat-cip/dci-openstack-agent/blob/master/samples/settings.yml)
-- `hooks/*.yml`: Each file from this directory is a list of Ansible tasks.
-  This is the place where the users can launch their deployment scripts.
-
-First, you must edit `/etc/dci-openstack-agent/settings.yml`. You probably just have to
-add the `undercloud_ip` key if you're using a static ip address. It should point to your
-undercloud IP. Otherwise you could add the undercloud to the dynamic ansible inventory
-during the playbook execution via the [add_host module](https://docs.ansible.com/ansible/latest/modules/add_host_module.html)
-
-You need to adjust the following Ansible playbook to describe how you want to
- provision your OpenStack. These playbook are located in the `/etc/dci-openstack-agent/hooks`.
-
-**pre-run.yml**: It will be called during the provisioning. This is the place
- where you describe the steps to follow to prepare your platform:
-    * deployment of the `undercloud` machine
-    * configuration of a network device
-    * etc
-This hook runs on the `localhost`.
-
-**running.yml**: this playbook will trigger to deploy the undercloud and the
- overcloud. It should also add <http://$jumpbox_ip/dci_repo/dci_repo.repo> to the
- repository list (`/etc/yum/yum.repo.d/dci_repo.repo`).
-
-At the end of this hook run, the Overcloud should be running.
-If your undercloud has a dynamic IP, you must use a set_fact action
-to set the undercloud_ip variable. The agent needs to
-know its IP to run the tests.
-
-This hook runs on the `localhost`.
-
-**teardown.yml**: This playbook cleans the full platform.
-This hook can either be called  from the `jumpbox` or the `undercloud`. If you
-need to run an action on a specific host, you should use the `delegate_to` key
-to be sure the task will be run on the correct machine.
 
 ### Start the service
 
 The agent comes with a systemd configuration that simplifies its execution. You can just start the agent:
 
 ```console
-# systemctl start dci-openstack-agent
+$ systemctl start dci-openstack-agent
 ```
 
-Use journalctl to follow the agent execution:
+You can use journalctl to follow the agent execution:
 
 ```console
-# journalctl -ef -u dci-openstack-agent
+$ journalctl -ef -u dci-openstack-agent
 ```
 
-If you need to connect as the dci-openstack-agent user, you can do:
+For debugging purposes if you need to connect as the dci-openstack-agent user, you can do:
 
 ```console
-# su - dci-openstack-agent -s /bin/bash
+$ sudo su - dci-openstack-agent -s /bin/bash
 ```
-
-This is, for example, necessary if you want to create a ssh key:
-
-```console
-$ ssh-keygen
-```
-
-### Use the timer
-
-The `dci-openstack-agent` rpm provides a systemd timer called `dci-openstack-agent.timer` will call automatically several times a day.
-
-To enable them, just run:
-
-```console
-# systemctl enable dci-openstack-agent.timer
-# systemctl start dci-openstack-agent.timer
-```
-
-### Use tags
-
-If you want to associate tags to jobs you can edit the file `/etc/dci-openstack-agent/settings.yml` and add your tags in the `dci_tags` list.
-By default the tag "debug" is associated with all jobs, you should keep it like this until the integration of the agent is done.
-The debug tag will prevent jobs to be count in the statistics.
 
 ### Keep your system up to date
 
-Distributed-CI is a rolling release. We publish updates every with and we expect
-our users to keep their jumpbox up to date.
+Distributed-CI is a rolling release. 
+When the agent is started with the dci-openstack-agent systemd unit or timer, the DCI related packages are upgraded before executing the Ansible playbook.
+
+If you don't start the agent with the dci-openstack-agent systemd unit or timer, please make sure to check for DCI packages upgrades before running the Ansible playbook.
+
+You can for example keep your system up-to-date with the following setup:
 
 ```console
-# yum install -y yum-cron
-# systemctl enable yum-cron
-# systemctl start yum-cron
-# sed -i 's,apply_updates = .*,apply_updates = yes,' /etc/yum/yum-cron.conf
+$ yum install -y yum-cron
+$ systemctl enable yum-cron
+$ systemctl start yum-cron
+$ sed -i 's,apply_updates = .*,apply_updates = yes,' /etc/yum/yum-cron.conf
 ```
 
