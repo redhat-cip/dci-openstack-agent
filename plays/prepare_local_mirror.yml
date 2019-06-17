@@ -18,6 +18,7 @@
     zone: public
     service: http
     permanent: true
+    immediate: true
     state: enabled
   register: result
   failed_when: false
