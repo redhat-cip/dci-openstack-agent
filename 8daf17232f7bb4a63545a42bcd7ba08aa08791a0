@@ -1,0 +1,288 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edfbe2a0_6cbdf089",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "Is running the latest RHEL 7 release.",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b898b88b_6d872d8d",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "Has a static IPv4 address.",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1810e360_29510741",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "Has 160GB of free space in `/var`.",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27409902_cb1c497e",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "To be able to install...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8fbc18c8_4491f369",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "Here is the structure...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98055af6_8d14e524",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "Typo: provisionning should be provisioning",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7560b569_d9d4a903",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "...based on the topic version set in...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8134eb3c_6fbcb1e2",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "... and will create a local registry...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39a00c60_019dab87",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "You are here? This is good news because you have a working automated agent running on your remoteci. We can now automate your server to run jobs automatically",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9410c4b5_102396b3",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "Having a synchronized clock is important to get meaningful log files. This is the reason why the agent ensures...",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 107
+      },
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c33c907a_72b92dfa",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "We publish updates every [day, week, month,]...",
+      "range": {
+        "startLine": 250,
+        "startChar": 62,
+        "endLine": 250,
+        "endChar": 66
+      },
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20a3da44_e69292ab",
+        "filename": "README_advanced.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "This should be the same value as...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd7f5c95_e10fb6c5",
+        "filename": "README_advanced.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "...will create a yum repository with the latest bits...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a29f31e5_fb4fc5c1",
+        "filename": "README_advanced.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "If you are using...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6861f56e_76cb8b44",
+        "filename": "README_advanced.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "You can of course...",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33242836_3bf49147",
+        "filename": "README_certification.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 586
+      },
+      "writtenOn": "2019-06-19T15:54:39Z",
+      "side": 1,
+      "message": "This is because of a dependency conflict.",
+      "revId": "8daf17232f7bb4a63545a42bcd7ba08aa08791a0",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
