@@ -14,7 +14,7 @@
         components: '{{ dci_components }}'
         topic: '{{ dci_topic }}'
         # id: '88fbd033-07b5-4cce-bb71-f320276cb0d0'
-        # embed: 'remoteci,rconfiguration,topic,components'
+        # embed: 'remoteci,topic,components'
       register: job_info
 
     - set_fact:
