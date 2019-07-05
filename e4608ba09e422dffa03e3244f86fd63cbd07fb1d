@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d06c0065_85606a58",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2019-07-05T07:57:24Z",
+      "side": 1,
+      "message": "executed ?",
+      "range": {
+        "startLine": 7,
+        "startChar": 43,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adfb6e97_646606c4",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2019-07-05T07:57:24Z",
+      "side": 1,
+      "message": "maybe be more specific by detailing where we put the data ?\n(/var/www/html for the components \u0026 /var/lib/docker for the container images)",
+      "range": {
+        "startLine": 51,
+        "startChar": 1,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "934e7753_5ec19e72",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 28
+      },
+      "writtenOn": "2019-07-05T07:57:24Z",
+      "side": 1,
+      "message": "Insert here: \n\n\"When the agent is started with the dci-openstack-agent systemd unit or timer, the DCI related packages are upgraded before executing the Ansible playbook.\n\nIf you don\u0027t start the agent with the dci-openstack-agent systemd unit or timer, please make sure to check for DCI packages upgrades before running the Ansible playbook.\n\nYou can for example keep your system up-to-date with the following setup:\"",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
