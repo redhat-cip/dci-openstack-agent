@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "ac951749_15932c3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "straightforward",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e035dba_5bb76d48",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "s/will/should/",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d06c0065_85606a58",
         "filename": "README.md",
         "patchSetId": 4
@@ -48,6 +82,91 @@
     },
     {
       "key": {
+        "uuid": "ab845c4c_2f2ab9ac",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "s/can/have to/",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1bd62cd_fbc35a8a",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "Automate job run",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5e9f111_9d329698",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "You are here? Good news, you have now a (...). Next step is to   configure your jobs to be performed on a recurring schedule.",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3950e262_9587f79a",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "Maybe add some explanations about the timer unit provided.",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3e34fff_9e65c516",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "*for debugging purposes",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "934e7753_5ec19e72",
         "filename": "README.md",
         "patchSetId": 4
@@ -59,6 +178,40 @@
       "writtenOn": "2019-07-05T07:57:24Z",
       "side": 1,
       "message": "Insert here: \n\n\"When the agent is started with the dci-openstack-agent systemd unit or timer, the DCI related packages are upgraded before executing the Ansible playbook.\n\nIf you don\u0027t start the agent with the dci-openstack-agent systemd unit or timer, please make sure to check for DCI packages upgrades before running the Ansible playbook.\n\nYou can for example keep your system up-to-date with the following setup:\"",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ef6894b_a549d198",
+        "filename": "README_advanced.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "Then, configure yum to use the proxy.\ns/For instance//",
+      "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af33902a_76415c79",
+        "filename": "README_certification.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-07-05T08:37:40Z",
+      "side": 1,
+      "message": "due to a dependency conflict.",
       "revId": "e4608ba09e422dffa03e3244f86fd63cbd07fb1d",
       "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
       "unresolved": false
