@@ -13,32 +13,58 @@
     set -o pipefail &&
     curl -k "{{ lookup('env', 'BUILD_URL') }}/timestamps/?time=yyyy-MM-dd%20HH:mm:ss.SSS%20|&appendLog&locale=en_GB"
     | gzip > {{ artcl_collect_dir }}/console.txt.gz
-  when: lookup('env', 'BUILD_URL') != ""
+  when: lookup('env', 'BUILD_URL')
 
-- name: Generate and retrieve the ARA static playbook report
-  shell: >
-    {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq;
-    {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.json;
-    cp -r {{ local_working_dir }}/ara_oooq {{ artcl_collect_dir }}/;
-    {% if artcl_gzip_only|bool %}gzip --best --recursive {{ artcl_collect_dir }}/ara_oooq;{% endif %}
-  ignore_errors: yes
+- when: ara_generate_html|bool
+  block:
 
-- name: Generate and retrieve root the ARA static playbook report
-  become: yes
-  shell: >
-    {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq_root;
-    {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.oooq.root.json;
-    cp -r {{ local_working_dir }}/ara_oooq_root {{ artcl_collect_dir }}/;
-    {% if artcl_gzip_only|bool %}gzip --best --recursive {{ artcl_collect_dir }}/ara_oooq_root;{% endif %}
-  ignore_errors: yes
+    - name: Generate and retrieve the ARA static playbook report
+      shell: >
+        {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq;
+        {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.json;
+        cp -r {{ local_working_dir }}/ara_oooq {{ artcl_collect_dir }}/;
+        {% if artcl_gzip_only|bool %}gzip --best --recursive {{ artcl_collect_dir }}/ara_oooq;{% endif %}
+      ignore_errors: true
+
+    - name: Generate and retrieve root the ARA static playbook report
+      become: true
+      shell: >
+        {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq_root;
+        {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.oooq.root.json;
+        cp -r {{ local_working_dir }}/ara_oooq_root {{ artcl_collect_dir }}/;
+        {% if artcl_gzip_only|bool %}gzip --best --recursive {{ artcl_collect_dir }}/ara_oooq_root;{% endif %}
+      ignore_errors: true
+
+    - name: Generate and retrieve the ARA static playbook report for OC deploy
+      become: true
+      shell: >
+        {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq_oc;
+        {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.oooq.oc.json;
+        cp -r {{ local_working_dir }}/ara_oooq_oc {{ artcl_collect_dir }}/;
+        {% if artcl_gzip_only|bool %}gzip --best --recursive {{ artcl_collect_dir }}/ara_oooq_oc;{% endif %}
+      ignore_errors: true
+      environment:
+        ARA_DATABASE: 'sqlite:///{{ ara_overcloud_db_path }}'
+
+- name: Copy ara files to ara-report directories
+  shell: |
+    mkdir -p {{ artcl_collect_dir }}/{{ item.dir }}/ara-report;
+    cp {{ item.file }} {{ artcl_collect_dir }}/{{ item.dir }}/ara-report/ansible.sqlite;
+  loop:
+    - dir: ara_oooq
+      file: "{{ local_working_dir }}/ara.sqlite"
+    - dir: ara_oooq_overcloud
+      file: "{{ ara_overcloud_db_path }}"
+  ignore_errors: true
+  when: not ara_generate_html|bool
 
 - include: ara_graphite.yml
   when: ara_graphite_server is defined
-  ignore_errors: yes
+  ignore_errors: true
 
 - include: ara_influxdb.yml
   when: influxdb_url is defined or influxdb_create_data_file|bool
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: fetch stackviz results to the root of the collect_dir
   shell: >
@@ -47,10 +73,28 @@
         gunzip -fr {{ artcl_collect_dir }}/stackviz;
     fi;
 
-- name: fetch tempest results to the root of the collect_dir
+- name: fetch stackviz results to the root of the collect_dir for os_tempest
+  shell: >
+    if [ -d {{ artcl_collect_dir }}/undercloud/var/log/tempest/stackviz/data ]; then
+        cp -r {{ artcl_collect_dir }}/undercloud/var/log/tempest/stackviz {{ artcl_collect_dir }};
+        gunzip -fr {{ artcl_collect_dir }}/stackviz;
+    fi;
+  when: use_os_tempest is defined
+
+- name: tempest results to the root of the collect_dir
   shell: >
     cp {{ artcl_collect_dir }}/undercloud/home/stack/tempest/tempest.{xml,html}{,.gz} {{ artcl_collect_dir }} || true;
     gunzip {{ artcl_collect_dir }}/tempest.{xml,html}.gz || true;
+
+- name: Gunzip tempest results to the root of the collect_dir for os_tempest
+  shell: >
+    gunzip -c {{ artcl_collect_dir }}/undercloud/var/log/tempest/stestr_results.html.gz > {{ artcl_collect_dir }}/stestr_results.html || true
+  when: use_os_tempest is defined
+
+- name: Copy testrepository.subunit file to the root of collect_dir for os_tempest
+  shell: >
+    cp {{ artcl_collect_dir }}/undercloud/var/log/tempest/testrepository.subunit.gz {{ artcl_collect_dir }}/testrepository.subunit.gz || true
+  when: use_os_tempest is defined
 
 - name: Fetch .sh and .log files from local working directory on localhost
   shell: >
@@ -75,8 +119,17 @@
     name: create-reproducer-script
   when: ansible_env.TOCI_JOBTYPE is defined
 
+
+- name: Create the zuul-based reproducer script if we are running on zuul
+  include_role:
+    name: create-zuul-based-reproducer
+  when: zuul is defined
+
 - name: upload to the artifact server using pubkey auth
-  shell: rsync -av --quiet -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" {{ artcl_collect_dir }}/ {{ artcl_rsync_path }}/{{ lookup('env', 'BUILD_TAG') }}
+  shell: >
+    rsync -av
+    --quiet -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+    {{ artcl_collect_dir }}/ {{ artcl_rsync_path }}/{{ lookup('env', 'BUILD_TAG') }}
   async: "{{ artcl_publish_timeout }}"
   poll: 15
   retries: 5
@@ -108,7 +161,9 @@
   when: artcl_use_swift|bool
 
 - name: use zuul_swift_upload.py to publish the files
-  shell: "{{ artcl_zuul_swift_upload_path }}/zuul_swift_upload.py --name {{ artcl_swift_container }} --delete-after {{ artcl_swift_delete_after }} {{ artcl_collect_dir }}"
+  shell: >
+    "{{ artcl_zuul_swift_upload_path }}/zuul_swift_upload.py --name {{ artcl_swift_container }}
+    --delete-after {{ artcl_swift_delete_after }} {{ artcl_collect_dir }}"
   async: "{{ artcl_publish_timeout }}"
   poll: 15
   when: artcl_use_zuul_swift_upload|bool

@@ -11,17 +11,22 @@ release['OSP11']='ocata'
 release['OSP12']='pike'
 release['OSP13']='queens'
 release['OSP14']='rocky'
-#release['OSP15']='stein'
+release['OSP15']='stein'
 
 get_repo() {
     repo=${1}
     roles=${2}
-    cd ${TMPDIR}
+    pushd ${TMPDIR}
     git clone https://code.engineering.redhat.com/gerrit/${repo}.git ${repo}
     cd ${repo}
     for topic in "${!release[@]}"; do
         branch=$(echo ${topic}|sed 's,OSP,origin/stable/rhos-,')
-	[ "${branch}" = "origin/stable/rhos-13" ] && branch="origin/stable/rhos-12"
+
+        # Override branch name for current unreleased version
+        if [ "${branch}" = "origin/stable/rhos-15" ]; then
+            branch="origin/master"
+        fi
+
         target=${BASEDIR}/roles/${release[$topic]}
         mkdir -p ${target}
         git checkout -b ${topic} ${branch}
@@ -44,13 +49,24 @@ get_repo() {
 	git reset --hard
 	git clean -ffdx
     done
+    popd
 }
 
+#
+# main()
+#
+
+# Do some cleanup
 rm -Rf ${TMPDIR} ${BASEDIR}/roles
 mkdir -p ${TMPDIR}
 
+# Fetch the required roles into each release folder
 get_repo tripleo-quickstart "common tripleo-inventory"
-get_repo tripleo-quickstart-extras "collect-logs extras-common tripleo-validations validate-tempest"
-mv "${BASEDIR}/roles/rocky/collect-logs" "${BASEDIR}/roles/"
-rm -r "${BASEDIR}"/roles/*/collect-logs
+get_repo tripleo-quickstart-extras "extras-common tripleo-validations validate-tempest"
+
+# We're using the same collect-logs role for all versions, keep only the latest one
+git clone --depth=1 --branch=master https://github.com/openstack/ansible-role-collect-logs "${BASEDIR}"/roles/collect-logs
+rm -rf "${BASEDIR}"/roles/collect-logs/.git
+
+# Finally add everything to staged area for review before commiting
 git add roles
