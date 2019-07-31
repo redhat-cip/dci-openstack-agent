@@ -42,7 +42,9 @@
     validate_certs: '{{ dci_openstack_agent_sslverify }}'
   become: true
   with_items: "{{ components }}"
-  when: job_info.job.topic.data.releasename >= 'pike'
+  when:
+    - job_info.job.topic.data.releasename >= 'pike'
+    - not item.canonical_project_name.endswith("-DevTools")
 
 - name: Prepare the global Yum .repo file with all the components
   yum_repository:
