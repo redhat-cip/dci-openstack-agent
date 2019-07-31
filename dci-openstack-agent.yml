@@ -31,7 +31,7 @@
       dci_job:
         id: "{{ job_id }}"
         tags: '{{ dci_tags }}'
-      when: dci_tags
+      when: dci_tags|default([])|len > 0
 
 - name: 'Sanity check'
   hosts: localhost
