@@ -31,7 +31,7 @@ on Openstack Instances launched via Openstack Virtual Baremetal (OVB/Heat):
         --requirements quickstart-role-requirements.txt \
         --requirements $WORKSPACE/$HW_ENV_DIR/requirements_files/$REQUIREMENTS_FILE \
         --config $WORKSPACE/$HW_ENV_DIR/config_files/$CONFIG_FILE \
-        --extra-vars @$OPENSACK_CLOUD_SETTINGS_FILE \
+        --extra-vars @$OPENSTACK_CLOUD_SETTINGS_FILE \
         --extra-vars @$OPENSTACK_CLOUD_CREDS_FILE \
         --extra-vars @$WORKSPACE/$HW_ENV_DIR/env_settings.yml \
         --playbook $PLAYBOOK \
@@ -85,4 +85,3 @@ Below are a list of example settings (overwriting defaults) that would be passed
     public_net_pool_start: 10.0.0.50
     public_net_pool_end: 10.0.0.100
     public_net_gateway: 10.0.0.1
-

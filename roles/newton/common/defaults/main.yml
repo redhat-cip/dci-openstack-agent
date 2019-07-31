@@ -177,6 +177,9 @@ ssl_overcloud: false
 overcloud_public_vip: 10.0.0.5
 overcloud_public_vip6: 2001:db8:fd00:1000::14
 
+# Enable the virt_bmc ( virtual baremetal controllers )
+enable_vbmc: true
+
 # Set this to `false` if you don't want your undercloud and overcloud vms
 # to have a VNC console available.
 enable_vnc_console: true
@@ -185,7 +188,7 @@ enable_vnc_console: true
 #
 # TODO(trown): It would be better to write a release into the image itself
 # and set this variable from there.
-release: pike
+release: queens
 
 # This option controls whether or not to use the repo setup for TripleO
 # development. Since this requires some other options to be funtional,
@@ -232,3 +235,6 @@ update_images: false
 
 # If running in chroot-like environments (containers)
 chrooted: false
+
+# moved from tqe
+undercloud_generate_service_certificate: true

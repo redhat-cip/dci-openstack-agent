@@ -18,6 +18,11 @@
     ansible_host: "{{ undercloud_ip }}"
     ansible_password: "{{ undercloud_password| default(None) }}"
 
+- name: Refresh facts for undercloud
+  setup:
+  delegate_to: undercloud
+  delegate_facts: True
+
 - name: Set authorized key of stack@undercloud (1/2)
   authorized_key:
     user: stack
