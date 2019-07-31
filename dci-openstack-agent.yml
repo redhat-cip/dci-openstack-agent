@@ -30,8 +30,8 @@
     - name: Set the tags
       dci_job:
         id: "{{ job_id }}"
-        tags: '{{ dci_tags }}'
-      when: dci_tags
+        tags: "{{ dci_tags|list }}"
+      when: dci_tags|list|length > 0
 
 - name: 'Sanity check'
   hosts: localhost

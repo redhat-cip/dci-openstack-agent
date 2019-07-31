@@ -4,13 +4,22 @@
       tempest_workers: "{{ ansible_processor_vcpus|int // 2 }}"
   when: tempest_workers is not defined
 
+- name: Set rc file to be sourced to run tempest
+  set_fact:
+      rc_file: "{{ working_dir }}/{% if tempest_undercloud %}stackrc{% else %}overcloudrc{% endif %}"
+
 - name: Create overcloud tempest setup script
   template:
     src: tempest-setup.j2
     dest: "{{ working_dir }}/tempest-setup.sh"
     mode: 0744
 
-- name: Load skip list variables
+- name: Deprecation message for test_regex
+  debug:
+    msg: "WARNING: The variable test_regex is deprecated and will be removed by end of ROCKY release in the favor of test_white_regex."
+  when: test_regex is defined
+
+- name: Load skip list variables (undercloud or overcloud)
   include_vars:
     file: "tempest_skip_{{ release }}.yml"
   when: skip_file_src != ''
@@ -29,12 +38,19 @@
     mode: 0644
   when: tempest_whitelist|length > 0
 
-- name: Install openstack services tempest plugins
-  yum:
-    name: "{{ tempest_plugins }}"
-    state: latest
+- name: Install packages to generate subunit results
   become: yes
-  when: tempest_plugins|length > 0
+  package: name={{ item }} state=present
+  with_items:
+    - python-subunit
+    - subunit-filters
+    - python-os-testr
+  when: tempest_format in ['container', 'packages']
+
+- name: Install stestr
+  become: yes
+  package: name=python-stestr state=present
+  when: tempest_format in ['container', 'packages'] and release not in ['newton', 'ocata']
 
 - ignore_errors: true
   block:
