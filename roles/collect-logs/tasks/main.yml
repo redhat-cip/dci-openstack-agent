@@ -1,4 +1,9 @@
 ---
+- name: gather facts used by role
+  setup:
+    gather_subset: "!min,pkg_mgr"
+  when: ansible_pkg_mgr is not defined
+
 - name: Collect logs
   include: collect.yml
   when: artcl_collect|bool
@@ -16,8 +21,10 @@
     - not artcl_collect|bool
 
 - name: Verify Sphinx build
-  shell: grep "{{ item }}" "{{ artcl_collect_dir }}/docs/build/index.html"
+  shell: |  # noqa 305
+    grep -q "{{ item }}" "{{ artcl_collect_dir }}/docs/build/index.html"
   with_items: "{{ artcl_create_docs_payload.table_of_contents }}"
+  changed_when: false
   when:
     - artcl_gen_docs|bool
     - artcl_verify_sphinx_build|bool
