@@ -8,7 +8,66 @@ artcl_collect_list:
   - /var/lib/oooq-images/*/*.sh
   - /var/lib/pacemaker/cib/cib*
   - /var/lib/pacemaker/pengine/pe-input*
-  - /var/log/
+  - /var/log/dmesg.txt
+  - /var/log/host_info.txt
+  - /var/log/journal.txt
+  - /var/log/postci.txt
+  - /var/log/secure
+  - /var/log/bootstrap-subnodes.log
+  - /var/log/unbound.log
+  - /var/log/yum.log
+  - /var/log/aodh/
+  - /var/log/audit/
+  - /var/log/barbican/
+  - /var/log/ceilometer/
+  - /var/log/ceph/
+  - /var/log/cinder/
+  - /var/log/cloudkitty/
+  - /var/log/cluster/
+  - /var/log/config-data/
+  - /var/log/congress/
+  - /var/log/containers/
+  - /var/log/deployed-server-enable-ssh-admin.log
+  - /var/log/deployed-server-os-collect-config.log
+  - /var/log/designate/
+  - /var/log/dmesg/
+  - /var/log/extra/
+  - /var/log/ec2api/
+  - /var/log/glance/
+  - /var/log/gnocchi/
+  - /var/log/heat/
+  - /var/log/heat-launcher/
+  - /var/log/horizon/
+  - /var/log/httpd/
+  - /var/log/ironic/
+  - /var/log/ironic-inspector/
+  - /var/log/libvirt/
+  - /var/log/keystone/
+  - /var/log/manila/
+  - /var/log/mariadb/
+  - /var/log/mistral/
+  - /var/log/monasca/
+  - /var/log/murano/
+  - /var/log/neutron/
+  - /var/log/nova/
+  - /var/log/novajoin/
+  - /var/log/octavia/
+  - /var/log/openvswitch/
+  - /var/log/ovn/
+  - /var/log/pacemaker/
+  - /var/log/panko/
+  - /var/log/qdr/
+  - /var/log/rabbitmq/
+  - /var/log/redis/
+  - /var/log/sahara/
+  - /var/log/sensu/
+  - /var/log/swift/
+  - /var/log/tacker/
+  - /var/log/tempest/
+  - /var/log/trove/
+  - /var/log/vitrage/
+  - /var/log/watcher/
+  - /var/log/zaqar/
   - /var/tmp/sosreport*
   - /etc/
   - /home/*/.instack/install-undercloud.log
@@ -32,11 +91,12 @@ artcl_collect_list:
   - /home/*/tempest/etc/*.conf
   - /home/*/tempest/*.subunit
   - /home/*/tempest/*.json
+  - /home/*/tripleo-heat-installer-templates/
   - /home/*/local_tht/
   - /home/*/gating_repo.tar.gz
-  - /home/*/browbeat/ansible/bug_report.log
-  - /home/*/browbeat/results/
+  - /home/*/browbeat/
   - /usr/share/openstack-tripleo-heat-templates/
+  - /home/*/tripleo-heat-templates/
   - /tmp/tripleoclient*
   # The next 2 items are temporary until config-download is executed
   # from a Mistral workflow (WIP in Queens)
@@ -94,25 +154,30 @@ artcl_logstash_files:
   - /home/*/install_built_repo.log
   - /home/*/install_packages.sh.log
   - /home/*/ironic-python-agent.log
+  - /home/*/nova_actions_check.log
   - /home/*/overcloud_create_ssl_cert.log
   - /home/*/overcloud_custom_tht_script.log
   - /home/*/overcloud_delete.log
   - /home/*/overcloud_deploy.log
   - /home/*/overcloud_deploy_post.log
+  - /home/*/overcloud_failed_prepare_resources.log
   - /home/*/overcloud-full.log
   - /home/*/overcloud_image_build.log
   - /home/*/overcloud_prep_containers.log
   - /home/*/overcloud_prep_images.log
   - /home/*/overcloud_prep_network.log
-  - /home/*/overcloud_upgrade_console.log
   - /home/*/overcloud_validate.log
+  - /home/*/*upgrade*.log
+  - /home/*/*update*.log
   - /home/*/repo_setup.log
   - /home/*/repo_setup.sh.*.log
   - /home/*/undercloud_install.log
   - /home/*/undercloud_reinstall.log
+  - /home/*/undercloud_custom_tht_script.log
   - /home/*/upgrade-undercloud-repo.sh.log
   - /home/*/validate-overcloud-ipmi-connection.log
   - /home/*/vxlan_networking.sh.log
+  - /home/*/workload_launch.log
   - /home/*/yum_mirror_error.log
   - /home/*/yum_mirror.log
   - /home/*/tempest_output.log
@@ -137,3 +202,5 @@ influxdb_password:
 influxdb_dbname: testdb
 influxdb_data_file_path: "{{ lookup('env', 'LOCAL_WORKING_DIR')|default('/tmp', true) }}/influxdb_data"
 influxdb_create_data_file: true
+odl_extra_log_dir: /var/log/extra/odl
+odl_extra_info_log: "{{ odl_extra_log_dir }}/odl_info.log"

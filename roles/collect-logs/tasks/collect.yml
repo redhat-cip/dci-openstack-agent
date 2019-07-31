@@ -3,12 +3,11 @@
   ignore_errors: true
   block:
     - name: Ensure required rpms for logging are installed
-      yum:
-        name:
-          - gzip
-          - rsync
-          - tar
-        state: present
+      yum: name={{ item }} state=present
+      with_items:
+        - gzip
+        - rsync
+        - tar
 
     - name: Prepare directory with extra logs
       file: dest=/var/log/extra state=directory
@@ -19,8 +18,18 @@
     - name: yum list installed
       shell: yum list installed >/var/log/extra/yum-list-installed.txt
 
-    - name: Collecting cpu information
-      shell: cat /proc/cpuinfo &> /var/log/extra/cpuinfo.txt
+    - name: Collecting /proc/cpuinfo|meminfo|swaps
+      shell: "cat /proc/{{item}} &> /var/log/extra/{{item}}.txt"
+      with_items:
+        - cpuinfo
+        - meminfo
+        - swaps
+
+    - name: Collect installed cron jobs
+      shell: |
+        for user in $(cut -f1 -d':' /etc/passwd); do \
+        echo $user; crontab -u $user -l | grep -v '^$\|^\s*\#\|^\s*PATH'; done \
+        &> /var/log/extra/installed_crons.txt
 
     # used by OSP Release Engineering to import into internal builds
     - name: package import delorean
@@ -41,7 +50,7 @@
 
     - name: Collect network status info
       shell: >
-        (ip a; ip r; iptables-save; iptables -nL) &> /var/log/extra/network.txt;
+        (ip a; ip r; netstat -i; iptables-save; iptables -nL) &> /var/log/extra/network.txt;
         (for NS in $(ip netns list); do
         echo "==== $NS ====";
         ip netns exec $NS ip a;
@@ -94,12 +103,44 @@
     - name: lvm debug
       shell: "(vgs; pvs; lvs) &> /var/log/extra/lvm.txt"
 
+    - name: check if ODL is enabled via docker
+      shell: docker ps | grep opendaylight_api
+      register: odl_docker_enabled
+
+    - name: check if ODL is enabled via rpm
+      shell: rpm -qa | grep opendaylight
+      register: odl_rpm_enabled
+
+    - name: Create ODL log directory
+      file: dest="{{ odl_extra_log_dir }}" state=directory
+      when: (odl_rpm_enabled.rc == 0) or (odl_docker_enabled.rc == 0)
+
+    - name: Create rsync filter file
+      template:
+        src: "odl_extra_logs.j2"
+        dest: "/tmp/odl_extra_logs.sh"
+
+    - name: Collect OVS outputs for ODL
+      shell: "bash /tmp/odl_extra_logs.sh"
+      when: (odl_rpm_enabled.rc == 0) or (odl_docker_enabled.rc == 0)
+
+    - name: Collect ODL info and logs (RPM deployment)
+      shell: >
+        cp /opt/opendaylight/data/log/* /var/log/extra/odl/;
+        journalctl -u opendaylight > /var/log/extra/odl/odl_journal.log
+      when: odl_rpm_enabled.rc == 0
+
     - name: Generate human-readable SAR logs
       shell: "[[ -f /usr/lib64/sa/sa2 ]] && /usr/lib64/sa/sa2 -A"
 
     - name: check for dstat log file
       stat: path=/var/log/extra/dstat-csv.log
       register: dstat_logfile
+
+    - name: kill dstat
+      shell: "pkill dstat"
+      become: true
+      when: dstat_logfile.stat.exists
 
     - name: Get dstat_graph tool
       git:
@@ -154,27 +195,45 @@
         if command -v docker && systemctl is-active docker; then
             BASE_DOCKER_EXTRA=/var/log/extra/docker;
             mkdir -p $BASE_DOCKER_EXTRA;
-            All_FILE=$BASE_DOCKER_EXTRA/docker_allinfo.log;
-            docker ps --all --size &> $All_FILE;
-            docker images &>> $All_FILE;
-            docker volume ls &>> $All_FILE;
-            docker stats --all --no-stream &>> $All_FILE;
-            docker info &>> $All_FILE;
+            ALL_FILE=$BASE_DOCKER_EXTRA/docker_allinfo.log;
+
+            DOCKER_INFO_CMDS=(
+                "docker ps --all --size"
+                "docker images"
+                "docker volume ls"
+                "docker stats --all --no-stream"
+                "docker info"
+            );
+            for cmd in "${DOCKER_INFO_CMDS[@]}"; do
+                echo "+ $cmd" >> $ALL_FILE;
+                $cmd >> $ALL_FILE;
+            done;
+
             for cont in $(docker ps | awk {'print $NF'} | grep -v NAMES); do
                 INFO_DIR=$BASE_DOCKER_EXTRA/containers/${cont};
                 mkdir -p $INFO_DIR;
                 INFO_FILE=$INFO_DIR/docker_info.log;
-                echo "+ docker top $cont auxw" > $INFO_FILE;
-                docker top $cont auxw &>> $INFO_FILE;
-                echo "+ docker exec $cont top -bwn1" >> $INFO_FILE;
-                docker exec $cont top -bwn1 &>> $INFO_FILE;
-                echo "+ docker inspect $cont" >> $INFO_FILE;
-                docker inspect $cont &>> $INFO_FILE;
+                DOCKER_CONTAINER_INFO_CMDS=(
+                    "docker top $cont auxw"
+                    "docker exec $cont top -bwn1"
+                    "docker inspect $cont"
+                );
+                for cmd in "${DOCKER_CONTAINER_INFO_CMDS[@]}"; do
+                    echo "+ $cmd" >> $INFO_FILE;
+                    $cmd >> $INFO_FILE;
+                done;
                 docker logs $cont &> $INFO_DIR/stdout.log;
                 docker cp $cont:/var/lib/kolla/config_files/config.json $INFO_DIR/config.json;
                 # NOTE(flaper87): This should go away. Services should be
                 # using a `logs` volume
-                docker cp $cont:/var/log $INFO_DIR/log;
+                # NOTE(mandre) Do not copy logs if the containers is bind mounting /var/log directory
+                if ! docker exec $cont stat $BASE_DOCKER_EXTRA 2>1 > /dev/null; then
+                  docker cp $cont:/var/log $INFO_DIR/log;
+                fi;
+
+                # Delete symlinks because they break log collection and are generally
+                # not useful
+                find $INFO_DIR -type l -delete;
             done;
 
             # NOTE(flaper87) Copy contents from the logs volume. We can expect this
@@ -224,7 +283,7 @@
 
 - name: Set default collect list
   set_fact:
-    collect_list: "{{ artcl_collect_list }}"
+    collect_list: "{{ artcl_collect_list }} + {{ artcl_collect_list_append|default([]) }}"
 
 - name: Override collect list
   set_fact:
@@ -246,6 +305,7 @@
 - name: Gather the logs to /tmp
   become: yes
   shell: >
+    set -o pipefail &&
     rsync --quiet --recursive --copy-links --prune-empty-dirs
     --filter '. /tmp/{{ inventory_hostname }}-rsync-filter' / /tmp/{{ inventory_hostname }};
     find /tmp/{{ inventory_hostname }} -type d -print0 | xargs -0 chmod 755;

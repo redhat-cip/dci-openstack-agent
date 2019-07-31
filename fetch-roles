@@ -10,6 +10,8 @@ release['OSP10']='newton'
 release['OSP11']='ocata'
 release['OSP12']='pike'
 release['OSP13']='queens'
+release['OSP14']='rocky'
+#release['OSP15']='stein'
 
 get_repo() {
     repo=${1}
@@ -26,13 +28,11 @@ get_repo() {
 
         if [ ${repo} = 'tripleo-quickstart-extras' ]; then
             git remote show redhat_gerrit || git remote add redhat_gerrit ssh://code.engineering.redhat.com:22/tripleo-quickstart-extras.git
-            [ ${topic} = "OSP13" ] && git review -x 551364
-            [ ${topic} = "OSP12" ] && git review -x 551364
             [ ${topic} = "OSP9" ] && git review -r redhat_gerrit -x 130689
             [ ${topic} = "OSP8" ] && git review -r redhat_gerrit -x 130690
             [ ${topic} = "OSP9" ] && git review -r redhat_gerrit -x 130692
             [ ${topic} = "OSP8" ] && git review -r redhat_gerrit -x 130694
-	fi
+        fi
 
         for i in ${roles}; do
            if [ "${i}" == "tripleo-validations" ] && ([ "${topic}" == "OSP8" ] || [ "${topic}" == "OSP9" ]); then
@@ -51,4 +51,6 @@ mkdir -p ${TMPDIR}
 
 get_repo tripleo-quickstart "common tripleo-inventory"
 get_repo tripleo-quickstart-extras "collect-logs extras-common tripleo-validations validate-tempest"
+mv "${BASEDIR}/roles/rocky/collect-logs" "${BASEDIR}/roles/"
+rm -r "${BASEDIR}"/roles/*/collect-logs
 git add roles
