@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5abd0bad_4c12320e",
+        "filename": "plays/run_tests.yml",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-08-09T14:19:43Z",
+      "side": 1,
+      "message": "clever use of the Openstack naming scheme, I like it! I like it a lot!",
+      "revId": "27d9129418751db70a2c37f027911e28c46c3af9",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
