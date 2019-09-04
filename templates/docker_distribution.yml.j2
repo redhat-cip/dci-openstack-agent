@@ -3,8 +3,7 @@ log:
   fields:
     service: registry
 storage:
-    cache:
-        layerinfo: inmemory
+# We're explicitly removing any "cache:" section because of issues with it
     filesystem:
         rootdirectory: /var/lib/registry
     delete:
