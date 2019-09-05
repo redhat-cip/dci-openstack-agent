@@ -46,7 +46,6 @@ install -p -D -m 644 ansible.cfg %{buildroot}%{_datadir}/dci-openstack-agent/ans
 cp -r files %{buildroot}/%{_datadir}/dci-openstack-agent
 cp -r roles %{buildroot}/%{_datadir}/dci-openstack-agent
 cp -r plays %{buildroot}/%{_datadir}/dci-openstack-agent
-cp -r templates %{buildroot}/%{_datadir}/dci-openstack-agent
 cp -r group_vars %{buildroot}/%{_datadir}/dci-openstack-agent
 install -p -D -m 644 dci-openstack-agent.yml %{buildroot}%{_datadir}/dci-openstack-agent/dci-openstack-agent.yml
 install -p -D -m 644 dcirc.sh %{buildroot}%{_sysconfdir}/dci-openstack-agent/dcirc.sh
