@@ -10,6 +10,9 @@ release['OSP10']='newton'
 release['OSP11']='ocata'
 release['OSP12']='pike'
 release['OSP13']='queens'
+release['OSP14']='rocky'
+release['OSP15']='stein'
+release['OSP16']='train'
 
 get_repo() {
     repo=${1}
