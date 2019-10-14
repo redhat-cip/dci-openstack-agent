@@ -1,13 +1,12 @@
 [Unit]
 Description=DCI OpenStack Agent
-Requires=dci-openstack-agent-setup.service
-After=dci-openstack-agent-setup.service
 
 [Service]
 Type=oneshot
 WorkingDirectory=/usr/share/dci-openstack-agent
 EnvironmentFile=/etc/dci-openstack-agent/dcirc.sh
-ExecStart=/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml
+ExecStart=/usr/share/dci-openstack-agent/dci-openstack-agent.sh run
+ExecStart=/usr/share/dci-openstack-agent/dci-openstack-agent.sh stop
 SuccessExitStatus=0
 User=dci-openstack-agent
 
