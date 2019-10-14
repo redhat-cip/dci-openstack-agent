@@ -1,3 +1,6 @@
+- name: Check if running inside container
+  set_fact:
+    container: "{{ lookup('env', 'container') }}"
 - name: Ensure Apache is installed
   package:
     name: 'httpd'
@@ -8,6 +11,8 @@
     name: 'httpd'
     state: 'started'
   become: true
+  when:
+    - container != 'podman'
 - name: Ensure python-firewall is installed
   package:
     name: 'python-firewall'
