@@ -82,7 +82,7 @@ exit 0
 %systemd_postun
 
 %files
-%doc LICENSE README.md README_advanced.md
+%doc LICENSE README.md
 %{_unitdir}/dci-openstack-agent.service
 %{_unitdir}/dci-openstack-agent.timer
 %{_unitdir}/dci-openstack-agent-setup.service
