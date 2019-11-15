@@ -1,0 +1,8 @@
+Code-Review+2: Guillaume Vincent <gvincent@redhat.com>
+Workflow+1: Guillaume Vincent <gvincent@redhat.com>
+Verified+2: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-by: Zuul CI <zuul@softwarefactory-project.io>
+Submitted-at: Fri, 15 Nov 2019 10:07:39 +0000
+Reviewed-on: https://softwarefactory-project.io/r/17022
+Project: dci-openstack-agent
+Branch: refs/heads/master
