@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3157b93_12e727e7",
+        "filename": "fetch-roles",
+        "patchSetId": 13
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 166
+      },
+      "writtenOn": "2019-11-20T14:35:21Z",
+      "side": 0,
+      "message": "I had a doubt here but finally looks ok",
+      "revId": "00ba177b3abcc4612e1470570d6b865da88aafcf",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
