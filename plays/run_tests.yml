@@ -4,12 +4,19 @@
     undercloud_ip: '{{ hostvars.localhost.undercloud_ip }}'
   when: hostvars.localhost.undercloud_ip is defined
 
+- name: default-overrides.conf is in python3-tempestconf since stein
+  package:
+    name: python3-tempestconf
+    state: present
+  become: true
+  when: release >= 'stein'
+
 - name: default-overrides.conf is in python-tempestconf since ocata
   package:
     name: python-tempestconf
     state: present
   become: true
-  when: release >= 'ocata'
+  when: release >= 'ocata' and release < 'stein'
 
 - name: default-overrides.conf is in openstack-tempest before ocata
   package:
