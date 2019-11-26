@@ -16,7 +16,7 @@ Requires:       dci-ansible
 Requires:       ansible
 Requires:       python-netaddr
 Requires:       ansible-role-dci-import-keys
-Requires:       ansible-role-dci-retrieve-component
+Requires:       ansible-role-dci-retrieve-component >= 0.1.1
 Requires:       ansible-role-dci-sync-registry
 Requires:       ansible-role-openstack-certification
 Requires:       sudo
