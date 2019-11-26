@@ -46,7 +46,7 @@
     - job_info.job.topic.data.releasename >= 'pike'
     - not item.canonical_project_name.endswith("-DevTools")
 
-- name: Prepare the global Yum .repo file with all the components
+- name: Prepare the global Yum .repo file with all the components (legacy repo component)
   yum_repository:
     name: '{{ item["canonical_project_name"] }}'
     description: '{{ item["canonical_project_name"] }}'
@@ -54,8 +54,19 @@
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo'
   with_items: "{{ components }}"
+  when: item["type"] != "Compose"
 
-- name: Prepare a Yum .repo file per component
+- name: Prepare the globak Yum .repo file with all the components & variants (Compose component)
+  yum_repository:
+    name: '{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
+    description: '{{ item["canonical_project_name"] }} {{ item[1] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item["canonical_project_name"] }}/compose/{{ item[1] }}/'
+    gpgcheck: no
+    file: '{{ dci_mirror_location}}/dci_repo/dci_repo'
+  loop: "{{ components|product(['OpenStack', 'DevTools'])|list }}"
+  when: item[0]["type"] == "Compose"
+
+- name: Prepare a Yum .repo file per component (legacy repo component)
   yum_repository:
     name: '{{ item["canonical_project_name"] }}'
     description: '{{ item["canonical_project_name"] }}'
@@ -63,6 +74,17 @@
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item["canonical_project_name"] }}'
   with_items: "{{ components }}"
+  when: item["type"] != "Compose"
+
+- name: Prepare a Yum .repo file per component & variant (Compose component)
+  yum_repository:
+    name: '{{ item[0]["canonical_project_name"] }}'
+    description: '{{ item[0]["canonical_project_name"] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["canonical_project_name"] }}/compose/{{ item[1] }}/'
+    gpgcheck: no
+    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
+  with_items: "{{ components }}"
+  when: item[0]["type"] == "Compose"
 
 - name: Run the sync registry role
   include_role:
