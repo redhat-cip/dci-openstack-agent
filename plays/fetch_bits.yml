@@ -32,6 +32,16 @@
     name: dci-retrieve-component
   with_items: "{{ components }}"
 
+- name: Import remoteci SSL keys (because they have been reset by dci-downloader)
+  vars:
+    dci_import_keys_remoteci_id: '{{ job_info.job.remoteci.id }}'
+    dci_import_keys_sslclientcert: '{{ dci_openstack_agent_sslclientcert }}'
+    dci_import_keys_sslclientkey: '{{ dci_openstack_agent_sslclientkey }}'
+  include_role:
+    name: dci-import-keys
+  when:
+    - job_info.job.topic.data.releasename >= 'train'
+
 - name: Download the images list file
   get_url:
     url: 'https://repo.distributed-ci.io/{{ job_info.job.topic.product_id }}/{{ item.topic_id }}/{{ item.id }}/images_list.yaml'
@@ -46,7 +56,7 @@
     - job_info.job.topic.data.releasename >= 'pike'
     - not item.canonical_project_name.endswith("-DevTools")
 
-- name: Prepare the global Yum .repo file with all the components
+- name: Prepare the global Yum .repo file with all the components (legacy repo component)
   yum_repository:
     name: '{{ item["canonical_project_name"] }}'
     description: '{{ item["canonical_project_name"] }}'
@@ -54,8 +64,19 @@
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo'
   with_items: "{{ components }}"
+  when: item["type"] != "Compose"
 
-- name: Prepare a Yum .repo file per component
+- name: Prepare the global Yum .repo file with all the components & variants (Compose component)
+  yum_repository:
+    name: '{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
+    description: '{{ item[0]["canonical_project_name"] }} {{ item[1] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["canonical_project_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
+    gpgcheck: no
+    file: '{{ dci_mirror_location}}/dci_repo/dci_repo'
+  loop: "{{ components|product(['OpenStack', 'DevTools'])|list }}"
+  when: item[0]["type"] == "Compose"
+
+- name: Prepare a Yum .repo file per component (legacy repo component)
   yum_repository:
     name: '{{ item["canonical_project_name"] }}'
     description: '{{ item["canonical_project_name"] }}'
@@ -63,6 +84,17 @@
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item["canonical_project_name"] }}'
   with_items: "{{ components }}"
+  when: item["type"] != "Compose"
+
+- name: Prepare a Yum .repo file per component & variant (Compose component)
+  yum_repository:
+    name: '{{ item[0]["canonical_project_name"] }}'
+    description: '{{ item[0]["canonical_project_name"] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["canonical_project_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
+    gpgcheck: no
+    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
+  loop: "{{ components|product(['OpenStack', 'DevTools'])|list }}"
+  when: item[0]["type"] == "Compose"
 
 - name: Run the sync registry role
   include_role:
