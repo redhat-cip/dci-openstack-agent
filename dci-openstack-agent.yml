@@ -57,6 +57,9 @@
           include_tasks: plays/fetch_bits.yml
 
       rescue:
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
+
         - name: Run the failure process
           include_tasks: plays/failure.yml
 
@@ -80,6 +83,9 @@
         - name: Run the teardown process
           include_tasks: "{{ dci_config_dir }}/hooks/teardown.yml"
           when: dci_teardown_on_failure|bool
+
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
 
         - name: Run the failure process
           include_tasks: plays/failure.yml
@@ -150,6 +156,9 @@
         - name: Clean the files
           include_tasks: plays/cleanup.yml
 
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
+
         - name: Run the failure process
           include_tasks: plays/failure.yml
 
@@ -182,6 +191,9 @@
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
+
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
 
         - name: Run the failure process
           include_tasks: plays/failure.yml
@@ -260,6 +272,9 @@
         - name: Clean the files
           include_tasks: plays/cleanup.yml
 
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
+
         - name: Run the failure process
           include_tasks: plays/failure.yml
 
@@ -287,6 +302,9 @@
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
+
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
 
         - name: Run the failure process
           include_tasks: plays/failure.yml
@@ -328,6 +346,9 @@
         - name: Clean the files
           include_tasks: plays/cleanup.yml
 
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
+
         - name: Run the failure process
           include_tasks: plays/failure.yml
 
@@ -355,6 +376,9 @@
 
         - name: Clean the files
           include_tasks: plays/cleanup.yml
+
+        - name: Run the failure hook
+          include_tasks: '{{ dci_config_dir }}/hooks/failure.yml'
 
         - name: Run the failure process
           include_tasks: plays/failure.yml
