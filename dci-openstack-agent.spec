@@ -1,6 +1,6 @@
 Name:           dci-openstack-agent
 Version:        0.0.VERS
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        DCI OpenStack Agent for DCI control server
 License:        ASL 2.0
 URL:            https://github.com/redhat-cip/dci-openstack-agent
@@ -54,6 +54,7 @@ install -p -D -m 644 hooks/running.yml %{buildroot}%{_sysconfdir}/dci-openstack-
 install -p -D -m 644 hooks/teardown.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/teardown.yml
 install -p -D -m 644 hooks/success.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/success.yml
 install -p -D -m 644 hooks/local_tests.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/local_tests.yml
+install -p -D -m 644 hooks/local_tests.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/hooks/failure.yml
 install -p -D -m 644 settings.yml %{buildroot}%{_sysconfdir}/dci-openstack-agent/settings.yml
 install -p -D -m 440 dci-openstack-agent.sudo %{buildroot}%{_sysconfdir}/sudoers.d/dci-openstack-agent
 install -p -d -m 755 %{buildroot}/%{_sharedstatedir}/dci-openstack-agent
@@ -94,11 +95,15 @@ exit 0
 %config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/success.yml
 %config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/local_tests.yml
 %config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/teardown.yml
+%config(noreplace) %{_sysconfdir}/dci-openstack-agent/hooks/failure.yml
 %dir %{_sharedstatedir}/dci-openstack-agent
 %attr(0755, dci-openstack-agent, dci-openstack-agent) %{_sharedstatedir}/dci-openstack-agent
 /etc/sudoers.d/dci-openstack-agent
 
 
 %changelog
+* Fri Jan 17 2020 François Charlier <francois.charlier@redhat.com> - 0.0.0-2
+- Added the "failure.yml" hook
+
 * Tue Mar 28 2017 Gonéri Le Bouder <goneri@redhat.com> - 0.0.0-1
 - Initial release
