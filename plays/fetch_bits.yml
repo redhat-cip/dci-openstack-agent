@@ -100,10 +100,13 @@
   include_role:
     name: dci-sync-registry
   vars:
-    dci_sync_registry_images_list: '{{ dci_mirror_location }}/dci_repo/{{ components[0].canonical_project_name }}/images_list.yaml'
+    dci_sync_registry_images_list: '{{ dci_mirror_location }}/dci_repo/{{ item.canonical_project_name }}/images_list.yaml'
     dci_sync_registry_local_ip: '{{ dci_base_ip }}'
     dci_sync_registry_local_port: '{{ dci_registry_port }}'
     dci_sync_registry_remote_login: '{{ job_info.job.topic.data.registry.login }}'
     dci_sync_registry_remote_password: '{{ job_info.job.topic.data.registry.password }}'
     dci_sync_registry_skip_list: '{{ skip_container_images }}'
-  when: job_info.job.topic.data.releasename >= 'pike'
+  loop: "{{ components }}"
+  when:
+    - job_info.job.topic.data.releasename >= 'pike'
+    - not item.canonical_project_name.endswith("-DevTools")
