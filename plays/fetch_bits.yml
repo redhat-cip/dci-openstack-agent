@@ -106,4 +106,6 @@
     dci_sync_registry_remote_login: '{{ job_info.job.topic.data.registry.login }}'
     dci_sync_registry_remote_password: '{{ job_info.job.topic.data.registry.password }}'
     dci_sync_registry_skip_list: '{{ skip_container_images }}'
-  when: job_info.job.topic.data.releasename >= 'pike'
+  when:
+    - job_info.job.topic.data.releasename >= 'pike'
+    - not item.canonical_project_name.endswith("-DevTools")
