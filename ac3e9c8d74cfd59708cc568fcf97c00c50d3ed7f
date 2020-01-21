@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b995446_3658c52a",
+        "filename": "dci-openstack-agent.spec",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 405
+      },
+      "writtenOn": "2020-01-21T14:08:07Z",
+      "side": 1,
+      "message": "failure no?",
+      "range": {
+        "startLine": 57,
+        "startChar": 27,
+        "endLine": 57,
+        "endChar": 43
+      },
+      "revId": "ac3e9c8d74cfd59708cc568fcf97c00c50d3ed7f",
+      "serverId": "6c1dc8ef-8b94-40e4-bd83-c2359d45ecc0",
+      "unresolved": false
+    }
+  ]
+}
