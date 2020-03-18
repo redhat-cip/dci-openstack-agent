@@ -50,6 +50,10 @@
     client_cert: '{{ dci_openstack_agent_sslclientcert }}'
     client_key: '{{ dci_openstack_agent_sslclientkey }}'
     validate_certs: '{{ dci_openstack_agent_sslverify }}'
+  environment:
+    http_proxy: "{{ lookup('env', 'http_proxy') }}"
+    https_proxy: "{{ lookup('env', 'https_proxy') }}"
+    no_proxy: "{{ lookup('env', 'no_proxy') }}"
   become: true
   with_items: "{{ components }}"
   when:
