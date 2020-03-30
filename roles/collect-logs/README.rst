@@ -1,7 +1,10 @@
 collect-logs
 ============
 
-An Ansible role for aggregating logs from different nodes.
+Ansible role for aggregating logs from different nodes.
+
+The only supported way to call this role is using its main entry point. Do not
+use ``tasks_from`` as this count as using private interfaces.
 
 Requirements
 ------------
@@ -24,8 +27,8 @@ exposed with
 Role Variables
 --------------
 
-Collection related
-~~~~~~~~~~~~~~~~~~
+File Collection
+~~~~~~~~~~~~~~~
 
 -  ``artcl_collect_list`` – A list of files and directories to gather
    from the target. Directories are collected recursively and need to
@@ -46,14 +49,54 @@ Collection related
    from collecting. This list is passed to rsync as an exclude filter
    and it takes precedence over the collection list. For details see the
    “FILTER RULES” topic in the rsync man page.
+-  ``artcl_exclude_list_append`` – A list of files and directories to be
+   appended in the default exclude list. This is useful for users that want to
+   keep the original list and just add more relevant paths.
 -  ``artcl_collect_dir`` – A local directory where the logs should be
    gathered, without a trailing slash.
--  ``artcl_gzip_only``: false/true – When true, gathered files are
-   gzipped one by one in ``artcl_collect_dir``, when false, a tar.gz
-   file will contain all the logs.
 -  ``collect_log_types`` - A list of which type of logs will be collected,
    such as openstack logs, network logs, system logs, etc.
    Acceptable values are system, monitoring, network, openstack and container.
+-  ``artcl_gzip``: Archive files, disabled by default.
+-  ``artcl_rsync_collect_list`` - if true, a rsync filter file is generated for
+   ``rsync`` to collect files, if false, ``find`` is used to generate list
+   of files to collect for ``rsync``. ``find`` brings some benefits like
+   searching for files in a certain depth (``artcl_find_maxdepth``) or up to
+   certain size (``artcl_find_max_size``).
+-  ``artcl_find_maxdepth`` - Number of levels of directories below the starting
+   points, default is 4. Note: this variable is applied only when
+   ``artcl_rsync_collect_list`` is set to false.
+-  ``artcl_find_max_size`` - Max size of a file in MBs to be included in find
+   search, default value is 256. Note: this variable is applied only when
+   ``artcl_rsync_collect_list`` is set to false.
+
+-  ``artcl_commands_extras`` - A nested dictionary of additional commands to be
+   run during collection. First level contains the group type, as defined by
+   ``collect_log_types`` list which determines which groups are collected and
+   which ones are skipped.
+
+   Defined keys will override implicit ones from defaults
+   ``artcl_commands`` which is not expected to be changed by user.
+
+   Second level keys are used to uniqly identify a command and determine the
+   default output filename, unless is mentioned via ``capture_file`` property.
+
+   ``cmd`` contains the shell command that would be run.
+
+.. code:: yaml
+
+   artcl_commands_extras:
+     system:
+       disk-space:
+         cmd: df
+         # will save output to /var/log/extras/dist-space.log
+       mounts:
+         cmd: mount -a
+         capture_file: /mounts.txt  # <-- custom capture file location
+     openstack:
+       key2:
+         cmd: touch /foo.txt
+         capture_disable: true # <-- disable implicit std redirection
 
 Documentation generation related
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -109,22 +152,34 @@ Publishing related
    ssh to connect
 -  ``artcl_rsync_url`` – rsync target for uploading the logs. The
    localhost needs to have passwordless authentication to the target or
-   the ``PROVISIONER_KEY`` Var specificed in the environment.
+   the ``PROVISIONER_KEY`` var specified in the environment.
 -  ``artcl_use_swift``: false/true – use swift object storage to publish
    the logs
 -  ``artcl_swift_auth_url`` – the OpenStack auth URL for Swift
 -  ``artcl_swift_username`` – OpenStack username for Swift
 -  ``artcl_swift_password`` – password for the Swift user
--  ``artcl_swift_tenant_name`` – OpenStack tenant name for Swift
+-  ``artcl_swift_tenant_name`` – OpenStack tenant (project) name for Swift
 -  ``artcl_swift_container`` – the name of the Swift container to use,
    default is ``logs``
 -  ``artcl_swift_delete_after`` – The number of seconds after which
    Swift will remove the uploaded objects, the default is 2678400
    seconds = 31 days.
--  ``artcl_artifact_url`` – a HTTP URL at which the uploaded logs will
+-  ``artcl_artifact_url`` – An HTTP URL at which the uploaded logs will
    be accessible after upload.
--  ``artcl_collect_sosreport`` – true/false – If true, create and
-   collect a sosreport for each host.
+-  ``artcl_report_server_key`` - A path to a key for an access to the report
+   server.
+
+
+Ara related
+~~~~~~~~~~~
+
+- ``ara_enabled``: true/false - If true, the role will generate ara reports.
+- ``ara_overcloud_db_path``: Path to ara overcloud path (tripleo only).
+- ``ara_generate_html``: true/false - Generate ara html.
+- ``ara_graphite_prefix``: Ara prefix to be used in graphite.
+- ``ara_only_successful_tasks``: true/false - Send to graphite only successfull
+  tasks.
+- ``ara_tasks_map``: Dictionary with ara tasks to be mapped on graphite.
 
 Logs parsing
 ~~~~~~~~~~~~
@@ -168,7 +223,7 @@ Example Role Playbook
        - collect-logs
 
 ** Note:
-  The tasks that collect data from the nodes is executed with ignore_errors.
+  The tasks that collect data from the nodes are executed with ignore_errors.
   For `example:  <https://opendev.org/openstack/ansible-role-collect-logs/src/branch/master/tasks/collect/system.yml#L3>`__
 
 Templated Bash to rST Conversion Notes
@@ -199,6 +254,68 @@ collecting system logs and other debug information. To enable creation
 of sosreport(s) with this role, create a custom config (you can use
 centosci-logs.yml as a template) and ensure that
 ``artcl_collect_sosreport: true`` is set.
+
+
+Sanitizing Log Strings
+----------------------
+
+Logs can contain senstive data such as private links and access
+passwords. The 'collect' task provides an option to replace
+private strings with sanitized strings to protect private data.
+
+The 'sanitize_log_strings' task makes use of the Ansible 'replace'
+module and is enabled by defining a ``sanitize_lines``
+variable as shown in the example below:
+
+.. code:: yaml
+
+   ---
+   sanitize_lines:
+     - dir_path: '/tmp/{{ inventory_hostname }}/etc/repos/'
+       file_pattern: '*'
+       orig_string: '^(.*)download(.*)$'
+       sanitized_string: 'SANITIZED_STR_download'
+     - dir_path: '/tmp/{{ inventory_hostname }}/home/zuul/'
+       file_pattern: '*'
+       orig_string: '^(.*)my_private_host\.com(.*)$'
+       sanitized_string: 'SANITIZED_STR_host'
+
+
+The task searches for files containing the sensitive strings
+(orig_string) within a file path, and then replaces the sensitive
+strings in those files with the sanitized_string.
+
+
+Usage with InfraRed
+-------------------
+
+Run the following steps to execute the role with
+`infrared <https://infrared.readthedocs.io/en/latest/>`__.
+
+1. Install infrared and add ansible-role-collect-logs plugin by providing
+   the url to this repo:
+
+   .. code-block::
+
+       (infrared)$ ir plugin add https://opendev.org/openstack/ansible-role-collect-logs.git --src-path infrared_plugin
+
+2. Verify that the plugin is imported by:
+
+   .. code-block::
+
+       (infrared)$ ir plugin list
+
+3. From infrared directory symlink roles path:
+
+   .. code-block::
+
+       $ ln -s $(pwd)/plugins $(pwd)/plugins/ansible-role-collect-logs/infrared_plugin/roles
+
+4. Run the plugin:
+
+   .. code-block::
+
+        (infrared)$ ir ansible-role-collect-logs
 
 License
 -------

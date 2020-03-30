@@ -13,6 +13,12 @@ containerized_undercloud: >-
   {%- else -%}
   false
   {%- endif -%}
+containerized_undercloud_upgrade: >-
+  {% if release not in ['newton','ocata','pike'] -%}
+  true
+  {%- else -%}
+  false
+  {%- endif -%}
 containerized_overcloud_upgrade: >-
   {% if release in ['newton', 'ocata'] -%}
   false
@@ -43,9 +49,9 @@ docker_ceph_tag: >-
   {% if release in ['pike'] -%}
   v3.0.3-stable-3.0-jewel-centos-7-x86_64
   {%- elif release in ['queens','rocky'] -%}
-  v3.2.1-stable-3.2-luminous-centos-7-x86_64
+  v3.2.10-stable-3.2-luminous-centos-7-x86_64
   {%- else -%}
-  v4.0.4-stable-4.0-nautilus-centos-7-x86_64
+  v4.0.10-stable-4.0-nautilus-centos-7-x86_64
   {%- endif -%}
 rhel_containers: >-
    {% if ansible_distribution == 'RedHat' -%}
@@ -90,3 +96,13 @@ baremetal_provision: false
 
 # If `undercloud_enable_nova` is `true`, the undercloud will have running glance and nova services
 undercloud_enable_nova: true
+
+# Set the location for the downloaded amphora image when download_amphora is true
+octavia_amphora_path: >-
+  {% if release in ['queens', 'rocky'] -%}
+  /usr/share/openstack-octavia-amphora-images/amphora-x64-haproxy.qcow2
+  {%- else -%}
+  {{ working_dir }}/amphora.qcow2
+  {%- endif %}
+
+undercloud_enable_mistral: true

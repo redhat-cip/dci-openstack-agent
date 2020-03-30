@@ -1,0 +1,52 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+
+    - name: "Download Infrared"
+      git:
+        repo: "https://github.com/redhat-openstack/infrared.git"
+        version: "master"
+        dest: "{{ infrared_location }}"
+        update: true
+
+    - name: "Create Infrared venv"
+      pip:
+        name:
+          - pbr
+          - pip
+          - setuptools
+        virtualenv: "{{ infrared_venv }}"
+
+    - name: "Install Infrared"
+      pip:
+        name: "."
+        virtualenv: "{{ infrared_venv }}"
+        chdir: "{{ infrared_location }}"
+
+    - name: "Create infrared_plugin dir"
+      file:
+        path: "{{ infrared_location }}/infrared_plugin"
+        state: directory
+
+    - name: "Copy ansible-role-collect-logs to test host"
+      synchronize:
+        src: "{{ playbook_dir }}/../../"
+        dest: "{{ ansible_env.HOME }}/artcl-src"
+        rsync_opts:
+          - "--exclude=.tox"
+
+    - name: "Install ansible-role-collect-logs plugin"
+      shell: |
+        export PATH=$PATH:/usr/local/sbin:/usr/sbin
+        source {{ infrared_venv }}/bin/activate
+        ir plugin add {{ ansible_env.HOME }}/artcl-src --src-path infrared_plugin
+      args:
+        chdir: "{{ infrared_location }}"
+        executable: /bin/bash
+      register: plugin_install_output
+      changed_when: true
+
+    - name: "Debug: output from plugin installation task main playbook"
+      debug:
+        msg: "{{ plugin_install_output }}"

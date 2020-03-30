@@ -73,7 +73,7 @@ regexes:
     name: same_host_re
   - regex: 'Failed to start (.+) container'
     name: failed_container_re
-  - regex: "msg\": \"(.*) isn't working \\(healthcheck failed\\)"
+  - regex: "msg\": \"([^\"]+) isn't working \\(healthcheck failed\\)"
     name: healthcheck_re
 patterns:
   "console":
@@ -668,6 +668,11 @@ patterns:
       logstash: "healthcheck failed"
       msg: "Failed healthcheck of {}."
       pattern: "healthcheck_re"
+      tag: "code"
+    - id: 526
+      logstash: "ERROR:root:Image prepare failed: [Errno 17] File exists"
+      msg: "Container image prepare lock error."
+      pattern: "ERROR:root:Image prepare failed: [Errno 17] File exists"
       tag: "code"
   "bmc":
     - id: 600

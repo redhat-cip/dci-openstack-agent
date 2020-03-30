@@ -9,62 +9,20 @@
     fi
   changed_when: true
 
-- name: fetch and gzip the console log
+- name: Fetch console log
   shell: >
     set -o pipefail &&
     curl -k "{{ lookup('env', 'BUILD_URL') }}/timestamps/?time=yyyy-MM-dd%20HH:mm:ss.SSS%20|&appendLog&locale=en_GB"
-    | gzip > {{ artcl_collect_dir }}/console.txt.gz
+    > {{ artcl_collect_dir }}/console.log
+  args:
+    executable: /bin/bash
   when: lookup('env', 'BUILD_URL')
 
-- when: ara_generate_html|bool
-  block:
-
-    - name: Generate and retrieve the ARA static playbook report
-      shell: >
-        {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq;
-        {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.json;
-        cp -r {{ local_working_dir }}/ara_oooq {{ artcl_collect_dir }}/;
-      ignore_errors: true
-
-    - name: Generate and retrieve root the ARA static playbook report
-      become: true
-      shell: >
-        {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq_root;
-        {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.oooq.root.json;
-        cp -r {{ local_working_dir }}/ara_oooq_root {{ artcl_collect_dir }}/;
-      ignore_errors: true
-
-    - name: Generate and retrieve the ARA static playbook report for OC deploy
-      become: true
-      shell: >
-        {{ local_working_dir }}/bin/ara generate html {{ local_working_dir }}/ara_oooq_oc;
-        {{ local_working_dir }}/bin/ara task list --all -f json > {{ artcl_collect_dir }}/ara.oooq.oc.json;
-        cp -r {{ local_working_dir }}/ara_oooq_oc {{ artcl_collect_dir }}/;
-      ignore_errors: true
-      environment:
-        ARA_DATABASE: 'sqlite:///{{ ara_overcloud_db_path }}'
-
-- name: Copy ara files to ara-report directories
-  shell: |
-    mkdir -p {{ artcl_collect_dir }}/{{ item.dir }}/ara-report;
-    cp {{ item.file }} {{ artcl_collect_dir }}/{{ item.dir }}/ara-report/ansible.sqlite;
-  loop:
-    - dir: ara_oooq
-      file: "{{ local_working_dir }}/ara.sqlite"
-    - dir: ara_oooq_overcloud
-      file: "{{ ara_overcloud_db_path }}"
-  ignore_errors: true
-  when: not ara_generate_html|bool
-
-- include: ara_graphite.yml
-  when: ara_graphite_server is defined
-  ignore_errors: true
-
-- include: ara_influxdb.yml
-  when: influxdb_url is defined or influxdb_create_data_file|bool
-  ignore_errors: true
-
 - include: sova.yml
+  ignore_errors: true
+
+- import_tasks: publish_ara.yml
+  when: ara_enabled|bool
   ignore_errors: true
 
 - name: fetch stackviz results to the root of the collect_dir
@@ -90,11 +48,6 @@
     gunzip {{ artcl_collect_dir }}/tempest.{xml,html}.gz || true;
   changed_when: true
 
-- name: Gunzip tempest results to the root of the collect_dir for os_tempest
-  shell: >
-    gunzip -c {{ artcl_collect_dir }}/undercloud/var/log/tempest/stestr_results.html.gz > {{ artcl_collect_dir }}/stestr_results.html || true
-  when: use_os_tempest is defined
-
 - name: Copy testrepository.subunit file to the root of collect_dir for os_tempest
   shell: >
     cp {{ artcl_collect_dir }}/undercloud/var/log/tempest/testrepository.subunit.gz {{ artcl_collect_dir }}/testrepository.subunit.gz || true
@@ -109,6 +62,16 @@
   ignore_errors: true
   changed_when: true
 
+# the doc footer for logging has been removed.
+# copy the log readme into the base directory.
+- name: copy in the logs README.html
+  shell: >
+    if [ -f {{ artcl_readme_path }} ]; then
+        cp {{ artcl_readme_path }} {{ artcl_readme_file }};
+    fi;
+  ignore_errors: true
+  changed_when: true
+
 - name: Rename compressed text based files to end with txt.gz extension
   shell: >
     set -o pipefail &&
@@ -117,6 +80,8 @@
     { new=orig; sub(/\.gz$/, ".txt.gz", new); system("mv " orig " " new) }
     /\.(conf|ini|json|sh|log|yaml|yml|repo|cfg|j2|py)\.gz$/ { rename($0) }
     /(\/var\/log\/|\/etc\/)[^ \/\.]+\.gz$/ { rename($0) }';
+  args:
+    executable: /bin/bash
   when: artcl_txt_rename|bool
 
 - name: Create the reproducer script
@@ -124,22 +89,24 @@
     name: create-reproducer-script
   when: ansible_env.TOCI_JOBTYPE is defined
 
-
 - name: Create the zuul-based reproducer script if we are running on zuul
   include_role:
     name: create-zuul-based-reproducer
   when: zuul is defined
 
+# This is where upload starts, no local change after this line
+# All tags after this line are marked with "notest" to allow testing (molecule) in absence of access to log servers.
 - name: upload to the artifact server using pubkey auth
   shell: >
     rsync -av
-    --quiet -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+    --quiet -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {{ artcl_report_server_key|default('') }}"
     {{ artcl_collect_dir }}/ {{ artcl_rsync_path }}/{{ lookup('env', 'BUILD_TAG') }}
   async: "{{ artcl_publish_timeout }}"
   poll: 15
   retries: 5
   delay: 60
   when: artcl_use_rsync|bool and not artcl_rsync_use_daemon|bool
+  tags: notest
 
 - name: upload to the artifact server using password auth
   environment:
@@ -150,6 +117,7 @@
   retries: 5
   delay: 60
   when: artcl_use_rsync|bool and artcl_rsync_use_daemon|bool
+  tags: notest
 
 - name: upload to swift based artifact server
   shell: swift upload --quiet --header "X-Delete-After:{{ artcl_swift_delete_after }}" {{ artcl_swift_container }}/{{ lookup('env', 'BUILD_TAG') }} *
@@ -164,6 +132,7 @@
   async: "{{ artcl_publish_timeout }}"
   poll: 15
   when: artcl_use_swift|bool
+  tags: notest
 
 - name: use zuul_swift_upload.py to publish the files
   shell: >
@@ -172,9 +141,11 @@
   async: "{{ artcl_publish_timeout }}"
   poll: 15
   when: artcl_use_zuul_swift_upload|bool
+  tags: notest
 
 - name: create the artifact location redirect file
   template:
     src: full_logs.html.j2
     dest: "{{ artcl_collect_dir }}/full_logs.html"
   when: artcl_env != 'tripleo-ci'
+  tags: notest

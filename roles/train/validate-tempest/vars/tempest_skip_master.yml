@@ -5,6 +5,9 @@
 ## the TripleO PTL, Thanks                          ##
 
 known_failures:
+  - test: 'tempest.scenario.test_security_groups_basic_ops.TestSecurityGroupsBasicOps.test_port_security_disable_security_group'
+    reason: 'timing out in ssh'
+    lp: 'https://bugs.launchpad.net/tripleo/+bug/1869077'
   - test: 'neutron_tempest_plugin.scenario.test_dns_integration.DNSIntegrationTests'
     reason: 'Remove this blacklist when OVS 2.12 will be released and https://patchwork.ozlabs.org/patch/1102717/ merged.'
     lp: 'https://bugs.launchpad.net/tripleo/+bug/1832166'
@@ -40,8 +43,6 @@ known_failures:
   - test: 'trove_tempest_plugin'
     reason: 'Not supported in TripleO'
   - test: 'tripleo_common_tempest_plugin'
-    reason: 'Not supported in TripleO'
-  - test: 'tempest_horizon'
     reason: 'Not supported in TripleO'
   - test: 'octavia_tempest_plugin'
     reason: 'Not supported in TripleO'
@@ -151,10 +152,7 @@ known_failures:
   - test: 'neutron_tempest_plugin.scenario.test_qos.QoSTest.test_qos_basic_and_update'
     reason: 'Possible bug for QoS + FIP in OVN'
     lp: 'https://bugs.launchpad.net/tripleo/+bug/1817705'
-  - test: 'barbican_tempest_plugin.tests.scenario.test_image_signing.ImageSigningSnapshotTest'
-    reason: 'barbican and python-tempestconf not playing well'
-    lp: 'https://bugs.launchpad.net/tripleo/+bug/1820668'
-  - test: 'barbican_tempest_plugin.tests.scenario.test_image_signing.ImageSigningTest'
+  - test: 'barbican_tempest_plugin.tests.scenario.test_image_signing.ImageSigningTest.test_signed_image_upload_boot_failure'
     reason: 'barbican and python-tempestconf not playing well'
     lp: 'https://bugs.launchpad.net/tripleo/+bug/1820671'
   - test: 'telemetry_tempest_plugin.scenario.test_telemetry_integration.TestTelemetryIntegration'
