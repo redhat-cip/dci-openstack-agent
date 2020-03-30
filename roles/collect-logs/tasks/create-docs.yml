@@ -4,13 +4,6 @@
   pip:
     requirements: "{{ local_working_dir }}/usr/local/share/ansible/roles/collect-logs/docs/doc-requirements.txt"
 
-- name: Unarchive shell scripts
-  shell: >
-    gunzip "{{ artcl_collect_dir }}/undercloud/home/{{ undercloud_user }}/{{ item }}.sh.gz";
-  with_items: "{{ artcl_create_docs_payload.included_deployment_scripts }}"
-  ignore_errors: true
-  when: artcl_gzip_only|bool
-
 - name: Generate rST docs from scripts and move to Sphinx src dir
   shell: >
      awk -f "{{ local_working_dir }}/usr/local/share/ansible/roles/collect-logs/scripts/doc_extrapolation.awk" \
@@ -43,5 +36,7 @@
     set -o pipefail &&
     sphinx-build -b html "{{ artcl_docs_source_dir }}" "{{ artcl_docs_build_dir }}"
     2>&1 {{ timestamper_cmd }} > {{ artcl_collect_dir }}/docs/sphinx_build.log
+  args:
+    executable: /bin/bash
   ignore_errors: true
   changed_when: true

@@ -41,7 +41,7 @@ done
 for i in $(openstack router list -c ID -f value); do openstack router unset --external-gateway $i; done
 for r in $(openstack router list -c ID -f value); do
     for p in $(openstack port list --router $r -c ID -f value); do
-        openstack router remove subnet $r $p || true
+        openstack router remove port $r $p || true
     done
 done
 for i in $(openstack router list -c ID -f value); do openstack router delete $i; done

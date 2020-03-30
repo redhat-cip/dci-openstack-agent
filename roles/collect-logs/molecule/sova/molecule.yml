@@ -7,22 +7,9 @@ driver:
       ansible_connection: local
 
 log: true
-lint:
-  name: yamllint
 platforms:
   - name: instance
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-    # Need to fix a whole role
-    options:
-      x:
-        - '301'
-        - '302'
-        - '303'
-        - '305'
 verifier:
   name: ansible
-  lint:
-    name: ansible-lint

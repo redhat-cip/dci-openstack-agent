@@ -122,13 +122,28 @@ artcl_exclude_list:
   - /etc/pki/ca-trust/extracted
   - /etc/alternatives
   - /var/log/journal
-artcl_gzip_only: true
-artcl_tar_gz: false
+
+# if true, a rsync filter file is generated for rsync to collect files,
+# if false, find is used to generate list of files to collect for rsync.
+artcl_rsync_collect_list: true
+artcl_find_maxdepth: 4
+# size in MBs
+artcl_find_max_size: 256
+
+# os specific values loaded from tasks/main.yaml
+artcl_collect_pkg_list: []
+
+# In upstream logs the compression is handled
+# by the storage servers themselves and this
+# can be false.  In other storage servers
+# the role must compress files.
+artcl_gzip: false
 
 ## publishing related vars
 artcl_publish: false
 artcl_env: default
-artcl_readme_file: "{{ artcl_collect_dir }}/README-logs.html"
+artcl_readme_path: "{{ working_dir }}/src/opendev.org/openstack/tripleo-ci/docs/tripleo-quickstart-logs.html"
+artcl_readme_file: "{{ artcl_collect_dir }}/README.html"
 artcl_txt_rename: false
 # give up log upload after 30 minutes
 artcl_publish_timeout: 1800
@@ -146,6 +161,26 @@ artcl_zuul_swift_upload_path: /usr/local/bin
 
 artcl_collect_sosreport: false
 artcl_sosreport_options: "--batch"
+
+# User defined commands to be executed, combined with default ones.
+artcl_commands_extras: {}
+
+# Implicit commands executed by the role. Keep the dict sorted.
+artcl_commands:
+  system:
+    cpuinfo:
+      cmd: cat /proc/cpuinfo
+      capture_file: /var/log/extra/cpuinfo.txt
+    meminfo:
+      cmd: cat /proc/meminfo
+      capture_file: /var/log/extra/meminfo.txt
+    swaps:
+      cmd: cat /proc/swaps
+      capture_file: /var/log/extra/swaps.txt
+  monitoring: {}
+  network: {}
+  openstack: {}
+  container: {}
 
 # Doc generation specific vars
 artcl_gen_docs: false
@@ -195,7 +230,12 @@ artcl_logstash_files:
   - /home/*/tempest.log
   - /var/log/bootstrap-subnodes.log
   - /var/log/tripleo-container-image-prepare.log
+
 # ara_graphite_server: graphite.tripleo.org
+# if ara_enabled is false, no ara tasks will be executed
+ara_enabled: true
+ara_overcloud_db_path: "/var/lib/mistral/overcloud/ara_overcloud.sqlite"
+ara_generate_html: true
 ara_graphite_prefix: "tripleo.{{ lookup('env', 'STABLE_RELEASE')|default('master', true) }}.{{ lookup('env', 'TOCI_JOBTYPE') }}."
 ara_only_successful_tasks: true
 ara_tasks_map:
@@ -225,5 +265,3 @@ influxdb_data_file_path: "{{ lookup('env', 'LOCAL_WORKING_DIR')|default('/tmp', 
 influxdb_create_data_file: true
 odl_extra_log_dir: /var/log/extra/odl
 odl_extra_info_log: "{{ odl_extra_log_dir }}/odl_info.log"
-ara_overcloud_db_path: "/var/lib/mistral/overcloud/ara_overcloud.sqlite"
-ara_generate_html: true
