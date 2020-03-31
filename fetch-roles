@@ -3,9 +3,14 @@ set -eux
 TMPDIR='/tmp/dci-tmp-dir'
 BASEDIR=$(pwd)
 
+if [ $# -ne 2 ] || [ "$1" != "--rhgerrit-user" ]; then
+    echo "Missing '--rhgerrit-user <your_username>'"
+    exit 1
+fi
+
+RHGERRIT_USER=$2
+
 declare -A release
-release['OSP8']='liberty'
-release['OSP9']='mitaka'
 release['OSP10']='newton'
 release['OSP11']='ocata'
 release['OSP12']='pike'
@@ -33,13 +38,12 @@ get_repo() {
         git checkout -b ${topic} ${branch}
 
         if [ ${repo} = 'tripleo-quickstart-extras' ]; then
-            git remote show redhat_gerrit || git remote add redhat_gerrit ssh://code.engineering.redhat.com:22/tripleo-quickstart-extras.git
-            [ ${topic} = "OSP9" ] && git review -r redhat_gerrit -x 130689
-            [ ${topic} = "OSP8" ] && git review -r redhat_gerrit -x 130690
-            [ ${topic} = "OSP9" ] && git review -r redhat_gerrit -x 130692
-            [ ${topic} = "OSP8" ] && git review -r redhat_gerrit -x 130694
+            git remote show redhat_gerrit || git remote add redhat_gerrit ssh://${RHGERRIT_USER}@code.engineering.redhat.com:22/tripleo-quickstart-extras.git
             [ ${topic} = "OSP10" ] && git review -r redhat_gerrit -x 185774
             [ ${topic} = "OSP15" -o ${topic} = "OSP16" ] && git review -x 676196
+            [ ${topic} = "OSP16" ] && git review -x 718353
+
+            git review -x 716237
         fi
 
         for i in ${roles}; do
