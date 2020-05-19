@@ -272,6 +272,34 @@ OnUnitInactiveSec= defines a timer relative to when the unit the timer is activa
 
 DCI comes with a default value of 1h, you can increase to 12h for example.
 
+## Tempest: How to select the Tempest tests to execute
+
+The agent runs by default the Tempest "smoke" tests only. This should be
+ sufficient to verify that the deployment is working without taking too long to
+ run or have false negatives due to deployment specifics.
+
+In the tempest configuration you can specify a regular expression against which
+ each test will be matched before being executed.
+
+The `test_white_regex` allows to filter the tests executed. For example, set it
+ to an empty string to run all of the Tempest tests:
+```console
+$ vim /etc/dci-openstack-agent/settings.yml
+(...)
+test_white_regex: ""
+(...)
+```
+
+Another option is to skip some specific tests using a blacklist:
+```
+(...)
+test_black_regex:
+  - tempest.api.image.v2.test_images_metadefs_namespace_properties.MetadataNamespacePropertiesTest.test_basic_meta_def_namespace_property
+(...)
+```
+
+NOTE: Both `test_white_regex` and `test_black_regex` can be used at the same time.
+
 ## Tempest: How to disable services
 
 The agent installs by default the meta tempest package openstack-tempest-all
@@ -280,20 +308,37 @@ The agent installs by default the meta tempest package openstack-tempest-all
  don't want because the service isn't install.
 
 In the tempest configuration you can disable tests per service. Each service has
- a boolean entry under [the service_available section](https://github.com/openstack/tempest/blob/master/tempest/config.py#L975-L994).
+ a boolean entry under [the service_available section](https://github.com/openstack/tempest/blob/master/tempest/config.py)
+ (now moved to each individual plugin).
 
-You can use the tempest_extra_config variable in the settings.yml file to add
- some services to disable:
+You can use the `tempest_extra_config` variable in the settings.yml file to add
+ some services to disable (the following example disables tempest tests for  all
+ services which may not be deployed by default, as of OSP 16):
 
 ```console
 $ vim /etc/dci-openstack-agent/settings.yml
 
 tempest_extra_config:
 (...)
+  service_available.aodh: False
+  service_available.ceilometer: False
+  service_available.panko: False
+  service_available.barbican: False
   service_available.designate: False
+  service_available.gnocchi: False
   service_available.ironic: False
+  service_available.kuryr: False
+  service_available.load_balancer: False
+  service_available.manilla: False
+  service_available.mistral: False
+  service_available.novajoin: False
   service_available.sahara: False
+  service_available.zaqar: False
+(...)
 ```
+
+**WARNING**: if you want to override any of the `tempest_extra_config` dictionnary, you also need to recopy the default values
+from `/usr/share/dci-openstack-agent/group_vars/all`.
 
 ## Tempest: How to customize services
 
@@ -330,6 +375,9 @@ tempest_extra_config:
 
 You will have some k/v with the 'network' prefix for neutron, 'compute' prefix
  for nova, etc... You can find most of the tempest config items in [the tempest project config](https://github.com/openstack/tempest/blob/master/tempest/config.py)
+
+**WARNING**: if you want to override any of the `tempest_extra_config` dictionnary, you also need to recopy the default values
+from `/usr/share/dci-openstack-agent/group_vars/all`.
 
 ## Tempest: Run a given test manually
 
