@@ -58,7 +58,15 @@ public_net_gateway: "{{ floating_ip_cidr | nthhost(1) }}"
 tempest_workers: 6
 
 #
+# Without any other configuration, run only Tempest smoke tests
+# override this to "" in settings.yml to run all of Tempest tests
+#
+
+test_white_regex: smoke
+
+#
 # Extra confituration for Tempest
+# (note: you must duplicate ALL the tempest_extra_config dict to override even only one of its settings.
 #
 
 tempest_extra_config:
