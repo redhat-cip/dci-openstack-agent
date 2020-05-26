@@ -219,8 +219,8 @@
     working_dir: "/home/{{ undercloud_user }}"
     local_working_dir: "{{ lookup('env', 'HOME') }}/.quickstart"
     artcl_collect_dir: "{{ local_working_dir }}/collected_files"
-    artcl_gzip_only: false
-    artcl_tar_gz: true
+    artcl_collect_sosreport: true
+    artcl_gzip: true
   roles:
     - collect-logs
 
