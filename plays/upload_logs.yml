@@ -11,12 +11,25 @@
   delegate_to: localhost
   ignore_errors: yes
 
+- name: Make sure we have an archive with logs
+  archive:
+    format: tar
+    remove: no
+    dest: "{{ lookup('env', 'HOME') }}/.quickstart/collected_files/{{ item }}.tar"
+    path: "{{ lookup('env', 'HOME') }}/.quickstart/collected_files/{{ item }}"
+  creates: "{{ lookup('env', 'HOME') }}/.quickstart/collected_files/{{ item }}.tar"
+  wth_items:
+    - 'undercloud'
+    - '{{ groups.overcloud|default([]) }}'
+  delegate_to: localhost
+  ignore_errors: yes
+
 - name: Upload logs
   dci_file:
-    path: "{{ lookup('env', 'HOME') }}/.quickstart/collected_files/{{ item }}.tar.gz"
-    name: '{{ item }}.tar.gz'
+    path: "{{ lookup('env', 'HOME') }}/.quickstart/collected_files/{{ item }}.tar"
+    name: '{{ item }}.tar'
     job_id: '{{ hostvars.localhost.job_info.job.id }}'
-    mime: 'application/x-compressed'
+    mime: 'application/x-tar'
   with_items:
     - 'undercloud'
     - '{{ groups.overcloud|default([]) }}'
