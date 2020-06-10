@@ -58,8 +58,6 @@
   vars:
     tempest_exit_on_failure: false
     run_tempest: true
-    test_regex: ''
-    skip_file_src: ''
     tempest_plugins: >-
       {% if release >= 'newton' -%}
       [ "openstack-tempest-all" ]
