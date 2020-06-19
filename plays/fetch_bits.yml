@@ -71,13 +71,15 @@
   when: item["type"] != "Compose"
 
 - name: Prepare the global Yum .repo file with all the components & variants (Compose component)
+  vars:
+    required_variants: {% if dci_topic == "OSP16" %}['OpenStack', 'DevTools']{% else %}['OpenStack',]{% endif %}
   yum_repository:
     name: '{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
     description: '{{ item[0]["canonical_project_name"] }} {{ item[1] }}'
     baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["canonical_project_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
     gpgcheck: no
     file: '{{ dci_mirror_location}}/dci_repo/dci_repo'
-  loop: "{{ components|product(['OpenStack', 'DevTools'])|list }}"
+  loop: "{{ components|product(required_variants)|list }}"
   when: item[0]["type"] == "Compose"
 
 - name: Prepare a Yum .repo file per component (legacy repo component)
@@ -91,13 +93,15 @@
   when: item["type"] != "Compose"
 
 - name: Prepare a Yum .repo file per component & variant (Compose component)
+  vars:
+    required_variants: {% if dci_topic == "OSP16" %}['OpenStack', 'DevTools']{% else %}['OpenStack',]{% endif %}
   yum_repository:
-    name: '{{ item[0]["canonical_project_name"] }}'
-    description: '{{ item[0]["canonical_project_name"] }}'
+    name: '{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
+    description: '{{ item[0]["canonical_project_name"] }} {{ item[1] }}'
     baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["canonical_project_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
-  loop: "{{ components|product(['OpenStack', 'DevTools'])|list }}"
+  loop: "{{ components|product(required_variants)|list }}"
   when: item[0]["type"] == "Compose"
 
 - name: Run the sync registry role
