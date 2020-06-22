@@ -12,6 +12,7 @@ BuildRequires:  ansible
 BuildRequires:  systemd
 BuildRequires:  systemd-units
 BuildRequires:  git
+BuildRequires:  /usr/bin/pathfix.py
 Requires:       dci-ansible
 Requires:       ansible
 Requires:       python-netaddr
@@ -35,6 +36,7 @@ DCI OpenStack Agent for DCI control server.
 
 %prep
 %setup -qc
+pathfix.py -pn .
 
 %build
 
@@ -102,6 +104,9 @@ exit 0
 
 
 %changelog
+* Mon Jun 22 2020 François Charlier <francois.charlier@redhat.com> - 0.0.0-3
+- Fix python shebang for el8
+
 * Fri Jan 17 2020 François Charlier <francois.charlier@redhat.com> - 0.0.0-2
 - Added the "failure.yml" hook
 
