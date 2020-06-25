@@ -13,7 +13,8 @@ BuildRequires:  systemd
 BuildRequires:  systemd-units
 BuildRequires:  git
 Requires:       dci-ansible
-Requires:       ansible
+# Bug in ansible 2.9.10 https://github.com/ansible/ansible/issues/70168
+Requires:       ansible <2.9.10
 Requires:       python-netaddr
 Requires:       ansible-role-dci-import-keys
 Requires:       ansible-role-dci-retrieve-component >= 0.1.1
