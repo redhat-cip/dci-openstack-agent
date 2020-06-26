@@ -1,19 +1,33 @@
 Name:           dci-openstack-agent
 Version:        0.0.VERS
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        DCI OpenStack Agent for DCI control server
 License:        ASL 2.0
 URL:            https://github.com/redhat-cip/dci-openstack-agent
 BuildArch:      noarch
 Source0:        dci-openstack-agent-%{version}.tar.gz
 
+%if 0%{?rhel} && 0%{?rhel} < 8
+%global with_python2 1
+%else
+%global with_python3 1
+%endif
+
+
 BuildRequires:  dci-ansible
 BuildRequires:  ansible
 BuildRequires:  systemd
 BuildRequires:  systemd-units
 BuildRequires:  git
+BuildRequires:  /usr/bin/pathfix.py
+%if 0%{?with_python3}
+BuildRequires:  python3-devel
+%else
+BuildRequires:  python2-devel
+%endif
 Requires:       dci-ansible
-Requires:       ansible
+# Bug in ansible 2.9.10 https://github.com/ansible/ansible/issues/70168
+Requires:       ansible < 2.9.10
 Requires:       python-netaddr
 Requires:       ansible-role-dci-import-keys
 Requires:       ansible-role-dci-retrieve-component >= 0.1.1
@@ -35,6 +49,11 @@ DCI OpenStack Agent for DCI control server.
 
 %prep
 %setup -qc
+%if 0%{?with_python3}
+pathfix.py -i "%{__python3} %{py3_shbang_opts}" -pn roles/
+%else
+pathfix.py -i "%{__python2} %{py2_shbang_opts}" -pn roles/
+%endif
 
 %build
 
@@ -102,6 +121,9 @@ exit 0
 
 
 %changelog
+* Mon Jun 22 2020 François Charlier <francois.charlier@redhat.com> - 0.0.0-3
+- Fix python shebang for el8
+
 * Fri Jan 17 2020 François Charlier <francois.charlier@redhat.com> - 0.0.0-2
 - Added the "failure.yml" hook
 
