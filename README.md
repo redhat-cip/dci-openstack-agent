@@ -127,7 +127,7 @@ dci-openstack-agent will start a job by downloading the lastest component based 
 
 ```console
 $ cat /etc/dci-openstack-agent/settings.yml
-dci_topic: OSP15
+dci_topic: OSP16
 ```
 
 Then the dci-openstack-agent will create a local repository (`http://<dci_mirror_location>/dci_repo/dci_repo.repo`) with the rpm downloaded and will create a local registry (`<dci_mirror_location>:5000`) for containers.
@@ -164,13 +164,13 @@ Before testing the integration, we need to check that you have access to the top
 
 ```console
 $ cat /etc/dci-openstack-agent/settings.yml
-dci_topic: OSP15
+dci_topic: OSP16
 ```
 
 Check with dcictl if you have access to this topic
 
 ```console
-$ dcictl topic-list --where 'name:OSP15'
+$ dcictl topic-list --where 'name:OSP16'
 ```
 
 If you don't have access to this topic then **you should contact your EPM at Red Hat** which will give you access to the topic you need.
@@ -221,9 +221,9 @@ Edit your settings to set the tags for your jobs
 
 ```console
 $ cat /etc/dci-openstack-agent/settings.yml
-dci_topic: OSP15
+dci_topic: OSP16
 dci_tags: []
-# dci_tags: ['lab1', 'osp15', 'driver abc']
+# dci_tags: ['lab1', 'osp16', 'driver abc']
 ```
 
 or directly in your job's hooks:
