@@ -1,5 +1,6 @@
 # List of specific DCI components to used instead of the latest one
 dci_components: []
+dci_components_by_query: []
 # The public IP address of the jumpbox that will be exposed to the
 # OpenStack cluster
 dci_base_ip: "{{ ansible_default_ipv4.address }}"

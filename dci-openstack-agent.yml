@@ -11,10 +11,15 @@
   tasks:
     - name: Schedule a new job
       dci_job:
-        components: '{{ dci_components }}'
         topic: '{{ dci_topic }}'
+        components: '{{ dci_components }}'
         # id: '88fbd033-07b5-4cce-bb71-f320276cb0d0'
         # embed: 'remoteci,topic,components'
+        components_by_query: "{{ dci_components_by_query }}"
+        comment: "{{ dci_comment | default('') }}"
+        url: "{{ dci_url | default('') }}"
+        name: "{{ dci_name | default('') }}"
+        configuration: "{{ dci_configuration | default('') }}"
       register: job_info
 
     - set_fact:
