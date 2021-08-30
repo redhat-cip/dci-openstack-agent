@@ -68,7 +68,7 @@
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo'
   with_items: "{{ components }}"
-  when: item["type"] != "Compose"
+  when: item["type"].lower() != "compose"
 
 - name: Prepare the global Yum .repo file with all the components & variants (Compose component)
   vars:
@@ -80,7 +80,7 @@
     gpgcheck: no
     file: '{{ dci_mirror_location}}/dci_repo/dci_repo'
   loop: "{{ components|product(required_variants)|list }}"
-  when: item[0]["type"] == "Compose"
+  when: item[0]["type"].lower() == "compose"
 
 - name: Prepare a Yum .repo file per component (legacy repo component)
   yum_repository:
@@ -90,7 +90,7 @@
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item["canonical_project_name"] }}'
   with_items: "{{ components }}"
-  when: item["type"] != "Compose"
+  when: item["type"].lower() != "compose"
 
 - name: Prepare a Yum .repo file per component & variant (Compose component)
   vars:
@@ -102,7 +102,7 @@
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
   loop: "{{ components|product(required_variants)|list }}"
-  when: item[0]["type"] == "Compose"
+  when: item[0]["type"] == "compose"
 
 - name: Run the sync registry role
   include_role:
