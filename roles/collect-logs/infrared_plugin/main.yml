@@ -4,7 +4,18 @@
 # This section collects data from the nodes
 - hosts: "{{ other.openstack_nodes }}"
   remote_user: "{{ other.remote_user }}"
+  ignore_errors: true
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "{{ py_interpreter.get('stdout_lines', ['/usr/libexec/platform-python']) | first | trim }}"
   tasks:
+
+    - name: Detect python interpreter
+      raw: 'command -v python3 python2 /usr/libexec/platform-python'
+      register: py_interpreter
+
+    - name: Gather facts
+      setup:
 
     - name: Remap infrared parameters to role variables
       set_fact:
@@ -13,11 +24,12 @@
 
     - name: Ansible role collect logs
       include_role:
-        name: ansible-role-collect-logs
+        name: collect_logs
 
 # This section takes care of preparing the collected data for publishing
 # and for publishing itself
 - hosts: localhost
+  ignore_errors: true
   tasks:
 
     - name: Remap infrared parameters to role variables
@@ -43,7 +55,6 @@
       args:
         chdir: "{{ artcl_collect_dir }}"
         executable: /bin/bash
-      ignore_errors: true
 
     - name: delete the tar file after extraction
       shell: |
@@ -51,15 +62,14 @@
       args:
         chdir: "{{ artcl_collect_dir }}"
         executable: /bin/bash
-      ignore_errors: true
 
     - name: Ansible role collect logs
       include_role:
-        name: ansible-role-collect-logs
+        name: collect_logs
+      when: artcl_publish|default(false)|bool
 
     - name: Delete artifact files from localhost
       file:
         state: absent
         path: "{{ artcl_collect_dir }}"
-      ignore_errors: true
       when: not disable_artifacts_cleanup | default(false) | bool

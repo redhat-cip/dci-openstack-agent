@@ -179,6 +179,7 @@
     - post-run
   vars:
     dci_status: 'post-run'
+    undercloud_ip: "{{ undercloud_ip }}"
   tasks:
     - block:
         - name: Run tests suite
@@ -227,7 +228,7 @@
     artcl_collect_sosreport: true
     artcl_gzip: true
   roles:
-    - collect-logs
+    - collect-logs/roles/collect_logs
 
 - name: 'Upload results and logs'
   hosts: localhost
@@ -289,6 +290,7 @@
     - post-run
   vars:
     dci_status: 'post-run'
+    undercloud_ip: "{{ undercloud_ip }}"
   tasks:
     - block:
         - name: Run tests suite
@@ -363,6 +365,7 @@
     - post-run
   vars:
     dci_status: 'post-run'
+    undercloud_ip: "{{ undercloud_ip }}"
   tasks:
     - block:
         - name: Run tests suite

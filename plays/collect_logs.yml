@@ -1,6 +1,6 @@
 - name: Collect Openstack logs
   import_role:
-    name: collect-logs
+    name: collect-logs/roles/collect_logs
   vars:
     inventory_hostname: undercloud
     undercloud_user: stack

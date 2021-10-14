@@ -3,7 +3,7 @@
 config:
   plugin_type: other
   entry_point: main.yml
-  roles_path: ../
+  roles_path: ../roles/
 subparsers:
   ansible-role-collect-logs:
     description: An Ansible role for aggregating logs from different nodes.
@@ -52,6 +52,29 @@ subparsers:
               A list of files and directories to be appended in the default
               exclude list. This is useful for users that want to keep the
               original list and just add more relevant paths.
+          artcl_commands:
+            type: NestedDict
+            help: |
+              Collect commands executed by the role. Keep the dict sorted.
+              Example: --artcl_commands <group_type>.<command name>.cmd=<command>
+              Note: group types to be collected are defined by collect_log_types
+              Example2: --artcl_commands system.cpuinfo.cmd="cat /proc/cpuinfo"
+          artcl_commands_extras:
+            type: NestedDict
+            help: |
+              Commands to be executed, combined with artcl_commands.
+          artcl_find_maxdepth:
+            type: Value
+            help: |
+              Max depth passed to find via -maxdepth arg, it makes effect only
+              when artcl_rsync_collect_list is set to False.
+            default: 4
+          artcl_find_max_size:
+            type: Value
+            help: |
+              Max file size passed to find via -size arg, it makes effect only
+              when artcl_rsync_collect_list is set to False.
+            default: 256
           artcl_rsync_collect_list:
             type: Bool
             help: |
@@ -70,6 +93,10 @@ subparsers:
             help: |
               A directory on the executor host within local_working_dir where
               the logs should be gathered, without a trailing slash.
+          artcl_build_url:
+            type: Value
+            help: |
+              Build URL used for fetching console.log
           artcl_gzip:
             type: Bool
             help: |

@@ -1,0 +1,4 @@
+---
+## THIS FILE IS DEPRECATED, PLEASE USE:
+## openstack/openstack-tempest-skiplist
+known_failures: []
