@@ -1,6 +1,6 @@
 Name:           dci-openstack-agent
 Version:        0.0.VERS
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        DCI OpenStack Agent for DCI control server
 License:        ASL 2.0
 URL:            https://github.com/redhat-cip/dci-openstack-agent
@@ -15,6 +15,11 @@ Source0:        dci-openstack-agent-%{version}.tar.gz
 
 
 BuildRequires:  dci-ansible
+%if 0%{?rhel} && 0%{?rhel} < 8
+Requires: python2-dciclient >= 2.3.0
+%else
+Requires: python3-dciclient >= 2.3.0
+%endif
 BuildRequires:  ansible
 BuildRequires:  systemd
 BuildRequires:  systemd-units
@@ -121,6 +126,9 @@ exit 0
 
 
 %changelog
+* Thu Mar 24 2022 Frederic Lepied <flepied@redhat.com> 0.0.0-4
+- use dci-vault-client
+
 * Mon Jun 22 2020 François Charlier <francois.charlier@redhat.com> - 0.0.0-3
 - Fix python shebang for el8
 

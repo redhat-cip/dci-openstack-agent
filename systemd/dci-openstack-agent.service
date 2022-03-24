@@ -7,7 +7,7 @@ After=dci-openstack-agent-setup.service
 Type=oneshot
 WorkingDirectory=/usr/share/dci-openstack-agent
 EnvironmentFile=/etc/dci-openstack-agent/dcirc.sh
-ExecStart=/usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml
+ExecStart=/usr/bin/ansible-playbook  --vault-id /usr/bin/dci-vault-client -vv /usr/share/dci-openstack-agent/dci-openstack-agent.yml -e @/etc/dci-openstack-agent/settings.yml
 SuccessExitStatus=0
 User=dci-openstack-agent
 
