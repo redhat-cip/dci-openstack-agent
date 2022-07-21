@@ -20,7 +20,7 @@ Requires: python2-dciclient >= 2.3.0
 %else
 Requires: python3-dciclient >= 2.3.0
 %endif
-BuildRequires:  ansible
+BuildRequires:  ansible < 2.9.10
 BuildRequires:  systemd
 BuildRequires:  systemd-units
 BuildRequires:  git
