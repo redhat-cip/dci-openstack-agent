@@ -31,8 +31,7 @@ BuildRequires:  python3-devel
 BuildRequires:  python2-devel
 %endif
 Requires:       dci-ansible
-# Bug in ansible 2.9.10 https://github.com/ansible/ansible/issues/70168
-Requires:       ansible < 2.9.10
+Requires:       ansible < 2.10
 Requires:       python-netaddr
 Requires:       ansible-role-dci-import-keys
 Requires:       ansible-role-dci-retrieve-component >= 0.1.1
@@ -104,7 +103,9 @@ exit 0
 %systemd_preun dci-openstack-agent-setup.service
 
 %postun
-%systemd_postun
+%systemd_postun dci-openstack-agent.service
+%systemd_postun dci-openstack-agent.timer
+%systemd_postun dci-openstack-agent-setup.service
 
 %files
 %doc LICENSE README.md
