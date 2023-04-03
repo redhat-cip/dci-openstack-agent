@@ -23,7 +23,7 @@
 - name: Retrieve component
   vars:
     dci_retrieve_component_local_repo: '{{ dci_mirror_location }}/dci_repo'
-    dci_retrieve_component_component_name: '{{ item["canonical_project_name"] }}'
+    dci_retrieve_component_component_name: '{{ item["display_name"] }}'
     dci_retrieve_component_component_id: '{{ item["id"] }}'
     dci_retrieve_component_sslverify: '{{ dci_openstack_agent_sslverify }}'
     dci_retrieve_component_sslclientcert: '{{ dci_openstack_agent_sslclientcert }}'
@@ -45,7 +45,7 @@
 - name: Download the images list file
   get_url:
     url: 'https://repo.distributed-ci.io/{{ job_info.job.topic.product_id }}/{{ item.topic_id }}/{{ item.id }}/images_list.yaml'
-    dest: '{{ dci_mirror_location }}/dci_repo/{{ item["canonical_project_name"] }}/images_list.yaml'
+    dest: '{{ dci_mirror_location }}/dci_repo/{{ item["display_name"] }}/images_list.yaml'
     force: yes
     client_cert: '{{ dci_openstack_agent_sslclientcert }}'
     client_key: '{{ dci_openstack_agent_sslclientkey }}'
@@ -58,13 +58,13 @@
   with_items: "{{ components }}"
   when:
     - job_info.job.topic.data.releasename >= 'pike'
-    - not item.canonical_project_name.endswith("-DevTools")
+    - not item.display_name.endswith("-DevTools")
 
 - name: Prepare the global Yum .repo file with all the components (legacy repo component)
   yum_repository:
-    name: '{{ item["canonical_project_name"] }}'
-    description: '{{ item["canonical_project_name"] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item["canonical_project_name"] }}/'
+    name: '{{ item["display_name"] }}'
+    description: '{{ item["display_name"] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item["display_name"] }}/'
     gpgcheck: no
     file: '{{ dci_mirror_location }}/dci_repo/dci_repo'
   with_items: "{{ components }}"
@@ -74,9 +74,9 @@
   vars:
     required_variants: "{% if dci_topic == 'OSP16' %}['OpenStack', 'DevTools']{% else %}['OpenStack',]{% endif %}"
   yum_repository:
-    name: '{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
-    description: '{{ item[0]["canonical_project_name"] }} {{ item[1] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["canonical_project_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
+    name: '{{ item[0]["display_name"] }}-{{ item[1] }}'
+    description: '{{ item[0]["display_name"] }} {{ item[1] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["display_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
     gpgcheck: no
     file: '{{ dci_mirror_location}}/dci_repo/dci_repo'
   loop: "{{ components|product(required_variants)|list }}"
@@ -84,11 +84,11 @@
 
 - name: Prepare a Yum .repo file per component (legacy repo component)
   yum_repository:
-    name: '{{ item["canonical_project_name"] }}'
-    description: '{{ item["canonical_project_name"] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item["canonical_project_name"] }}/'
+    name: '{{ item["display_name"] }}'
+    description: '{{ item["display_name"] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item["display_name"] }}/'
     gpgcheck: no
-    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item["canonical_project_name"] }}'
+    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item["display_name"] }}'
   with_items: "{{ components }}"
   when: item["type"].lower() != "compose"
 
@@ -96,11 +96,11 @@
   vars:
     required_variants: "{% if dci_topic == 'OSP16' %}['OpenStack', 'DevTools']{% else %}['OpenStack',]{% endif %}"
   yum_repository:
-    name: '{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
-    description: '{{ item[0]["canonical_project_name"] }} {{ item[1] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["canonical_project_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
+    name: '{{ item[0]["display_name"] }}-{{ item[1] }}'
+    description: '{{ item[0]["display_name"] }} {{ item[1] }}'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["display_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
     gpgcheck: no
-    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item[0]["canonical_project_name"] }}-{{ item[1] }}'
+    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item[0]["display_name"] }}-{{ item[1] }}'
   loop: "{{ components|product(required_variants)|list }}"
   when: item[0]["type"] == "compose"
 
@@ -108,7 +108,7 @@
   include_role:
     name: dci-sync-registry
   vars:
-    dci_sync_registry_images_list: '{{ dci_mirror_location }}/dci_repo/{{ item.canonical_project_name }}/images_list.yaml'
+    dci_sync_registry_images_list: '{{ dci_mirror_location }}/dci_repo/{{ item.display_name }}/images_list.yaml'
     dci_sync_registry_local_ip: '{{ dci_base_ip }}'
     dci_sync_registry_local_port: '{{ dci_registry_port }}'
     dci_sync_registry_remote_login: '{{ job_info.job.topic.data.registry.login }}'
@@ -117,4 +117,4 @@
   loop: "{{ components }}"
   when:
     - job_info.job.topic.data.releasename >= 'pike'
-    - not item.canonical_project_name.endswith("-DevTools")
+    - not item.display_name.endswith("-DevTools")
