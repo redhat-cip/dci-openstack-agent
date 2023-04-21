@@ -1,84 +1,69 @@
 - set_fact:
-    components: '{{ job_info.job.components }}'
+    components: "{{ job_info.job.components }}"
 
 - name: Ensure proper directories are created
   file:
-    path: '{{ item }}'
+    path: "{{ item }}"
     state: directory
-    owner: '{{ ansible_user_id }}'
-    group: '{{ ansible_user_gid }}'
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
   with_items:
-    - '{{ dci_cache_dir }}'
-    - '{{ dci_mirror_location }}/dci_repo'
+    - "{{ dci_cache_dir }}"
+    - "{{ dci_mirror_location }}/dci_repo"
   become: true
 
 - name: Import remoteci SSL keys
   vars:
-    dci_import_keys_remoteci_id: '{{ job_info.job.remoteci.id }}'
-    dci_import_keys_sslclientcert: '{{ dci_openstack_agent_sslclientcert }}'
-    dci_import_keys_sslclientkey: '{{ dci_openstack_agent_sslclientkey }}'
+    dci_import_keys_remoteci_id: "{{ job_info.job.remoteci.id }}"
+    dci_import_keys_sslclientcert: "{{ dci_openstack_agent_sslclientcert }}"
+    dci_import_keys_sslclientkey: "{{ dci_openstack_agent_sslclientkey }}"
   include_role:
     name: dci-import-keys
 
 - name: Retrieve component
   vars:
-    dci_retrieve_component_local_repo: '{{ dci_mirror_location }}/dci_repo'
-    dci_retrieve_component_component_name: '{{ item["display_name"] }}'
+    dci_retrieve_component_local_repo: "{{ dci_mirror_location }}/dci_repo"
+    dci_retrieve_component_component_name: '{{ job_info.job.topic.name }}'
     dci_retrieve_component_component_id: '{{ item["id"] }}'
-    dci_retrieve_component_sslverify: '{{ dci_openstack_agent_sslverify }}'
-    dci_retrieve_component_sslclientcert: '{{ dci_openstack_agent_sslclientcert }}'
-    dci_retrieve_component_sslclientkey: '{{ dci_openstack_agent_sslclientkey }}'
+    dci_retrieve_component_sslverify: "{{ dci_openstack_agent_sslverify }}"
+    dci_retrieve_component_sslclientcert: "{{ dci_openstack_agent_sslclientcert }}"
+    dci_retrieve_component_sslclientkey: "{{ ci_openstack_agent_sslclientkey }}"
+    dci_retrieve_component_registry_local_ip: "{{ dci_base_ip }}"
+    dci_retrieve_component_registry_local_port: "{{ dci_registry_port }}"
   include_role:
     name: dci-retrieve-component
   with_items: "{{ components }}"
 
 - name: Import remoteci SSL keys (because they have been reset by dci-downloader)
   vars:
-    dci_import_keys_remoteci_id: '{{ job_info.job.remoteci.id }}'
-    dci_import_keys_sslclientcert: '{{ dci_openstack_agent_sslclientcert }}'
-    dci_import_keys_sslclientkey: '{{ dci_openstack_agent_sslclientkey }}'
+    dci_import_keys_remoteci_id: "{{ job_info.job.remoteci.id }}"
+    dci_import_keys_sslclientcert: "{{ dci_openstack_agent_sslclientcert }}"
+    dci_import_keys_sslclientkey: "{{ dci_openstack_agent_sslclientkey }}"
   include_role:
     name: dci-import-keys
   when:
     - job_info.job.topic.data.releasename >= 'train'
 
-- name: Download the images list file
-  get_url:
-    url: 'https://repo.distributed-ci.io/{{ job_info.job.topic.product_id }}/{{ item.topic_id }}/{{ item.id }}/images_list.yaml'
-    dest: '{{ dci_mirror_location }}/dci_repo/{{ item["display_name"] }}/images_list.yaml'
-    force: yes
-    client_cert: '{{ dci_openstack_agent_sslclientcert }}'
-    client_key: '{{ dci_openstack_agent_sslclientkey }}'
-    validate_certs: '{{ dci_openstack_agent_sslverify }}'
-  environment:
-    http_proxy: "{{ lookup('env', 'http_proxy') }}"
-    https_proxy: "{{ lookup('env', 'https_proxy') }}"
-    no_proxy: "{{ lookup('env', 'no_proxy') }}"
-  become: true
-  with_items: "{{ components }}"
-  when:
-    - job_info.job.topic.data.releasename >= 'pike'
-    - not item.display_name.endswith("-DevTools")
-
 - name: Prepare the global Yum .repo file with all the components (legacy repo component)
   yum_repository:
     name: '{{ item["display_name"] }}'
     description: '{{ item["display_name"] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item["display_name"] }}/'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ job_info.job.topic.name }}/'
     gpgcheck: no
-    file: '{{ dci_mirror_location }}/dci_repo/dci_repo'
+    file: "{{ dci_mirror_location }}/dci_repo/dci_repo"
   with_items: "{{ components }}"
   when: item["type"].lower() != "compose"
 
 - name: Prepare the global Yum .repo file with all the components & variants (Compose component)
   vars:
-    required_variants: "{% if dci_topic == 'OSP16' %}['OpenStack', 'DevTools']{% else %}['OpenStack',]{% endif %}"
+    required_variants:
+      - OpenStack
   yum_repository:
     name: '{{ item[0]["display_name"] }}-{{ item[1] }}'
     description: '{{ item[0]["display_name"] }} {{ item[1] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["display_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
+    baseurl: "{{ dci_baseurl }}/dci_repo/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os"
     gpgcheck: no
-    file: '{{ dci_mirror_location}}/dci_repo/dci_repo'
+    file: "{{ dci_mirror_location}}/dci_repo/dci_repo"
   loop: "{{ components|product(required_variants)|list }}"
   when: item[0]["type"].lower() == "compose"
 
@@ -86,21 +71,22 @@
   yum_repository:
     name: '{{ item["display_name"] }}'
     description: '{{ item["display_name"] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item["display_name"] }}/'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ job_info.job.topic.name }}/'
     gpgcheck: no
-    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item["display_name"] }}'
+    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ job_info.job.topic.name }}'
   with_items: "{{ components }}"
   when: item["type"].lower() != "compose"
 
 - name: Prepare a Yum .repo file per component & variant (Compose component)
   vars:
-    required_variants: "{% if dci_topic == 'OSP16' %}['OpenStack', 'DevTools']{% else %}['OpenStack',]{% endif %}"
+    required_variants:
+      - OpenStack
   yum_repository:
     name: '{{ item[0]["display_name"] }}-{{ item[1] }}'
     description: '{{ item[0]["display_name"] }} {{ item[1] }}'
-    baseurl: '{{ dci_baseurl }}/dci_repo/{{ item[0]["display_name"] }}/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
+    baseurl: '{{ dci_baseurl }}/dci_repo/{{ job_info.job.topic.name }}/compose/{{ item[1] }}/$basearch/os'
     gpgcheck: no
-    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ item[0]["display_name"] }}-{{ item[1] }}'
+    file: '{{ dci_mirror_location }}/dci_repo/dci_repo_{{ job_info.job.topic.name }}-{{ item[1] }}'
   loop: "{{ components|product(required_variants)|list }}"
   when: item[0]["type"] == "compose"
 
@@ -108,13 +94,10 @@
   include_role:
     name: dci-sync-registry
   vars:
-    dci_sync_registry_images_list: '{{ dci_mirror_location }}/dci_repo/{{ item.display_name }}/images_list.yaml'
+    dci_sync_registry_images_list: '{{ dci_mirror_location }}/dci_repo/{{ job_info.job.topic.name }}/compose/images_list.yaml'
     dci_sync_registry_local_ip: '{{ dci_base_ip }}'
     dci_sync_registry_local_port: '{{ dci_registry_port }}'
     dci_sync_registry_remote_login: '{{ job_info.job.topic.data.registry.login }}'
     dci_sync_registry_remote_password: '{{ job_info.job.topic.data.registry.password }}'
     dci_sync_registry_skip_list: '{{ skip_container_images }}'
   loop: "{{ components }}"
-  when:
-    - job_info.job.topic.data.releasename >= 'pike'
-    - not item.display_name.endswith("-DevTools")

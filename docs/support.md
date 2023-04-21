@@ -7,10 +7,10 @@ pre-release bits in an automated way.
 
 | topic   | type    | Architecture |
 | ------- | ------- | ------------ |
-| OSP16   | compose | x86_64       |
 | OSP16.1 | compose | x86_64       |
 | OSP16.2 | compose | x86_64       |
 | OSP17.0 | compose | x86_64       |
+| OSP17.1 | compose | x86_64       |
 
 Please contact your EPM if you would like a specific version or architecture not listed here.
 

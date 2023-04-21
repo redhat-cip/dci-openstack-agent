@@ -175,6 +175,7 @@
 #
 - name: 'Openstack specific tests'
   hosts: undercloud
+  ignore_unreachable: true
   tags:
     - post-run
   vars:
