@@ -15,10 +15,6 @@ dci_registry_port: 5000
 # If you don't want to free the resources on failure set the
 # dci_teardown_on_failure variable to false (default: true).
 dci_teardown_on_failure: true
-# DCI SSL repository parameters
-dci_openstack_agent_sslverify: yes
-dci_openstack_agent_sslclientcert: /etc/ssl/repo/dci.crt
-dci_openstack_agent_sslclientkey: /etc/ssl/repo/dci.key
 
 # dci_tags: tags to attach to a job [optional]
 #
