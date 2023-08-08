@@ -1,6 +1,6 @@
 Name:           dci-openstack-agent
 Version:        0.0.VERS
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        DCI OpenStack Agent for DCI control server
 License:        ASL 2.0
 URL:            https://github.com/redhat-cip/dci-openstack-agent
@@ -20,7 +20,6 @@ Requires: python2-dciclient >= 2.3.0
 %else
 Requires: python3-dciclient >= 2.3.0
 %endif
-BuildRequires:  ansible < 2.9.10
 BuildRequires:  systemd
 BuildRequires:  systemd-units
 BuildRequires:  git
@@ -31,7 +30,6 @@ BuildRequires:  python3-devel
 BuildRequires:  python2-devel
 %endif
 Requires:       dci-ansible
-Requires:       ansible < 2.10
 Requires:       python-netaddr
 Requires:       ansible-role-dci-retrieve-component >= 0.2.1
 Requires:       ansible-role-dci-sync-registry
@@ -126,6 +124,9 @@ exit 0
 
 
 %changelog
+* Tue Aug  8 2023 Frederic Lepied <flepied@redhat.com> 0.0.0-6
+- simplify dependencies to be compatible with RHEL9
+
 * Mon Jul 17 2023 François Charlier <fcharlie@redhat.com> 0.0.0-5
 - discard ansible-role-dci-import-keys role
 - require ansible-role-dci-retrieve-component >= 0.2.1
