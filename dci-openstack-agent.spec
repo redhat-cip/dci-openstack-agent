@@ -1,6 +1,6 @@
 Name:           dci-openstack-agent
-Version:        0.0.VERS
-Release:        6%{?dist}
+Version:        0.1.0
+Release:        1.VERS%{?dist}
 Summary:        DCI OpenStack Agent for DCI control server
 License:        ASL 2.0
 URL:            https://github.com/redhat-cip/dci-openstack-agent
@@ -124,7 +124,10 @@ exit 0
 
 
 %changelog
-* Tue Aug  8 2023 Frederic Lepied <flepied@redhat.com> 0.0.0-6
+* Thu Nov 02 2023 Guillaume Vincent <gvincent@redhat.com> 0.1.0-1
+- Fix rpm name
+
+* Tue Aug 08 2023 Frederic Lepied <flepied@redhat.com> 0.0.0-6
 - simplify dependencies to be compatible with RHEL9
 
 * Mon Jul 17 2023 François Charlier <fcharlie@redhat.com> 0.0.0-5
