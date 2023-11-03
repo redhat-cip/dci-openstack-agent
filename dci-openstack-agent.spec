@@ -14,7 +14,6 @@ Source0:        dci-openstack-agent-%{version}.tar.gz
 %endif
 
 
-BuildRequires:  dci-ansible
 %if 0%{?rhel} && 0%{?rhel} < 8
 Requires: python2-dciclient >= 2.3.0
 %else
