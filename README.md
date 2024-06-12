@@ -1,10 +1,14 @@
 # DCI OpenStack Agent
 
+## Deprecation warning
+
+DCI OpenStack agent has been deprecated.
+
 ## Overview
 
 The following documentation will allow you to configure your OpenStack automated jobs with DCI.
 At the end of this documentation, you should have a configured systemd service running DCI jobs with the latest versions of RHOSP or RDO.
-dci-openstack-agent is an ansible-playbook executed as a systemd service. 
+dci-openstack-agent is an ansible-playbook executed as a systemd service.
 This service will run on a RHEL server called remoteci.
 It will run Red Hat tests at the end of the process to ensure everything is working fine.
 
@@ -122,7 +126,6 @@ DCI hooks are ansible tasks that will be run by the agent. You need to call your
     chdir: /var/lib/dci-openstack-agent
 ```
 
-
 dci-openstack-agent will start a job by downloading the lastest component based on the topic version set in `/etc/dci-openstack-agent/settings.yml`
 
 ```console
@@ -131,7 +134,6 @@ dci_topic: OSP16
 ```
 
 Then the dci-openstack-agent will create a local repository (`http://<dci_mirror_location>/dci_repo/dci_repo.repo`) with the rpm downloaded and will create a local registry (`<dci_mirror_location>:5000`) for containers.
-
 
 `running.yml` hooks should install undercloud and overcloud using local repository and registry.
 
@@ -175,7 +177,6 @@ $ dcictl topic-list --where 'name:OSP16'
 
 If you don't have access to this topic then **you should contact your EPM at Red Hat** which will give you access to the topic you need.
 
-
 ## Test your integation and run your first job
 
 Now that everything is configured, we will run the dci-openstask-agent playbook to see if everything is fine
@@ -191,7 +192,6 @@ $ /usr/bin/ansible-playbook -vv /usr/share/dci-openstack-agent/dci-openstack-age
 
 When you are on the undercloud machine or the overcloud ones, you should be able to reach the remoteci via `http` port 80 and 5000.
 The undercloud should be able to reach the floating-IP network. During its run, Tempest will try to reach the VM IP on this range. If you don't use it disable the tests (see advanced documentation)
-
 
 ## Automate job run
 
@@ -213,7 +213,6 @@ $ chronyc activity
 ```
 
 If Chrony is not running, you can follow [the official documentation](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sect-using_chrony) to set it up.
-
 
 ### Set tags
 
@@ -258,7 +257,7 @@ $ sudo su - dci-openstack-agent -s /bin/bash
 
 ### Keep your system up to date
 
-Distributed-CI is a rolling release. 
+Distributed-CI is a rolling release.
 When the agent is started with the dci-openstack-agent systemd unit or timer, the DCI related packages are upgraded before executing the Ansible playbook.
 
 If you don't start the agent with the dci-openstack-agent systemd unit or timer, please make sure to check for DCI packages upgrades before running the Ansible playbook.
@@ -271,4 +270,3 @@ $ systemctl enable yum-cron
 $ systemctl start yum-cron
 $ sed -i 's,apply_updates = .*,apply_updates = yes,' /etc/yum/yum-cron.conf
 ```
-
